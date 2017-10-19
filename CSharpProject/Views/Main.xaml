@@ -13,7 +13,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">RSS:</Label>
 
-                <TextBox Grid.Column="1" Width="300" HorizontalAlignment="Right" Padding="2"/>
+                <TextBox Grid.Column="1" x:Name="RSSTextBox" Width="300" HorizontalAlignment="Right" Padding="2"/>
             </Grid>
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
@@ -22,7 +22,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Name:</Label>
 
-                <TextBox Grid.Column="1" Width="300" HorizontalAlignment="Right" Padding="2"/>
+                <TextBox Grid.Column="1" Width="300" x:Name="RSSNameTextBox" HorizontalAlignment="Right" Padding="2"/>
             </Grid>
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
@@ -36,7 +36,7 @@
                     Category:
                 </Label>
 
-                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1">
+                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1" SelectionChanged="ComboBox_SelectionChanged">
                     <ComboBoxItem>Uncategorized</ComboBoxItem>
                     <ComboBoxItem>Data Stuff</ComboBoxItem>
                     <ComboBoxItem>Add new...</ComboBoxItem>
@@ -54,7 +54,7 @@
 
 
             </Grid>
-            <Button Content="Add" Width="80" Margin="0 0 0 10" Background="#FFEEEEEE"/>
+            <Button Content="Add" x:Name="AddButton" Width="80" Margin="0 0 0 10" Background="#FFEEEEEE" Click="Button_Click"/>
             <Label HorizontalContentAlignment="Center" FontWeight="Bold">My Podcasts</Label>
             <ListBox x:Name="podListBox" Height="200" Margin="0 0 0 10">
                 <ListBoxItem>Podcast 1</ListBoxItem>
