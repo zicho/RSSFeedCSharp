@@ -7,7 +7,9 @@ namespace CSharpProject.Views
     {
         public MainWindow()
         {
+            
             InitializeComponent();
+            this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
         }
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)

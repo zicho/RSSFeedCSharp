@@ -36,10 +36,10 @@
                     Category:
                 </Label>
 
-                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="100" Margin="0,1,0,-1">
-                    <ComboBoxItem>1 day</ComboBoxItem>
-                    <ComboBoxItem>3 days</ComboBoxItem>
-                    <ComboBoxItem>1 week</ComboBoxItem>
+                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1">
+                    <ComboBoxItem>Uncategorized</ComboBoxItem>
+                    <ComboBoxItem>Data Stuff</ComboBoxItem>
+                    <ComboBoxItem>Add new...</ComboBoxItem>
                 </ComboBox>
 
                 <Label Grid.Column="2" HorizontalAlignment="Right" Width="60">
@@ -54,7 +54,7 @@
 
 
             </Grid>
-            <Button Content="Add" Width="80" Margin="0 0 0 10"/>
+            <Button Content="Add" Width="80" Margin="0 0 0 10" Background="#FFEEEEEE"/>
             <Label HorizontalContentAlignment="Center" FontWeight="Bold">My Podcasts</Label>
             <ListBox Height="200" Margin="0 0 0 10">
                 <ListBoxItem>Podcast 1</ListBoxItem>
