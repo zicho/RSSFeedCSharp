@@ -56,7 +56,7 @@
             </Grid>
             <Button Content="Add" Width="80" Margin="0 0 0 10" Background="#FFEEEEEE"/>
             <Label HorizontalContentAlignment="Center" FontWeight="Bold">My Podcasts</Label>
-            <ListBox Height="200" Margin="0 0 0 10">
+            <ListBox x:Name="podListBox" Height="200" Margin="0 0 0 10">
                 <ListBoxItem>Podcast 1</ListBoxItem>
                 <ListBoxItem>Podcast 2</ListBoxItem>
                 <ListBoxItem>Podcast 3</ListBoxItem>
