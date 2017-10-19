@@ -27,12 +27,26 @@
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" HorizontalAlignment="Right">
-                    Download interval:
+
+                <Label Grid.Column="0" HorizontalAlignment="Left" Width="60">
+                    Category:
                 </Label>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="100">
+
+                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="100" Margin="0,1,0,-1">
+                    <ComboBoxItem>1 day</ComboBoxItem>
+                    <ComboBoxItem>3 days</ComboBoxItem>
+                    <ComboBoxItem>1 week</ComboBoxItem>
+                </ComboBox>
+
+                <Label Grid.Column="2" HorizontalAlignment="Right" Width="60">
+                    Interval:
+                </Label>
+
+                <ComboBox Grid.Column="3" HorizontalAlignment="Right" Width="75">
                     <ComboBoxItem>1 day</ComboBoxItem>
                     <ComboBoxItem>3 days</ComboBoxItem>
                     <ComboBoxItem>1 week</ComboBoxItem>
@@ -59,12 +73,13 @@
             </ListBox>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="125*" />
+                    <ColumnDefinition Width="83*" />
+                    <ColumnDefinition Width="41*"/>
+                    <ColumnDefinition Width="125*" />
                 </Grid.ColumnDefinitions>
                 <Button Content="Listen" Grid.Column="0"/>
-                <Button Content="Remove" Grid.Column="2"/>
+                <Button Content="Remove" Grid.Column="3"/>
             </Grid>
 
 

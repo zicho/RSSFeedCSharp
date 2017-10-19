@@ -9,5 +9,10 @@ namespace CSharpProject.Views
         {
             InitializeComponent();
         }
+
+        private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
