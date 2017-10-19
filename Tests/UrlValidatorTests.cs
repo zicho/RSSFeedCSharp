@@ -12,7 +12,7 @@ namespace Tests
         public void Expect_valid_url_to_be_ok()
         {
             var validator = new UrlValidator();
-
+            //Topper was here
             validator.Validate("http://www.dn.se");
         }
 
