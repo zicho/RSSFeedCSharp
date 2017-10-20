@@ -18,7 +18,7 @@ namespace CSharpProject.Views
     {
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
-
+        public List<FeedItem> feedItemList = Logic.Entities.FeedItem.FeedItemList;
         
         public Logic.Entities.FeedItem feedItem = new FeedItem();
 
@@ -28,8 +28,6 @@ namespace CSharpProject.Views
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
-
-            var feedItemList = feedItem.getFeedItems();
 
             podListBox.Items.Clear();
 
@@ -89,7 +87,7 @@ namespace CSharpProject.Views
             catch (Exception ex)
             {
 
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Validation Error...");
             }
         }
 
@@ -164,15 +162,28 @@ namespace CSharpProject.Views
 
                 */
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast");
-                var feedItemList = feedItem.getFeedItems();
-                Process.Start(feedItemList[podListBox.SelectedIndex].Link.ToString());
+                System.Diagnostics.Process.Start(@feedItemList[podListBox.SelectedIndex].Link.ToString());
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "No item selected!");
             }
 
 
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            try { 
+            boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
+                feedItemList.RemoveAt(podListBox.SelectedIndex);
+                podListBox.Items.Remove(podListBox.SelectedItem);
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "No item selected!");
+            }
         }
     }
 }
