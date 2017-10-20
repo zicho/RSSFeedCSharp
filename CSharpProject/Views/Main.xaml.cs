@@ -27,6 +27,9 @@ namespace CSharpProject.Views
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
+
+            var feedItemList = feedItem.getFeedItems();
+
             podListBox.Items.Clear();
 
             InitializeComboBoxes();
@@ -34,9 +37,7 @@ namespace CSharpProject.Views
             //Logic.Podcast.FillPodcastList();
 
             Podcast.FillPodcastList();
-
-            var feedItemList = feedItem.getFeedItems();
-
+            
             foreach(var item in feedItemList)
             {
                 podListBox.Items.Add(item.Title);
@@ -151,7 +152,9 @@ namespace CSharpProject.Views
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
+            var feedItemList = feedItem.getFeedItems();
+            var listItem = podListBox.SelectedItem;
+            MessageBox.Show(feedItemList[podListBox.SelectedIndex].Link.ToString());
         }
     }
 }
