@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
 
 namespace Logic.Entities
 {
@@ -39,7 +40,17 @@ namespace Logic.Entities
                     FeedList.Add(feed);
                 }
                 }
-            }
+        }
+
+        public void LoadFeeds()
+        {
+            String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
+
+            string[] files = System.IO.Directory.GetFiles(path, "*.xml");
+
+            foreach (string file in files)
+                file
+        }
 
         }
     }
