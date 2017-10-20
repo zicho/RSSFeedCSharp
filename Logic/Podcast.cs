@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,32 +34,5 @@ namespace Logic
             this.published = publ;
         }
 
-        public void AddNewPodcast(String content, String name)
-        {
-            if (content != null)
-            {
-                String path = (Environment.CurrentDirectory + "\\XML-folder"); // Path to a folder containing all XML files in the project directory
-
-                if (Directory.Exists(path) == false)
-                {
-                    Directory.CreateDirectory(path);
-                }
-                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
-
-                if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
-                {
-                    if (CategoryBox.SelectedIndex == 0)
-                    {
-
-                    }
-                    File.AppendAllText(path, content);
-                }
-                else
-                {
-                    MessageBox.Show("A podcast with that name already exist");
-                }
-            }
-
-        }
     }
 }

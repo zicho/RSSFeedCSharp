@@ -18,7 +18,7 @@ namespace CSharpProject.Views
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
         public List<FeedItem> feedItemList = Logic.Entities.FeedItem.FeedItemList;
-        public Logic.Podcast podcast = new Podcast();
+        public Logic.Entities.Feed feed = new Feed();
 
         public Logic.Entities.FeedItem feedItem = new FeedItem();
 
@@ -83,23 +83,25 @@ namespace CSharpProject.Views
                 boxValidator.Validate(CategoryBox.SelectedIndex, "category");
                 boxValidator.Validate(IntervalBox.SelectedIndex, "download interval");
 
-                Task<String> xmlText = DownloadString(RSSTextBox.Text);
-                String RSSName = RSSNameTextBox.Text;
-                await xmlText; //detta är väl useless i detta fallet men ville testa hur det funkade
+                Task<String> RSS_URL = DownloadString(RSSTextBox.Text);
+                String RSS_Name = RSSNameTextBox.Text;
+                await RSS_URL; //detta är väl useless i detta fallet men ville testa hur det funkade
 
-                if (xmlText != null)
+                // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
+
+                if (RSS_URL != null)
                 {
-
-                    if (RSSName != null)
+                    if (RSS_Name != null)
                     {
-                        podcast.AddNewPodcast(xmlText.Result, RSSName);
+                        feed.AddNewFeed(RSS_URL.Result, RSS_Name);
                     }
-
                 }
+
+                FeedItem.FillItemList();
+                RefreshPodcastList();
             }
             catch (Exception ex)
-            {
-
+            { 
                 MessageBox.Show(ex.Message, "Validation Error...");
             }
         }
