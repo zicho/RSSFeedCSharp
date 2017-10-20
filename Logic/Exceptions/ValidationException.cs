@@ -14,7 +14,7 @@ namespace Logic.Exceptions
         {
             public void Validate(string input, string field)
             {
-                if (input.Length == 0)
+                if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input)) //testar ersätta input.Length == 0
                     throw new Exception($"The field '{field}' may not be empty.");
             }
         }
@@ -37,10 +37,10 @@ namespace Logic.Exceptions
         {
             public void Validate(string input, string field)
             {
-                if (input.Length == 0)
+                if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
                     throw new Exception($"The field '{field}' may not be empty.");
-
-                if (!Uri.IsWellFormedUriString(input, UriKind.RelativeOrAbsolute))
+                
+                if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
                 {
                     throw new Exception($"Entry of field '{field}' is not a valid URL.");
                 }
