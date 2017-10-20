@@ -38,7 +38,7 @@
                     Category:
                 </Label>
 
-                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBox x:Name="CategoryBox" Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1" SelectionChanged="ComboBox_SelectionChanged">
                     <ComboBoxItem>Uncategorized</ComboBoxItem>
                     <ComboBoxItem>Data Stuff</ComboBoxItem>
                     <ComboBoxItem>Add new...</ComboBoxItem>
@@ -48,7 +48,7 @@
                     Interval:
                 </Label>
 
-                <ComboBox Grid.Column="3" HorizontalAlignment="Right" Width="75">
+                <ComboBox x:Name="IntervalBox" Grid.Column="3" HorizontalAlignment="Right" Width="75">
                     <ComboBoxItem>1 day</ComboBoxItem>
                     <ComboBoxItem>3 days</ComboBoxItem>
                     <ComboBoxItem>1 week</ComboBoxItem>

@@ -13,6 +13,7 @@ namespace CSharpProject.Views
     public partial class MainWindow : Window
     {
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
+        public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
         public MainWindow()
         {
@@ -70,6 +71,8 @@ namespace CSharpProject.Views
             {
                 validator.Validate(RSSTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 validator.Validate(RSSNameTextBox.Text, "Name");
+                boxValidator.Validate(CategoryBox.SelectedIndex, "category");
+                boxValidator.Validate(IntervalBox.SelectedIndex, "download interval");
 
                 Task<String> xmlText = DownloadString(RSSTextBox.Text);
                 String RSSName = RSSNameTextBox.Text;
