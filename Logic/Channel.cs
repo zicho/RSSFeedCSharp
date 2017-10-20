@@ -21,7 +21,7 @@ namespace Logic
         {
             this.title = title;
             lastUpdated = DateTime.Now;
-            podcastList = new List<Podcast>;
+            podcastList = new List<Podcast>();
             this.updateInterval = updateInterval;
         }
 

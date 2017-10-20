@@ -12,8 +12,6 @@ using System.Diagnostics;
 
 namespace CSharpProject.Views
 {
-    
-
     public partial class MainWindow : Window
     {
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
@@ -35,7 +33,7 @@ namespace CSharpProject.Views
 
             //Logic.Podcast.FillPodcastList();
 
-            Podcast.FillPodcastList();
+            FeedItem.FillItemList();
             
             foreach(var item in feedItemList)
             {
@@ -168,17 +166,14 @@ namespace CSharpProject.Views
             {
                 MessageBox.Show(ex.Message, "No item selected!");
             }
-
-
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             try { 
             boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
-                feedItemList.RemoveAt(podListBox.SelectedIndex);
-                podListBox.Items.Remove(podListBox.SelectedItem);
-                
+                feedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
+                podListBox.Items.Remove(podListBox.SelectedItem); // remove from listbox
             }
             catch (Exception ex)
             {

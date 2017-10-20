@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Logic.Entities
 {
@@ -10,6 +13,58 @@ namespace Logic.Entities
         public string Id { get; set; }
         public string Title { get; set; }
         public string Link { get; set; }
+
+        public static void FillItemList()
+        {
+            String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
+
+            string[] files = System.IO.Directory.GetFiles(path, "*.xml");
+
+            foreach(var file in files)
+            {
+                var xmlDocument = XDocument.Load(file);
+                var items = xmlDocument.Descendants("item");
+
+                var feedItems = items.Select(element => new FeedItem
+                {
+                    Title = element.Descendants("title").Single().Value,
+                    Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                });
+
+                foreach (var feedItem in feedItems)
+                {
+                    FeedItemList.Add(feedItem);
+                }
+            }
+            
+
+            //using (var client = new System.Net.WebClient())
+            //{
+            //    client.Encoding = Encoding.UTF8;
+            //    xml = client.DownloadString("https://filmdrunk.podbean.com/feed/");
+            //}
+
+            ////Skapa en objektrepresentation.
+            //var dom = new System.Xml.XmlDocument();
+            //dom.LoadXml(xml);
+
+            ////Iterera igenom elementet item.
+            //foreach (System.Xml.XmlNode item
+            //   in dom.DocumentElement.SelectNodes("channel/item"))
+            //{
+            //    //Skriv ut dess titel.
+
+            //    Entities.FeedItem feedItem = new Entities.FeedItem();
+
+            //    var title = item.SelectSingleNode("title");
+            //    var link = item.SelectSingleNode("enclosure/@url");
+            //    Console.WriteLine(item);
+
+            //    feedItem.Title = title.InnerText.ToString();
+            //    feedItem.Link = link.InnerText.ToString();
+            //    Entities.FeedItem.FeedItemList.Add(feedItem);
+            //}
+        }
 
         public void playItem(string link)
         {

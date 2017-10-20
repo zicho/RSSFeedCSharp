@@ -25,38 +25,6 @@ namespace Logic
 
         }
 
-        public static void FillPodcastList()
-        {
-            var xml = "";
-            using (var client = new System.Net.WebClient())
-            {
-                client.Encoding = Encoding.UTF8;
-                xml = client.DownloadString("https://filmdrunk.podbean.com/feed/");
-            }
-
-            //Skapa en objektrepresentation.
-            var dom = new System.Xml.XmlDocument();
-            dom.LoadXml(xml);
-
-            //Iterera igenom elementet item.
-            foreach (System.Xml.XmlNode item
-               in dom.DocumentElement.SelectNodes("channel/item"))
-            {
-                //Skriv ut dess titel.
-
-                Entities.FeedItem feedItem = new Entities.FeedItem();
-
-                var title = item.SelectSingleNode("title");
-                var link = item.SelectSingleNode("enclosure/@url");
-                Console.WriteLine(item);
-
-                feedItem.Title = title.InnerText.ToString();
-                feedItem.Link = link.InnerText.ToString();
-
-                Entities.FeedItem.FeedItemList.Add(feedItem);
-            }
-        }
-
         public Podcast(String name, String desc, String url, String publ)
         {
             this.name = name;
