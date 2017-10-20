@@ -32,18 +32,28 @@ namespace CSharpProject.Views
             CategoryBox.SelectedIndex = 0;
             IntervalBox.SelectedIndex = 0;
 
-            podListBox.Items.Clear();
+            //podListBox.Items.Clear();
 
             InitializeComboBoxes();
 
             //Logic.Podcast.FillPodcastList();
 
             FeedItem.FillItemList();
-            
+            RefreshPodcastList();
+            //foreach(var item in feedItemList)
+            //{
+            //    podListBox.Items.Add(item.Title);
+            //}
+        }
+
+        private void RefreshPodcastList()
+        {
+            podListBox.Items.Clear();
             foreach(var item in feedItemList)
             {
                 podListBox.Items.Add(item.Title);
             }
+
         }
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
@@ -124,7 +134,14 @@ namespace CSharpProject.Views
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-
+            /*LoadChannels lc = new LoadChannels();
+            string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());
+            podListBox.Items.Clear();
+            foreach (String f in selectedPodcast)
+            {
+                var fileName = f.Split('\\');
+                ChannelCBox.Items.Add(fileName[fileName.Length - 1]);
+            }*/
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
