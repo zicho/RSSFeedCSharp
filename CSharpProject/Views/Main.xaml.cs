@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static Logic.Exceptions.ValidationException;
 using Logic.Entities;
+using System.Diagnostics;
 
 namespace CSharpProject.Views
 {
@@ -152,9 +153,26 @@ namespace CSharpProject.Views
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var feedItemList = feedItem.getFeedItems();
-            var listItem = podListBox.SelectedItem;
-            MessageBox.Show(feedItemList[podListBox.SelectedIndex].Link.ToString());
+            try
+            {
+
+                /*
+
+                1. Validera med boxvalidatorn att en podcast-item är vald
+                2. hämtar listan över alla feeditems ur klassen FeedITem som ansvarar för den listan
+                3. Hämtar indexet från podcastlistan ur feeditemlistan. Tar länken o konverterar till sträng o visar användaren.
+
+                */
+                boxValidator.Validate(podListBox.SelectedIndex, "podcast");
+                var feedItemList = feedItem.getFeedItems();
+                Process.Start(feedItemList[podListBox.SelectedIndex].Link.ToString());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
         }
     }
 }

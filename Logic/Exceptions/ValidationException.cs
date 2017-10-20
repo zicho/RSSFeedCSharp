@@ -42,7 +42,7 @@ namespace Logic.Exceptions
                 
                 if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
                 {
-                    throw new Exception($"Entry of field '{field}' is not a valid URL.");
+                    throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");
                 }
             }
         }
