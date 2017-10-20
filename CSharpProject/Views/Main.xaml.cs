@@ -117,12 +117,12 @@ namespace CSharpProject.Views
                 await RSS_URL; //detta är väl useless i detta fallet men ville testa hur det funkade
 
                 // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
-
+                var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 if (RSS_URL != null)
                 {
                     if (RSS_Name != null)
                     {
-                        feed.AddNewFeed(RSS_URL.Result, RSS_Name);
+                        feed.AddNewFeed(RSS_URL.Result, RSS_Name, updateInterval);
                     }
                 }
 

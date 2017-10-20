@@ -48,10 +48,10 @@
                     Interval:
                 </Label>
 
-                <ComboBox x:Name="IntervalBox" Grid.Column="3" HorizontalAlignment="Right" Width="75">
-                    <ComboBoxItem>1 day</ComboBoxItem>
-                    <ComboBoxItem>3 days</ComboBoxItem>
-                    <ComboBoxItem>1 week</ComboBoxItem>
+                <ComboBox x:Name="IntervalBox" Grid.Column="3" HorizontalAlignment="Right" Width="75" SelectedValuePath="Tag">
+                    <ComboBoxItem Tag="1">1 day</ComboBoxItem>
+                    <ComboBoxItem Tag="3">3 days</ComboBoxItem>
+                    <ComboBoxItem Tag="7">1 week</ComboBoxItem>
                 </ComboBox>
 
 

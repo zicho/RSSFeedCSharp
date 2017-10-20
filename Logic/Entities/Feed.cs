@@ -10,11 +10,13 @@ namespace Logic.Entities
         public String Filepath { get; set; }
         public String Name { get; set; }
         public String URL { get; set; }
-        public String UpdateInterval { get; set; }
+        public int UpdateInterval { get; set; }
+        public DateTime LastUpdated { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
         public static List<Feed> FeedList = new List<Feed>();
 
-        public void AddNewFeed(String url, String name)
+       
+        public void AddNewFeed(String url, String name, String updateInterval)
         {
             if (url != null)
             {
@@ -36,10 +38,22 @@ namespace Logic.Entities
                     feed.Filepath = ($@"{path}/{name}.xml"); // append the PATH to the XML. This is useful for deleting items directly from the XML file.
                     feed.Name = name;
                     feed.URL = url;
+                    feed.UpdateInterval = Int32.Parse(updateInterval);
+                    feed.LastUpdated = DateTime.Now;
                     FeedList.Add(feed);
                 }
-                }
             }
+        }
 
+        public void ShallFeedBeUpdated(Feed feed)
+        {
+            DateTime updateDate = LastUpdated.AddDays(feed.UpdateInterval);
+
+            if (DateTime.Now.Equals(updateDate))
+            {
+                //feed.kollaEfterUpdates;
+            }
+            LastUpdated = DateTime.Now.AddDays(UpdateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
         }
     }
+}
