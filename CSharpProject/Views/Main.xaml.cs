@@ -22,8 +22,6 @@ namespace CSharpProject.Views
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
             podListBox.Items.Clear();
 
-            
-
             InitializeComboBoxes();
 
             var xml = "";
