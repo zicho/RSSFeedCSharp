@@ -16,6 +16,7 @@ namespace Logic.Entities
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
         public static List<Feed> FeedList = new List<Feed>();
 
+
        
         public void AddNewFeed(String url, String name, String updateInterval)
         {
@@ -43,8 +44,34 @@ namespace Logic.Entities
                     feed.LastUpdated = DateTime.Now;
                     FeedList.Add(feed);
                 }
-                }
+                //using (var client = new System.Net.WebClient())
+                //{
+                //    client.Encoding = Encoding.UTF8;
+                //    xml = client.DownloadString("https://filmdrunk.podbean.com/feed/");
+                //}
+
+                ////Skapa en objektrepresentation.
+                //var dom = new System.Xml.XmlDocument();
+                //dom.LoadXml(xml);
+
+                ////Iterera igenom elementet item.
+                //foreach (System.Xml.XmlNode item
+                //   in dom.DocumentElement.SelectNodes("channel/item"))
+                //{
+                //    //Skriv ut dess titel.
+
+                //    Entities.FeedItem feedItem = new Entities.FeedItem();
+
+                //    var title = item.SelectSingleNode("title");
+                //    var link = item.SelectSingleNode("enclosure/@url");
+                //    Console.WriteLine(item);
+
+                //    feedItem.Title = title.InnerText.ToString();
+                //    feedItem.Link = link.InnerText.ToString();
+                //    Entities.FeedItem.FeedItemList.Add(feedItem);
+                //}
             }
+        }
 
         public void ShallFeedBeUpdated(Feed feed)
         {

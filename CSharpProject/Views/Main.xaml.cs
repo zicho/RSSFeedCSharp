@@ -151,6 +151,7 @@ namespace CSharpProject.Views
                     {
                         try
                         {
+                            client.Encoding = Encoding.UTF8;
                             text = client.DownloadString(url);
                         }
                         catch (Exception ex)
