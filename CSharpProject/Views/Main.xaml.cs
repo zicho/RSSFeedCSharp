@@ -5,17 +5,86 @@ using System.IO;
 using System.Threading.Tasks;
 using Logic;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CSharpProject.Views
 {
     public partial class MainWindow : Window
     {
+
+        interface IValidator
+        {
+            void Validate(string input, string field);
+        }
+
+        class Validator : IValidator
+        {
+            public void Validate(string input, string field)
+            {
+                if (input.Length == 0)
+                    throw new Exception($"The field '{field}' may not be empty.");
+            }
+        }
+
+        class LengthValidator : IValidator
+        {
+            private int length;
+            public LengthValidator(int length)
+            {
+                this.length = length;
+            }
+            public void Validate(string input, string field)
+            {
+                if (input.Length < length)
+                    throw new Exception($"Longer input is needed for field '{field}'. (At least three symbols)");
+            }
+        }
+
+        class URLValidator : IValidator
+        {
+            public void Validate(string input, string field)
+            {
+                if (input.Length == 0)
+                    throw new Exception($"The field '{field}' may not be empty.");
+                
+                Uri validatedUri;
+
+                if (Uri.TryCreate(input, UriKind.RelativeOrAbsolute, out validatedUri))
+                {
+                    throw new Exception($"Entry of field '{field}' is not a valid URL.");
+                }
+            }
+        }
+
+        class ValidatorList : List<IValidator>
+        {
+            public void Validate(string input, string field)
+            {
+                foreach (var validator in this)
+                {
+                    validator.Validate(input, field);
+                }
+            }
+
+            public void Validate(string input, string field, bool url)
+            {
+                URLValidator urlValidator = new URLValidator();
+                urlValidator.Validate(input, field);
+            }
+        }
+
+        private ValidatorList validator = new ValidatorList();
+
         public MainWindow()
         {
-
             InitializeComponent();
+            validator.Add(new Validator());
+            validator.Add(new LengthValidator(3));
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
             podListBox.Items.Clear();
+
+            
+
             InitializeComboBoxes();
 
             var xml = "";
@@ -60,22 +129,32 @@ namespace CSharpProject.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            Task<String> xmlText = DownloadString(RSSTextBox.Text);
-            String RSSName = RSSNameTextBox.Text;
-            ClearAllFields();
-            await xmlText; //detta är väl useless i detta fallet men ville testa hur det funkade
-
-            if (xmlText != null)
+            try
             {
-                
-                if (RSSName != null)
-                {
-                    CreateXMLFile(xmlText.Result, RSSName);
-                    
-                }
+                validator.Validate(RSSTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
+                validator.Validate(RSSNameTextBox.Text, "Name");
 
+                Task<String> xmlText = DownloadString(RSSTextBox.Text);
+                String RSSName = RSSNameTextBox.Text;
+                await xmlText; //detta är väl useless i detta fallet men ville testa hur det funkade
+
+                if (xmlText != null)
+                {
+
+                    if (RSSName != null)
+                    {
+                        CreateXMLFile(xmlText.Result, RSSName);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
             }
         }
+
 
         public void ClearAllFields() //method to reset the app upon successful podcast add
         {
@@ -87,13 +166,14 @@ namespace CSharpProject.Views
         {
             if (content != null)
             {
-            String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
+            String path = (Environment.CurrentDirectory + "\\XML-folder"); // Path to a folder containing all XML files in the project directory
+
             if (Directory.Exists(path) == false)
             {
                 Directory.CreateDirectory(path);
             }
-
             path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+
             if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
             {
                 File.AppendAllText(path, content);
@@ -111,17 +191,17 @@ namespace CSharpProject.Views
             return await Task.Run(() =>
                 {
                     String text = null;
+
                     using (var client = new System.Net.WebClient())
                     {
                         try
                         {
                             text = client.DownloadString(url);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            MessageBox.Show("Error adding podcast");
-                        }
-                        
+                            MessageBox.Show("Error adding podcast: " + ex.Message);
+                        }  
                     }
                     return text;
                 });

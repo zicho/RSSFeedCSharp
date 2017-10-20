@@ -11,18 +11,20 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0">RSS:</Label>
+                <Label x:Name="LabelRSS" Grid.Column="0">RSS URL:</Label>
 
                 <TextBox Grid.Column="1" x:Name="RSSTextBox" Width="300" HorizontalAlignment="Right" Padding="2"/>
             </Grid>
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="36*" />
+                    <ColumnDefinition Width="13*"/>
+                    <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0">Name:</Label>
+                <Label x:Name="LabelRSSName" Grid.Column="0">Name:</Label>
 
-                <TextBox Grid.Column="1" Width="300" x:Name="RSSNameTextBox" HorizontalAlignment="Right" Padding="2"/>
+                <TextBox Grid.Column="1" Width="300" x:Name="RSSNameTextBox" HorizontalAlignment="Right" Padding="2" Grid.ColumnSpan="3"/>
             </Grid>
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
@@ -64,7 +66,7 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Channel:</Label>
-                <ComboBox Grid.Column="1" HorizontalAlignment="center" x:Name="ChannelCBox" Width="250" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0">
+                <ComboBox Grid.Column="1" HorizontalAlignment="right" x:Name="ChannelCBox" Width="280" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0">
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
             </Grid>
