@@ -7,13 +7,19 @@ using Logic;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static Logic.Exceptions.ValidationException;
+using Logic.Entities;
 
 namespace CSharpProject.Views
 {
+    
+
     public partial class MainWindow : Window
     {
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
+
+        
+        public Logic.Entities.FeedItem feedItem = new FeedItem();
 
         public MainWindow()
         {
@@ -25,25 +31,15 @@ namespace CSharpProject.Views
 
             InitializeComboBoxes();
 
-            var xml = "";
-            using (var client = new System.Net.WebClient())
-            {
-                client.Encoding = Encoding.UTF8;
-                xml = client.DownloadString("https://filmdrunk.podbean.com/feed/");
-            }
+            //Logic.Podcast.FillPodcastList();
 
-            //Skapa en objektrepresentation.
-            var dom = new System.Xml.XmlDocument();
-            dom.LoadXml(xml);
+            Podcast.FillPodcastList();
 
-            //Iterera igenom elementet item.
-            foreach (System.Xml.XmlNode item
-               in dom.DocumentElement.SelectNodes("channel/item"))
+            var feedItemList = feedItem.getFeedItems();
+
+            foreach(var item in feedItemList)
             {
-                //Skriv ut dess titel.
-                var title = item.SelectSingleNode("title");
-                var link = item.SelectSingleNode("enclosure/@url");
-                podListBox.Items.Add(link.InnerText);
+                podListBox.Items.Add(item.Title);
             }
         }
 
