@@ -16,8 +16,10 @@ namespace CSharpProject.Views
     {
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
+
         public List<FeedItem> feedItemList = Logic.Entities.FeedItem.FeedItemList;
-        
+        public Logic.Podcast podcast = new Podcast();
+
         public Logic.Entities.FeedItem feedItem = new FeedItem();
 
         public MainWindow()
@@ -25,7 +27,10 @@ namespace CSharpProject.Views
             InitializeComponent();
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
+
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
+            CategoryBox.SelectedIndex = 0;
+            IntervalBox.SelectedIndex = 0;
 
             podListBox.Items.Clear();
 
@@ -77,7 +82,7 @@ namespace CSharpProject.Views
 
                     if (RSSName != null)
                     {
-                        CreateXMLFile(xmlText.Result, RSSName);
+                        podcast.AddNewPodcast(xmlText.Result, RSSName);
                     }
 
                 }
@@ -89,35 +94,10 @@ namespace CSharpProject.Views
             }
         }
 
-
         public void ClearAllFields() //method to reset the app upon successful podcast add
         {
             RSSTextBox.Text = "";
             RSSNameTextBox.Text = "";
-        }
-
-        public void CreateXMLFile(String content, String name)
-        {
-            if (content != null)
-            {
-                String path = (Environment.CurrentDirectory + "\\XML-folder"); // Path to a folder containing all XML files in the project directory
-
-                if (Directory.Exists(path) == false)
-                {
-                    Directory.CreateDirectory(path);
-                }
-                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
-
-                if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
-                {
-                    File.AppendAllText(path, content);
-                }
-                else
-                {
-                    MessageBox.Show("A podcast with that name already exist");
-                }
-            }
-            
         }
 
         public async Task<string> DownloadString(string url) //method to get all the data from an RSS feed
