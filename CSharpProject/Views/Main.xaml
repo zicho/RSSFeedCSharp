@@ -38,7 +38,7 @@
                     Category:
                 </Label>
 
-                <ComboBox x:Name="CategoryBox" Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBox x:Name="categoryComboBox" Grid.Column="1" HorizontalAlignment="Left" Width="165" Margin="0,1,0,-1" SelectionChanged="ComboBox_SelectionChanged">
                     <ComboBoxItem>Uncategorized</ComboBoxItem>
                     <ComboBoxItem>Data Stuff</ComboBoxItem>
                     <ComboBoxItem>Add new...</ComboBoxItem>
@@ -61,12 +61,16 @@
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="120*" />
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="120*" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0">Channel:</Label>
-                <ComboBox Grid.Column="1" HorizontalAlignment="right" x:Name="ChannelCBox" Width="280" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0">
+                <Label Grid.Column="0" Content="Category:"/>
+                <ComboBox Grid.Column="1" HorizontalAlignment="right" x:Name="categoryFilterBox" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" Width="120">
+                    <ComboBoxItem>All</ComboBoxItem>
+                </ComboBox>
+                <Label Grid.Column="2" Content="Feed:"/>
+                <ComboBox Grid.Column="3" HorizontalAlignment="right" x:Name="feedComboBox" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" Width="120">
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
             </Grid>

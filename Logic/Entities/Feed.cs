@@ -11,9 +11,8 @@ namespace Logic.Entities
         public String Name { get; set; }
         public String URL { get; set; }
         public String UpdateInterval { get; set; }
-        public List<FeedItem> Items { get; set; }
-
-        
+        // public List<FeedItem> Items { get; set; } USE THIS??????????????
+        public static List<Feed> FeedList = new List<Feed>();
 
         public void AddNewFeed(String url, String name)
         {
@@ -27,6 +26,7 @@ namespace Logic.Entities
                 {
                     Directory.CreateDirectory(path);
                 }
+
                 path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
 
                 if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
@@ -36,6 +36,7 @@ namespace Logic.Entities
                     feed.Filepath = ($@"{path}/{name}.xml"); // append the PATH to the XML. This is useful for deleting items directly from the XML file.
                     feed.Name = name;
                     feed.URL = url;
+                    FeedList.Add(feed);
                 }
                 }
             }

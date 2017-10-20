@@ -17,9 +17,13 @@ namespace CSharpProject.Views
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
+        // COMPLETE LISTS OF FEEDS AND FEED ITEMS 
+        public List<Feed> feedList = Logic.Entities.Feed.FeedList;
         public List<FeedItem> feedItemList = Logic.Entities.FeedItem.FeedItemList;
-        public Logic.Entities.Feed feed = new Feed();
+        public List<Category> categoryList = Logic.Entities.Category.CategoryList;
 
+        public Logic.Entities.Feed feed = new Feed();
+        public Logic.Entities.Category category = new Category();
         public Logic.Entities.FeedItem feedItem = new FeedItem();
 
         public MainWindow()
@@ -29,14 +33,14 @@ namespace CSharpProject.Views
             validator.Add(new LengthValidator(3));
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
-            CategoryBox.SelectedIndex = 0;
-            IntervalBox.SelectedIndex = 0;
-
+            
             //podListBox.Items.Clear();
 
             InitializeComboBoxes();
 
             //Logic.Podcast.FillPodcastList();
+
+            
 
             FeedItem.FillItemList();
             RefreshPodcastList();
@@ -62,13 +66,38 @@ namespace CSharpProject.Views
         }
         private void InitializeComboBoxes() //method to add data to comboboxes
         {
-            LoadChannels lc = new LoadChannels();
-            List<String> allXMLFiles = lc.GetAllXMLFiles();
-            foreach(String f in allXMLFiles)
+            feedComboBox.Items.Clear();
+            categoryComboBox.Items.Clear();
+
+            categoryFilterBox.Items.Clear();
+
+            category.LoadCategories();
+
+            foreach (var category in categoryList)
             {
-                var fileName = f.Split('\\');
-                ChannelCBox.Items.Add(fileName[fileName.Length - 1]);
+                categoryFilterBox.Items.Add(category.Name);
+                categoryComboBox.Items.Add(category.Name);
+                
             }
+
+            categoryComboBox.SelectedIndex = 0;
+            IntervalBox.SelectedIndex = 0;
+            categoryFilterBox.SelectedIndex = 0;
+            categoryComboBox.Items.Add("Add new...");
+
+            //foreach (var feed in feedList)
+            //{
+            //    Console.WriteLine(feed.Name);
+            //}
+
+
+
+            //LoadChannels lc = new LoadChannels();
+            //List<String> allXMLFiles = lc.GetAllXMLFiles();
+            //foreach(String f in allXMLFiles)
+            //{
+            //    var fileName = f.Split('\\');
+            //    ChannelCBox.Items.Add(fileName[fileName.Length - 1]);     
             //allXMLFiles.ForEach(i => ChannelCBox.Items.Add(i));
             //lc.GetAllChannels();
             //List<Channel> allChannels = lc.GetAllChannels();
@@ -80,7 +109,7 @@ namespace CSharpProject.Views
             {
                 validator.Validate(RSSTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 validator.Validate(RSSNameTextBox.Text, "Name");
-                boxValidator.Validate(CategoryBox.SelectedIndex, "category");
+                boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(IntervalBox.SelectedIndex, "download interval");
 
                 Task<String> RSS_URL = DownloadString(RSSTextBox.Text);
