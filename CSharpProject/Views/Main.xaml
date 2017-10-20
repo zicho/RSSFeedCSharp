@@ -92,7 +92,7 @@
                     <ColumnDefinition Width="41*"/>
                     <ColumnDefinition Width="125*" />
                 </Grid.ColumnDefinitions>
-                <Button Content="Listen" Grid.Column="0"/>
+                <Button Content="Listen" Grid.Column="0" Click="Button_Click_1"/>
                 <Button Content="Remove" Grid.Column="3"/>
             </Grid>
 
