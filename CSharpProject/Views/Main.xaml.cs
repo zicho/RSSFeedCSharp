@@ -112,7 +112,9 @@ namespace CSharpProject.Views
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(IntervalBox.SelectedIndex, "download interval");
 
-                Task<String> RSS_URL = DownloadString(RSSTextBox.Text);
+                var text = "";
+
+                Task<String> RSS_URL = feed.DownloadFeed(RSSTextBox.Text, text);
                 String RSS_Name = RSSNameTextBox.Text;
                 await RSS_URL; //detta är väl useless i detta fallet men ville testa hur det funkade
 
@@ -141,28 +143,7 @@ namespace CSharpProject.Views
             RSSNameTextBox.Text = "";
         }
 
-        public async Task<string> DownloadString(string url) //method to get all the data from an RSS feed
-        {
-            return await Task.Run(() =>
-                {
-                    String text = null;
-
-                    using (var client = new System.Net.WebClient())
-                    {
-                        try
-                        {
-                            client.Encoding = Encoding.UTF8;
-                            text = client.DownloadString(url);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error adding podcast: " + ex.Message);
-                        }  
-                    }
-                    return text;
-                });
-
-        }
+       
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {

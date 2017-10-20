@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Logic.Entities
@@ -14,6 +16,7 @@ namespace Logic.Entities
         public int UpdateInterval { get; set; }
         public DateTime LastUpdated { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
+
         public static List<Feed> FeedList = new List<Feed>();
 
 
@@ -44,33 +47,16 @@ namespace Logic.Entities
                     feed.LastUpdated = DateTime.Now;
                     FeedList.Add(feed);
                 }
-                //using (var client = new System.Net.WebClient())
-                //{
-                //    client.Encoding = Encoding.UTF8;
-                //    xml = client.DownloadString("https://filmdrunk.podbean.com/feed/");
-                //}
-
-                ////Skapa en objektrepresentation.
-                //var dom = new System.Xml.XmlDocument();
-                //dom.LoadXml(xml);
-
-                ////Iterera igenom elementet item.
-                //foreach (System.Xml.XmlNode item
-                //   in dom.DocumentElement.SelectNodes("channel/item"))
-                //{
-                //    //Skriv ut dess titel.
-
-                //    Entities.FeedItem feedItem = new Entities.FeedItem();
-
-                //    var title = item.SelectSingleNode("title");
-                //    var link = item.SelectSingleNode("enclosure/@url");
-                //    Console.WriteLine(item);
-
-                //    feedItem.Title = title.InnerText.ToString();
-                //    feedItem.Link = link.InnerText.ToString();
-                //    Entities.FeedItem.FeedItemList.Add(feedItem);
-                //}
             }
+        }
+
+        public async Task<String> DownloadFeed(string url, string text)
+        {
+            return await Task.Run(async () =>
+            {
+                Writer writer = new Writer();
+                return await writer.DownloadURL(url);
+            });
         }
 
         public void ShallFeedBeUpdated(Feed feed)

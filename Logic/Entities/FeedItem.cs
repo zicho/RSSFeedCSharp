@@ -37,7 +37,6 @@ namespace Logic.Entities
                 }
             }
             
-
         }
 
         public void playItem(string link)
