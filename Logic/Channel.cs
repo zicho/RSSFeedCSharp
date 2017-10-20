@@ -30,7 +30,7 @@ namespace Logic
             DateTime updateDate = lastUpdated.AddDays(updateInterval);
             
             if(DateTime.Now.Equals(updateDate)) {
-                Podcast.FillPodcastList();
+                //Podcast.FillPodcastList();
             }
             lastUpdated = DateTime.Now.AddDays(updateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
         }
