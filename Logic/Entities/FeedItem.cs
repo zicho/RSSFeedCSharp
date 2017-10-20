@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Logic.Entities
 {
-    
+
     public class FeedItem
     {
         public static List<FeedItem> FeedItemList = new List<FeedItem>();
@@ -11,9 +11,9 @@ namespace Logic.Entities
         public string Title { get; set; }
         public string Link { get; set; }
 
-        public List<FeedItem> getFeedItems()
+        public void playItem(string link)
         {
-            return FeedItemList;
+            System.Diagnostics.Process.Start(link);
         }
     }
 }
