@@ -162,7 +162,7 @@ namespace CSharpProject.Views
 
                 */
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast");
-                System.Diagnostics.Process.Start(@feedItemList[podListBox.SelectedIndex].Link.ToString());
+                feedItem.playItem(@feedItemList[podListBox.SelectedIndex].Link.ToString());
             }
             catch (Exception ex)
             {

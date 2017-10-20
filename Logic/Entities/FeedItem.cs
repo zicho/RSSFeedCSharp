@@ -10,5 +10,10 @@ namespace Logic.Entities
         public string Id { get; set; }
         public string Title { get; set; }
         public string Link { get; set; }
+
+        public void playItem(string link)
+        {
+            System.Diagnostics.Process.Start(link);
+        }
     }
 }
