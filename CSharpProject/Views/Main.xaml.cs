@@ -2,6 +2,9 @@
 using System.Text;
 using System.Windows;
 using System.IO;
+using System.Threading.Tasks;
+using Logic;
+using System.Collections.Generic;
 
 namespace CSharpProject.Views
 {
@@ -9,10 +12,11 @@ namespace CSharpProject.Views
     {
         public MainWindow()
         {
-            
+
             InitializeComponent();
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
             podListBox.Items.Clear();
+            InitializeComboBoxes();
 
             var xml = "";
             using (var client = new System.Net.WebClient())
@@ -40,24 +44,50 @@ namespace CSharpProject.Views
         {
 
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void InitializeComboBoxes() //method to add data to comboboxes
         {
-            String xmlText = DownloadString(RSSTextBox.Text);
+            LoadChannels lc = new LoadChannels();
+            List<String> allXMLFiles = lc.GetAllXMLFiles();
+            foreach(String f in allXMLFiles)
+            {
+                var fileName = f.Split('\\');
+                ChannelCBox.Items.Add(fileName[fileName.Length - 1]);
+            }
+            //allXMLFiles.ForEach(i => ChannelCBox.Items.Add(i));
+            //lc.GetAllChannels();
+            //List<Channel> allChannels = lc.GetAllChannels();
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Task<String> xmlText = DownloadString(RSSTextBox.Text);
+            String RSSName = RSSNameTextBox.Text;
+            ClearAllFields();
+            await xmlText; //detta är väl useless i detta fallet men ville testa hur det funkade
+
             if (xmlText != null)
             {
-                String RSSName = RSSNameTextBox.Text;
+                
                 if (RSSName != null)
                 {
-                    CreateXMLFile(xmlText,RSSName);
+                    CreateXMLFile(xmlText.Result, RSSName);
+                    
                 }
-                
+
             }
+        }
+
+        public void ClearAllFields() //method to reset the app upon successful podcast add
+        {
+            RSSTextBox.Text = "";
+            RSSNameTextBox.Text = "";
         }
 
         public void CreateXMLFile(String content, String name)
         {
-            String path = (Environment.CurrentDirectory +"\\XML-folder"); //Path to a folder containing all XML files in the project directory
+            if (content != null)
+            {
+            String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
             if (Directory.Exists(path) == false)
             {
                 Directory.CreateDirectory(path);
@@ -72,22 +102,33 @@ namespace CSharpProject.Views
             {
                 MessageBox.Show("A podcast with that name already exist");
             }
-            
-
-            
-        }
-
-        public string DownloadString(string url) //method to get all the data from an RSS feed
-        {
-            string text;
-            using (var client = new System.Net.WebClient())
-            {
-                text = client.DownloadString(url);
             }
-            return text;
+            
         }
 
-            private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        public async Task<string> DownloadString(string url) //method to get all the data from an RSS feed
+        {
+            return await Task.Run(() =>
+                {
+                    String text = null;
+                    using (var client = new System.Net.WebClient())
+                    {
+                        try
+                        {
+                            text = client.DownloadString(url);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Error adding podcast");
+                        }
+                        
+                    }
+                    return text;
+                });
+
+        }
+
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
 
         }
