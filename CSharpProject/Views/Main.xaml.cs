@@ -102,22 +102,22 @@ namespace CSharpProject.Views
         {
             if (content != null)
             {
-            String path = (Environment.CurrentDirectory + "\\XML-folder"); // Path to a folder containing all XML files in the project directory
+                String path = (Environment.CurrentDirectory + "\\XML-folder"); // Path to a folder containing all XML files in the project directory
 
-            if (Directory.Exists(path) == false)
-            {
-                Directory.CreateDirectory(path);
-            }
-            path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+                if (Directory.Exists(path) == false)
+                {
+                    Directory.CreateDirectory(path);
+                }
+                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
 
-            if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
-            {
-                File.AppendAllText(path, content);
-            }
-            else
-            {
-                MessageBox.Show("A podcast with that name already exist");
-            }
+                if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
+                {
+                    File.AppendAllText(path, content);
+                }
+                else
+                {
+                    MessageBox.Show("A podcast with that name already exist");
+                }
             }
             
         }
@@ -145,6 +145,11 @@ namespace CSharpProject.Views
         }
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
 
         }

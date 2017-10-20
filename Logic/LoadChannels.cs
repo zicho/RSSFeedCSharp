@@ -28,7 +28,7 @@ namespace Logic
             allFiles = allFiles.Where(name => name.EndsWith(".xml")).ToList();
             return allFiles;
         }
-
+        
         public List<Channel> GetAllChannels() //denna fungerar ej i nuläget, börjar läsa filerna men ger error
         {
             List<String> allXMLFiles = GetAllXMLFiles();
