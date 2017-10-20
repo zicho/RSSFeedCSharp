@@ -28,6 +28,13 @@ namespace Logic
             allFiles = allFiles.Where(name => name.EndsWith(".xml")).ToList();
             return allFiles;
         }
+        /*public String[] GetSpecificXMLFile(string searchWord)
+        {
+            String path = GetDirectory();
+            searchWord = searchWord+".xml";
+            string[] file = Directory.GetFiles(path, searchWord);
+            return file;
+        }*/
         
         public List<Channel> GetAllChannels() //denna fungerar ej i nuläget, börjar läsa filerna men ger error
         {
