@@ -6,74 +6,13 @@ using System.Threading.Tasks;
 using Logic;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using static Logic.Exceptions.ValidationException;
 
 namespace CSharpProject.Views
 {
     public partial class MainWindow : Window
     {
-
-        interface IValidator
-        {
-            void Validate(string input, string field);
-        }
-
-        class Validator : IValidator
-        {
-            public void Validate(string input, string field)
-            {
-                if (input.Length == 0)
-                    throw new Exception($"The field '{field}' may not be empty.");
-            }
-        }
-
-        class LengthValidator : IValidator
-        {
-            private int length;
-            public LengthValidator(int length)
-            {
-                this.length = length;
-            }
-            public void Validate(string input, string field)
-            {
-                if (input.Length < length)
-                    throw new Exception($"Longer input is needed for field '{field}'. (At least three symbols)");
-            }
-        }
-
-        class URLValidator : IValidator
-        {
-            public void Validate(string input, string field)
-            {
-                if (input.Length == 0)
-                    throw new Exception($"The field '{field}' may not be empty.");
-                
-                Uri validatedUri;
-
-                if (Uri.TryCreate(input, UriKind.RelativeOrAbsolute, out validatedUri))
-                {
-                    throw new Exception($"Entry of field '{field}' is not a valid URL.");
-                }
-            }
-        }
-
-        class ValidatorList : List<IValidator>
-        {
-            public void Validate(string input, string field)
-            {
-                foreach (var validator in this)
-                {
-                    validator.Validate(input, field);
-                }
-            }
-
-            public void Validate(string input, string field, bool url)
-            {
-                URLValidator urlValidator = new URLValidator();
-                urlValidator.Validate(input, field);
-            }
-        }
-
-        private ValidatorList validator = new ValidatorList();
+        public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
 
         public MainWindow()
         {
