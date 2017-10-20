@@ -42,15 +42,5 @@ namespace Logic.Entities
                 }
         }
 
-        public void LoadFeeds()
-        {
-            String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
-
-            string[] files = System.IO.Directory.GetFiles(path, "*.xml");
-
-            foreach (string file in files)
-                file
-        }
-
         }
     }
