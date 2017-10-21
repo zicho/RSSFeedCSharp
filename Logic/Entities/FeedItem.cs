@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -17,26 +18,27 @@ namespace Logic.Entities
         public static void FillItemList()
         {
             String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
-
-            string[] files = System.IO.Directory.GetFiles(path, "*.xml");
-
-            foreach(var file in files)
+            if (Directory.Exists(path))
             {
-                var xmlDocument = XDocument.Load(file);
-                var items = xmlDocument.Descendants("item");
+                string[] files = System.IO.Directory.GetFiles(path, "*.xml");
 
-                var feedItems = items.Select(element => new FeedItem
+                foreach (var file in files)
                 {
-                    Title = element.Descendants("title").Single().Value,
-                    Link = element.Descendants("enclosure").Single().Attribute("url").Value
-                });
+                    var xmlDocument = XDocument.Load(file);
+                    var items = xmlDocument.Descendants("item");
 
-                foreach (var feedItem in feedItems)
-                {
-                    FeedItemList.Add(feedItem);
+                    var feedItems = items.Select(element => new FeedItem
+                    {
+                        Title = element.Descendants("title").Single().Value,
+                        Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                    });
+
+                    foreach (var feedItem in feedItems)
+                    {
+                        FeedItemList.Add(feedItem);
+                    }
                 }
-            }
-            
+            } 
         }
 
         public void playItem(string link)

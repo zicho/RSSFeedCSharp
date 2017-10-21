@@ -181,9 +181,13 @@ namespace CSharpProject.Views
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             try { 
-            boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
+                boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
                 feedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
                 podListBox.Items.Remove(podListBox.SelectedItem); // remove from listbox
+
+                //String path = (Environment.CurrentDirectory + "\\XML-folder");
+                //path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+
             }
             catch (Exception ex)
             {

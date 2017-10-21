@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -15,19 +16,21 @@ namespace Logic.Entities
         public void LoadCategories()
         {
             String path = (Environment.CurrentDirectory + "/categories.xml"); // Path to base folder
-
-            var xmlDocument = XDocument.Load(path);
-            var categories = xmlDocument.Descendants("category");
-
-            var categoryList = categories.Select(element => new Category
+            if (Directory.Exists(path))
             {
-                Name = element.Descendants("name").Single().Value,
-            });
+                var xmlDocument = XDocument.Load(path);
+                var categories = xmlDocument.Descendants("category");
 
-            foreach (var category in categoryList)
-            {
-                CategoryList.Add(category);
-            }
+                var categoryList = categories.Select(element => new Category
+                {
+                    Name = element.Descendants("name").Single().Value,
+                });
+
+                foreach (var category in categoryList)
+                {
+                    CategoryList.Add(category);
+                }
+            } 
         }
     }
 }
