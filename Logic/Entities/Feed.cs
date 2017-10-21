@@ -18,8 +18,6 @@ namespace Logic.Entities
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
-
-
        
         public void AddNewFeed(String url, String name, String updateInterval)
         {
