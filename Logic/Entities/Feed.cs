@@ -15,11 +15,12 @@ namespace Logic.Entities
         public String URL { get; set; }
         public int UpdateInterval { get; set; }
         public DateTime LastUpdated { get; set; }
+        public Category Category { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
        
-        public void AddNewFeed(String url, String name, String updateInterval)
+        public void AddNewFeed(String url, String name, String updateInterval, String category)
         {
             if (url != null)
             {
@@ -44,6 +45,7 @@ namespace Logic.Entities
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     FeedList.Add(feed);
+                    feed.Category.Name = category;
                 }
             }
         }

@@ -122,11 +122,12 @@ namespace CSharpProject.Views
 
                 // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
+                var categoryName = categoryComboBox.SelectedValue.ToString();
                 if (RSS_URL != null)
                 {
                     if (RSS_Name != null)
                     {
-                        feed.AddNewFeed(RSS_URL.Result, RSS_Name, updateInterval);
+                        feed.AddNewFeed(RSS_URL.Result, RSS_Name, updateInterval, categoryName);
                     }
                 }
 
@@ -155,6 +156,10 @@ namespace CSharpProject.Views
                 AddCategoryWindow.Show();
                 categoryComboBox.SelectedIndex = 0;
                 this.IsEnabled = false;
+            }
+            else
+            {
+
             }
             /*LoadChannels lc = new LoadChannels();
             string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());

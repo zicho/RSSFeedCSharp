@@ -15,6 +15,7 @@ namespace Logic.Entities
         public Category(String name)
         {
             this.Name = name;
+            Id = Guid.NewGuid();
         }
         public Category()
         {
