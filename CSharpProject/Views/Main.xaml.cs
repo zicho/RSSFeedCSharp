@@ -50,6 +50,8 @@ namespace CSharpProject.Views
             //}
         }
 
+
+
         private void RefreshPodcastList()
         {
             podListBox.Items.Clear();
@@ -180,10 +182,13 @@ namespace CSharpProject.Views
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            try { 
-            boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
+            try {
+                /*var feedToBeDeleted = feed.Filepath;
+                File.Delete(feedToBeDeleted);*/
+                boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
                 feedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
                 podListBox.Items.Remove(podListBox.SelectedItem); // remove from listbox
+                
             }
             catch (Exception ex)
             {
