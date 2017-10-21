@@ -65,7 +65,11 @@ namespace Logic.Entities
 
             if (DateTime.Now.Equals(updateDate))
             {
-                //feed.kollaEfterUpdates;
+               /* var name = feed.Name;
+                String path = (Environment.CurrentDirectory + "\\XML-folder");
+                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+
+                var freshFeed = File.ReadAllText(path);*/
             }
             LastUpdated = DateTime.Now.AddDays(UpdateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
         }

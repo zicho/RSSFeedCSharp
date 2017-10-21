@@ -13,10 +13,15 @@ namespace Logic.Entities
 
         public static List<Category> CategoryList = new List<Category>();
 
+        public void addCategory(string categoryName)
+        {
+
+        }
+
         public void LoadCategories()
         {
             String path = (Environment.CurrentDirectory + "/categories.xml"); // Path to base folder
-            if (Directory.Exists(path))
+            if (File.Exists(path))
             {
                 var xmlDocument = XDocument.Load(path);
                 var categories = xmlDocument.Descendants("category");
