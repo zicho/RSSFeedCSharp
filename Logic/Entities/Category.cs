@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using static Logic.Exceptions.ValidationException;
 
 namespace Logic.Entities
 {
@@ -61,6 +62,9 @@ namespace Logic.Entities
 
         public void AddCategoryToXML(String categoryName) //method to add a new category to the XML file
         {
+            CategoryValidator validator = new CategoryValidator();
+            validator.Validate(categoryName, "category");
+
             String path = (Environment.CurrentDirectory + "/categories.xml");
             var serializer = new XmlSerializer(typeof(List<Category>));
             using (var stream = new StreamWriter("categories.xml"))

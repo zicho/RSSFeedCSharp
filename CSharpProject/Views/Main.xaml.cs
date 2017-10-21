@@ -152,10 +152,17 @@ namespace CSharpProject.Views
         {
             if (categoryComboBox.SelectedIndex == categoryComboBox.Items.Count - 1 && categoryComboBox.Items.Count>1)
             {
-                AddCategory AddCategoryWindow = new AddCategory(this);
-                AddCategoryWindow.Show();
-                categoryComboBox.SelectedIndex = 0;
-                this.IsEnabled = false;
+                try
+                {
+                    AddCategory AddCategoryWindow = new AddCategory(this);
+                    AddCategoryWindow.Show();
+                    categoryComboBox.SelectedIndex = 0;
+                    this.IsEnabled = false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Category already exists");
+                }
             }
             else
             {

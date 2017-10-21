@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
 
 namespace Logic.Exceptions
 {
@@ -71,6 +73,18 @@ namespace Logic.Exceptions
                 if(index < 0)
                 {
                     throw new Exception($"Please choose a {boxname}.");
+                }
+            }
+        }
+        public class CategoryValidator : IValidator
+        {
+            public void Validate (string categoryName, string category)
+            {
+                String path = (Environment.CurrentDirectory + "/categories.xml");
+                var categoryString = File.ReadAllText(path).ToLower();
+                if (categoryString.Contains(categoryName.ToLower()))
+                {
+                    throw new Exception($"This {category} already exists.");
                 }
             }
         }
