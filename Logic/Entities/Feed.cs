@@ -18,8 +18,6 @@ namespace Logic.Entities
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
-
-
        
         public void AddNewFeed(String url, String name, String updateInterval)
         {
@@ -65,7 +63,11 @@ namespace Logic.Entities
 
             if (DateTime.Now.Equals(updateDate))
             {
-                //feed.kollaEfterUpdates;
+               /* var name = feed.Name;
+                String path = (Environment.CurrentDirectory + "\\XML-folder");
+                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+
+                var freshFeed = File.ReadAllText(path);*/
             }
             LastUpdated = DateTime.Now.AddDays(UpdateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
         }
