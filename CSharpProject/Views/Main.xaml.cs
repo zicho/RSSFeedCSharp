@@ -64,7 +64,7 @@ namespace CSharpProject.Views
         {
 
         }
-        private void InitializeComboBoxes() //method to add data to comboboxes
+        public void InitializeComboBoxes() //method to add data to comboboxes
         {
             feedComboBox.Items.Clear();
             categoryComboBox.Items.Clear();
@@ -147,6 +147,13 @@ namespace CSharpProject.Views
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            if (categoryComboBox.SelectedIndex == categoryComboBox.Items.Count - 1 && categoryComboBox.Items.Count>1)
+            {
+                AddCategory AddCategoryWindow = new AddCategory(this);
+                AddCategoryWindow.Show();
+                categoryComboBox.SelectedIndex = 0;
+                this.IsEnabled = false;
+            }
             /*LoadChannels lc = new LoadChannels();
             string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());
             podListBox.Items.Clear();

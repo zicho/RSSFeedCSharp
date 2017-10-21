@@ -1,0 +1,17 @@
+﻿<Window x:Class="CSharpProject.Views.AddCategory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CSharpProject.Views"
+        mc:Ignorable="d"
+        Title="Add Category" Height="120" Width="300"
+        ResizeMode="NoResize">
+    <Border Padding="10">
+        <StackPanel>
+            <TextBox Padding="2" x:Name="NameTxtBox" Margin="0 0 0 15" />
+            <Button Width="125" Content="Add" x:Name="AddBtn" Click="AddBtn_Click" />
+
+        </StackPanel>
+    </Border>
+</Window>
