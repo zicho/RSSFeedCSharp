@@ -20,11 +20,7 @@ namespace Logic.Entities
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
-
-        private Feed()
-        {
-            Id = Guid.NewGuid();
-        }
+        
 
         public void AddNewFeed(String url, String name, String updateInterval, String category)
         {
@@ -59,6 +55,7 @@ namespace Logic.Entities
                     using (var stream = new StreamWriter("settings.xml"))
                     {
                         Feed settingsFeed = new Feed();
+                        settingsFeed.Id = Guid.NewGuid();
                         settingsFeed.Name = name;
                         settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
                         settingsFeed.LastUpdated = DateTime.Now;
