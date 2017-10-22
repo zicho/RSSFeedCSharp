@@ -43,8 +43,6 @@ namespace CSharpProject.Views
             validator.Add(new LengthValidator(3));
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
-            
-            //podListBox.Items.Clear();
 
             InitializeComboBoxes();
 

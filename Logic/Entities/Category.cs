@@ -30,8 +30,6 @@ namespace Logic.Entities
             String path = (Environment.CurrentDirectory + "/categories.xml"); // Path to base folder
             CheckCategoryFile(path);
 
-
-
             var xmlDocument = XDocument.Load(path);
             var categories = xmlDocument.Descendants("Category");
 
@@ -74,5 +72,7 @@ namespace Logic.Entities
                 serializer.Serialize(stream, CategoryList);
             }
         }
+
+
     }
 }
