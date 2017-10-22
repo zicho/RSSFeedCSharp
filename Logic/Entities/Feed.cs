@@ -54,7 +54,7 @@ namespace Logic.Entities
                     using (var stream = new StreamWriter("settings.xml"))
                     {
                         serializer.Serialize(stream, FeedList);
-                    }
+                    }//s
                 }
             }
         }
