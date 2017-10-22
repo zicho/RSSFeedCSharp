@@ -50,9 +50,15 @@ namespace CSharpProject.Views
 
             //Logic.Podcast.FillPodcastList();
 
-            
 
-            FeedItem.FillItemList();
+            try
+            {
+                FeedItem.FillItemList();
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             RefreshPodcastList();
             
             //foreach(var item in feedItemList)
