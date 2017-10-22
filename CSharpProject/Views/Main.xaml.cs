@@ -21,13 +21,20 @@ namespace CSharpProject.Views
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
         // COMPLETE LISTS OF FEEDS AND FEED ITEMS 
-        public List<Feed> feedList = Logic.Entities.Feed.FeedList;
-        public List<FeedItem> feedItemList = Logic.Entities.FeedItem.FeedItemList;
-        public List<Category> categoryList = Logic.Entities.Category.CategoryList;
+        private List<Feed> feedList = Feed.FeedList;
+        private List<FeedItem> feedItemList = FeedItem.FeedItemList;
+        private List<Category> categoryList = Category.CategoryList;
 
-        public Logic.Entities.Feed feed = new Feed();
-        public Logic.Entities.Category category = new Category();
-        public Logic.Entities.FeedItem feedItem = new FeedItem();
+        private Feed feed = new Feed();
+        private Category category = new Category();
+        private FeedItem feedItem = new FeedItem();
+
+        public List<Feed> FeedList { get => feedList; set => feedList = value; }
+        public List<FeedItem> FeedItemList { get => feedItemList; set => feedItemList = value; }
+        public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
+        public Feed Feed { get => feed; set => feed = value; }
+        public Category Category { get => category; set => category = value; }
+        public FeedItem FeedItem { get => feedItem; set => feedItem = value; }
 
         public MainWindow()
         {
@@ -57,7 +64,7 @@ namespace CSharpProject.Views
         private void RefreshPodcastList()
         {
             podListBox.Items.Clear();
-            foreach(var item in feedItemList)
+            foreach(var item in FeedItemList)
             {
                 item.isDownloaded = item.CheckIfDownloaded(item.Title);
                 podListBox.Items.Add(item);
@@ -76,9 +83,9 @@ namespace CSharpProject.Views
 
             categoryFilterBox.Items.Clear();
 
-            category.LoadCategories();
+            Category.LoadCategories();
 
-            foreach (var category in categoryList)
+            foreach (var category in CategoryList)
             {
                 categoryFilterBox.Items.Add(category.Name);
                 categoryComboBox.Items.Add(category.Name);
@@ -119,7 +126,7 @@ namespace CSharpProject.Views
 
                 var text = "";
 
-                Task<String> RSS_URL = feed.DownloadFeed(RSSTextBox.Text, text);
+                Task<String> RSS_URL = Feed.DownloadFeed(RSSTextBox.Text, text);
                 String RSS_Name = RSSNameTextBox.Text;
                 await RSS_URL; //detta är väl useless i detta fallet men ville testa hur det funkade
 
@@ -130,7 +137,7 @@ namespace CSharpProject.Views
                 {
                     if (RSS_Name != null)
                     {
-                        feed.AddNewFeed(RSS_URL.Result, RSS_Name, updateInterval, categoryName);
+                        Feed.AddNewFeed(RSS_URL.Result, RSS_Name, updateInterval, categoryName);
                     }
                 }
 
@@ -194,7 +201,7 @@ namespace CSharpProject.Views
 
                 */
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast");
-                feedItem.playItem(@feedItemList[podListBox.SelectedIndex].Link.ToString());
+                FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
             }
             catch (Exception ex)
             {
@@ -208,7 +215,7 @@ namespace CSharpProject.Views
                 /*var feedToBeDeleted = feed.Filepath;
                 File.Delete(feedToBeDeleted);*/
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
-                feedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
+                FeedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
                 podListBox.Items.Remove(podListBox.SelectedItem); // remove from listbox
                 
             }

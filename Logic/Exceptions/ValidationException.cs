@@ -82,9 +82,15 @@ namespace Logic.Exceptions
             {
                 String path = (Environment.CurrentDirectory + "/categories.xml");
                 var categoryString = File.ReadAllText(path).ToLower();
+
+                if (string.IsNullOrEmpty(categoryString))
+                {
+                    throw new Exception($"Please enter a name.");
+                }
+
                 if (categoryString.Contains(categoryName.ToLower()))
                 {
-                    throw new Exception($"This {category} already exists.");
+                    throw new Exception($"This category name already exists.");
                 }
             }
         }

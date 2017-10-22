@@ -8,10 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Logic.Entities;
+using static Logic.Exceptions.ValidationException;
 
 namespace CSharpProject.Views
 {
@@ -20,6 +18,9 @@ namespace CSharpProject.Views
     /// </summary>
     public partial class AddCategory : Window
     {
+
+        private CategoryValidator categoryValidator = new CategoryValidator();
+
         public AddCategory(MainWindow main)
         {
             
@@ -30,14 +31,23 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
         }
 
+        public CategoryValidator CategoryValidator { get => categoryValidator; set => categoryValidator = value; }
+
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            Category c = new Category();
 
-            //TODO validate category
+            try
+            {
+                categoryValidator.Validate(NameTxtBox.Text, "Category");
 
-            c.AddCategoryToXML(NameTxtBox.Text);
-            this.Close();
+                Category c = new Category();
+                c.AddCategoryToXML(NameTxtBox.Text);
+                this.Close();
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Input error");
+            }
+
         }
     }
 }
