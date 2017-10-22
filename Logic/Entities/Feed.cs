@@ -20,7 +20,7 @@ namespace Logic.Entities
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
-        
+        public static List<Feed> SettingsList = new List<Feed>();
 
         public void AddNewFeed(String url, String name, String updateInterval, String category)
         {
@@ -49,8 +49,7 @@ namespace Logic.Entities
                     feed.Category = category;
                     // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
                     FeedList.Add(feed);
-
-                    //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+                    
                     var serializer = new XmlSerializer(typeof(Feed));
                     using (var stream = new StreamWriter("settings.xml"))
                     {
