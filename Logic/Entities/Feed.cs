@@ -21,6 +21,11 @@ namespace Logic.Entities
 
         public static List<Feed> FeedList = new List<Feed>();
 
+        private Feed()
+        {
+            Id = Guid.NewGuid();
+        }
+
         public void AddNewFeed(String url, String name, String updateInterval, String category)
         {
             if (url != null)
@@ -49,12 +54,17 @@ namespace Logic.Entities
                     // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
                     FeedList.Add(feed);
 
-                    String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
-                    var serializer = new XmlSerializer(typeof(List<Feed>));
+                    //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+                    var serializer = new XmlSerializer(typeof(Feed));
                     using (var stream = new StreamWriter("settings.xml"))
                     {
-                        serializer.Serialize(stream, FeedList);
-                    }//s
+                        Feed settingsFeed = new Feed();
+                        settingsFeed.Name = name;
+                        settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
+                        settingsFeed.LastUpdated = DateTime.Now;
+                        settingsFeed.Category = category;
+                        serializer.Serialize(stream, settingsFeed);
+                    }
                 }
             }
         }

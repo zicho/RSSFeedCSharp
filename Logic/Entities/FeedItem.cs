@@ -72,7 +72,7 @@ namespace Logic.Entities
                 String[] pod2 = pod.Split('\\');
                     if (podcastUrl.Equals(pod2[pod2.Length-1]))
                     {
-                    return true;
+                        return true;
                     }
             }
             return false;
