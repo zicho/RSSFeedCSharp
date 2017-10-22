@@ -55,19 +55,22 @@ namespace Logic.Entities
             } 
         }
 
-        public bool CheckIfDownloaded(string podcastTitle) //måste ändras
+        public bool CheckIfDownloaded(string podcastUrl)
         {
             XMLLogic xl = new XMLLogic();
 
-            String path = xl.GetPodcastDirectory();
+            string path = xl.GetPodcastDirectory();
+
+            string[] fileName = podcastUrl.Split('/');
+
+            podcastUrl = fileName[fileName.Length - 1];
 
             string[] podcasts = System.IO.Directory.GetFiles(path, "*.mp3");
 
             foreach (string pod in podcasts)
                 {
                 String[] pod2 = pod.Split('\\');
-                String[] pod3 = pod2[pod2.Length-1].Split('.');
-                    if (podcastTitle.Equals(pod3[0]))
+                    if (podcastUrl.Equals(pod2[pod2.Length-1]))
                     {
                     return true;
                     }

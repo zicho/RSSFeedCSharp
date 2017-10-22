@@ -72,7 +72,7 @@ namespace CSharpProject.Views
             podListBox.Items.Clear();
             foreach(var item in FeedItemList)
             {
-                item.isDownloaded = item.CheckIfDownloaded(item.Title);
+                item.isDownloaded = item.CheckIfDownloaded(item.Link);
                 podListBox.Items.Add(item);
             }
 
