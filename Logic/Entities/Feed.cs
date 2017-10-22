@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Logic.Entities
 {
@@ -15,7 +16,7 @@ namespace Logic.Entities
         public String URL { get; set; }
         public int UpdateInterval { get; set; }
         public DateTime LastUpdated { get; set; }
-        public Category Category { get; set; }
+        public string Category { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
@@ -44,8 +45,16 @@ namespace Logic.Entities
                     feed.URL = url;
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
+                    feed.Category = category;
                     // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
                     FeedList.Add(feed);
+
+                    String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+                    var serializer = new XmlSerializer(typeof(List<Feed>));
+                    using (var stream = new StreamWriter("settings.xml"))
+                    {
+                        serializer.Serialize(stream, FeedList);
+                    }
                 }
             }
         }
