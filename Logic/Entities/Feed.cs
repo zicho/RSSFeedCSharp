@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -20,7 +21,7 @@ namespace Logic.Entities
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
 
         public static List<Feed> FeedList = new List<Feed>();
-        
+        public static List<Feed> SettingsList = new List<Feed>();
 
         public void AddNewFeed(String url, String name, String updateInterval, String category)
         {
@@ -48,7 +49,7 @@ namespace Logic.Entities
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
                     // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
-                    
+                    FeedList.Add(feed);
 
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
@@ -82,17 +83,20 @@ namespace Logic.Entities
 
         public void ShallFeedBeUpdated(Feed feed)
         {
-            DateTime updateDate = LastUpdated.AddDays(feed.UpdateInterval);
+            String path = (Environment.CurrentDirectory + "/settings.xml");
+            var settingsDoc = XDocument.Load(path);
+            var updateInterval = settingsDoc.Descendants("UpdateInterval").Single().Value;
+            DateTime lastUpdated = DateTime.Parse(settingsDoc.Descendants("LastUpdated").Single().Value);
+            var updateIntervalAsInt = Int32.Parse(updateInterval);
+            DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
 
-            if (DateTime.Now.Equals(updateDate))
+            if (DateTime.Now.Equals(updateDueDate))
             {
-               /* var name = feed.Name;
-                String path = (Environment.CurrentDirectory + "\\XML-folder");
-                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+                //ladda ner
+                var lastUpdatedSettings = settingsDoc.Element("LastUpdated");
 
-                var freshFeed = File.ReadAllText(path);*/
+                lastUpdatedSettings.Value = DateTime.Now.ToString();
             }
-            LastUpdated = DateTime.Now.AddDays(UpdateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
         }
     }
 }
