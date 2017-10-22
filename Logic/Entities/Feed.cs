@@ -49,7 +49,7 @@ namespace Logic.Entities
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
                     // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
-                    FeedList.Add(feed);
+                    //FeedList.Add(feed);
 
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
@@ -96,6 +96,7 @@ namespace Logic.Entities
                 var lastUpdatedSettings = settingsDoc.Element("LastUpdated");
 
                 lastUpdatedSettings.Value = DateTime.Now.ToString();
+                settingsDoc.Save(path);
             }
         }
     }
