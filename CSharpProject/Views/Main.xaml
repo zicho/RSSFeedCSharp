@@ -74,21 +74,30 @@
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
             </Grid>
-            <ListBox x:Name="podListBox" Height="200" Margin="0 0 0 10">
-                <ListBoxItem>Podcast 1</ListBoxItem>
-                <ListBoxItem>Podcast 2</ListBoxItem>
-                <ListBoxItem>Podcast 3</ListBoxItem>
-                <ListBoxItem>Podcast 4</ListBoxItem>
-                <ListBoxItem>Podcast 5</ListBoxItem>
-                <ListBoxItem>Podcast 6</ListBoxItem>
-                <ListBoxItem>Podcast 7</ListBoxItem>
-                <ListBoxItem>Podcast 8</ListBoxItem>
-                <ListBoxItem>Podcast 9</ListBoxItem>
-                <ListBoxItem>Podcast 10</ListBoxItem>
-                <ListBoxItem>Podcast 11</ListBoxItem>
-                <ListBoxItem>Podcast 12</ListBoxItem>
+            <ListView x:Name="podListBox" Height="200" Margin="0 0 0 10">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Label x:Name="label" Width="360" Margin="0,0,5,0" HorizontalAlignment="Left">
+                            <Label.Content>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <Binding Path="Title" />
 
-            </ListBox>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding isDownloaded }" Value="True" >
+                                <Setter TargetName="label" Property="Background" Value="Green" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListViewItem>Podcast 1</ListViewItem>
+                <ListViewItem>Podcast 2</ListViewItem>
+            </ListView>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

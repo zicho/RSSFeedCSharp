@@ -9,11 +9,20 @@ using Data;
 
 namespace Logic
 {
-    public class LoadChannels
+    public class XMLLogic
     {
-        public String GetDirectory() //gets the directory of the project
+        public String GetXMLDirectory() //gets the directory of the project
         {
             String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
+            if (Directory.Exists(path) == false)
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
+        public String GetPodcastDirectory() //gets the directory of the project
+        {
+            String path = (Environment.CurrentDirectory + "\\Podcasts"); //Path to a folder containing all XML files in the project directory
             if (Directory.Exists(path) == false)
             {
                 Directory.CreateDirectory(path);
@@ -23,7 +32,7 @@ namespace Logic
 
         public List<String> GetAllXMLFiles() //gets a list of strings of the pathway to all the xml files in the directory
         {
-            String path = GetDirectory();
+            String path = GetXMLDirectory();
             List<String> allFiles = new List<String>();
             allFiles = Directory.GetFiles(path).ToList();
             allFiles = allFiles.Where(name => name.EndsWith(".xml")).ToList();
@@ -53,6 +62,8 @@ namespace Logic
             }
             return allChannels;
         }
+
+        
         /*public List<Podcast> GetAllPodcasts(String channelName)
         {
 

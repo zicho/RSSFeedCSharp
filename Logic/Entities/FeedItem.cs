@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,13 @@ using System.Xml.Linq;
 namespace Logic.Entities
 {
 
-    public class FeedItem
+    public class FeedItem : INotifyPropertyChanged
     {
         public static List<FeedItem> FeedItemList = new List<FeedItem>();
         public string Id { get; set; }
         public string Title { get; set; }
         public string Link { get; set; }
+        public bool isDownloaded { get; set; }
 
         public static void FillItemList()
         {
@@ -40,11 +42,40 @@ namespace Logic.Entities
                 }
             } 
         }
-        
+
+        public bool CheckIfDownloaded(string podcastTitle) //måste ändras
+        {
+            XMLLogic xl = new XMLLogic();
+
+            String path = xl.GetPodcastDirectory();
+
+            string[] podcasts = System.IO.Directory.GetFiles(path, "*.mp3");
+
+            foreach (string pod in podcasts)
+                {
+                String[] pod2 = pod.Split('\\');
+                String[] pod3 = pod2[pod2.Length-1].Split('.');
+                    if (podcastTitle.Equals(pod3[0]))
+                    {
+                    return true;
+                    }
+            }
+            return false;
+        }
+
 
         public void playItem(string link)
         {
             System.Diagnostics.Process.Start(link);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
         }
     }
 }

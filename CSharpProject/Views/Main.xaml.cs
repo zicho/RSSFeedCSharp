@@ -9,11 +9,14 @@ using System.Text.RegularExpressions;
 using static Logic.Exceptions.ValidationException;
 using Logic.Entities;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Controls;
 
 namespace CSharpProject.Views
 {
     public partial class MainWindow : Window
     {
+        
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
@@ -44,20 +47,22 @@ namespace CSharpProject.Views
 
             FeedItem.FillItemList();
             RefreshPodcastList();
+            
             //foreach(var item in feedItemList)
             //{
             //    podListBox.Items.Add(item.Title);
             //}
         }
 
-
+        
 
         private void RefreshPodcastList()
         {
             podListBox.Items.Clear();
             foreach(var item in feedItemList)
             {
-                podListBox.Items.Add(item.Title);
+                item.isDownloaded = item.CheckIfDownloaded(item.Title);
+                podListBox.Items.Add(item);
             }
 
         }
