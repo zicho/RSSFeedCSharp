@@ -87,9 +87,9 @@ namespace Logic.Entities
             if (DateTime.Now.Equals(updateDueDate))
             {
                 //ladda ner
-                var lastUpdatedSettings = settingsDoc.Element("UpdateInterval");
+                var lastUpdatedSettings = settingsDoc.Element("LastUpdated");
 
-                lastUpdatedSettings.Value = DateTime.Now.AddDays(updateIntervalAsInt).ToString();
+                lastUpdatedSettings.Value = DateTime.Now.ToString();
             }
         }
     }
