@@ -15,6 +15,7 @@ namespace Logic.Entities
         public string Id { get; set; }
         public string Title { get; set; }
         public string Link { get; set; }
+        public string Parent { get; set; }
         public bool isDownloaded { get; set; }
 
         public static void FillItemList()
@@ -38,7 +39,7 @@ namespace Logic.Entities
                         var feedItems = items.Select(element => new FeedItem
                         {
                             Title = element.Descendants("title").Single().Value,
-                            Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                            Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                         });
 
                         foreach (var feedItem in feedItems)

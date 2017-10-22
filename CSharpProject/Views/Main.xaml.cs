@@ -11,6 +11,7 @@ using Logic.Entities;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace CSharpProject.Views
 {
@@ -51,7 +52,7 @@ namespace CSharpProject.Views
 
             try
             {
-                FeedItem.FillItemList();
+              FeedItem.FillItemList();
             } catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -68,6 +69,7 @@ namespace CSharpProject.Views
         private void RefreshPodcastList()
         {
             podListBox.Items.Clear();
+
             foreach(var item in FeedItemList)
             {
                 item.isDownloaded = item.CheckIfDownloaded(item.Link);

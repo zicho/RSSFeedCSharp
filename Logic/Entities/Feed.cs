@@ -48,7 +48,7 @@ namespace Logic.Entities
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
                     // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
-                    FeedList.Add(feed);
+                    
 
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
@@ -61,7 +61,11 @@ namespace Logic.Entities
                         settingsFeed.LastUpdated = DateTime.Now;
                         settingsFeed.Category = category;
                         serializer.Serialize(stream, settingsFeed);
+                        feed.Id = settingsFeed.Id; // Set the ID to the actual feed object as well
                     }
+
+                    FeedList.Add(feed); // add it to list
+                    Console.WriteLine("New feed gets id " + feed.Id);
                 }
             }
         }
