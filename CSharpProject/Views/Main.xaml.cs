@@ -54,8 +54,6 @@ namespace CSharpProject.Views
             //}
         }
 
-        
-
         private void RefreshPodcastList()
         {
             podListBox.Items.Clear();

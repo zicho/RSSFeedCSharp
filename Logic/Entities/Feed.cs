@@ -44,8 +44,8 @@ namespace Logic.Entities
                     feed.URL = url;
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
+                    // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
                     FeedList.Add(feed);
-                    feed.Category.Name = category;
                 }
             }
         }
