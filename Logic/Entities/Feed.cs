@@ -41,7 +41,7 @@ namespace Logic.Entities
                 {
                     File.AppendAllText(path, url);
                     
-                    feed.Filepath = ($@"{path}/{name}.xml"); // append the PATH to the XML. This is useful for deleting items directly from the XML file.
+                    feed.Filepath = ($@"{path}"); // append the PATH to the XML. This is useful for deleting items directly from the XML file.
                     feed.Name = name;
                     feed.URL = url;
                     feed.UpdateInterval = Int32.Parse(updateInterval);
@@ -65,7 +65,8 @@ namespace Logic.Entities
                     }
 
                     FeedList.Add(feed); // add it to list
-                    Console.WriteLine("New feed gets id " + feed.Id);
+                    Console.WriteLine("NEw feed gets path " + feed.Filepath);
+
                 }
             }
         }
