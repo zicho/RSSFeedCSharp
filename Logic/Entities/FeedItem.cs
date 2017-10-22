@@ -26,19 +26,31 @@ namespace Logic.Entities
 
                 foreach (var file in files)
                 {
-                    var xmlDocument = XDocument.Load(file);
-                    var items = xmlDocument.Descendants("item");
 
-                    var feedItems = items.Select(element => new FeedItem
-                    {
-                        Title = element.Descendants("title").Single().Value,
-                        Link = element.Descendants("enclosure").Single().Attribute("url").Value
-                    });
+                    XDocument xmlDocument;
 
-                    foreach (var feedItem in feedItems)
+                    try
                     {
-                        FeedItemList.Add(feedItem);
-                    }
+                        xmlDocument = XDocument.Load(file);
+
+                        var items = xmlDocument.Descendants("item");
+
+                        var feedItems = items.Select(element => new FeedItem
+                        {
+                            Title = element.Descendants("title").Single().Value,
+                            Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                        });
+
+                        foreach (var feedItem in feedItems)
+                        {
+                            FeedItemList.Add(feedItem);
+                        }
+
+                    } catch 
+                    {
+                        // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
+                        // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
+                    } 
                 }
             } 
         }
