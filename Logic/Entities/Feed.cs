@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -76,17 +77,20 @@ namespace Logic.Entities
 
         public void ShallFeedBeUpdated(Feed feed)
         {
-            DateTime updateDate = LastUpdated.AddDays(feed.UpdateInterval);
+            String path = (Environment.CurrentDirectory + "/settings.xml");
+            var settingsDoc = XDocument.Load(path);
+            var updateInterval = settingsDoc.Descendants("UpdateInterval").Single().Value;
+            DateTime lastUpdated = DateTime.Parse(settingsDoc.Descendants("LastUpdated").Single().Value);
+            var updateIntervalAsInt = Int32.Parse(updateInterval);
+            DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
 
-            if (DateTime.Now.Equals(updateDate))
+            if (DateTime.Now.Equals(updateDueDate))
             {
-               /* var name = feed.Name;
-                String path = (Environment.CurrentDirectory + "\\XML-folder");
-                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+                //ladda ner
+                var lastUpdatedSettings = settingsDoc.Element("UpdateInterval");
 
-                var freshFeed = File.ReadAllText(path);*/
+                lastUpdatedSettings.Value = DateTime.Now.AddDays(updateIntervalAsInt).ToString();
             }
-            LastUpdated = DateTime.Now.AddDays(UpdateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
         }
     }
 }
