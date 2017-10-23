@@ -104,7 +104,9 @@ namespace CSharpProject.Views
 
                 XDocument xmlDocument;
                 var podID = Path.GetFileNameWithoutExtension(file);
-                var podSettings /*= settings.Descendants("Feed").Where(feed => feed.Attribute("Id").Value.Equals(podID))*/;
+                var podSettings = (from podcast in settings.Descendants("Feed")
+                                   where podcast.Element("Id").Value == podID
+                                   select podcast).FirstOrDefault();
                 MessageBox.Show(podSettings.ToString());
                 try
                 {
@@ -119,7 +121,7 @@ namespace CSharpProject.Views
                         Title = element.Descendants("title").Single().Value,
                         Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                         FolderName = filePathSplit[filePathSplit.Length - 2],
-                        //Category = podSettings.Descendants("Category").Single().Value,
+                        Category = podSettings.Descendants("Category").Single().Value,
                     });
 
                     foreach (var feedItem in feedItems)

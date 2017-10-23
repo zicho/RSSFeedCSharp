@@ -19,7 +19,7 @@ namespace Logic.Entities
         public DateTime LastUpdated { get; set; }
         public string Category { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
-        //Kommentar
+        
         public static List<Feed> FeedList = new List<Feed>();
         public static List<Feed> SettingsList = new List<Feed>();
 
@@ -58,7 +58,7 @@ namespace Logic.Entities
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(List<Feed>));
                     //var settingsPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", "settings.xml");
-                    using (var stream = new StreamWriter("settings.xml")) //istället för "settings.xml"
+                    using (var stream = new StreamWriter("settings.xml"))
                     {
                         Feed settingsFeed = new Feed();
                         settingsFeed.Id = freshGuid;
@@ -91,7 +91,7 @@ namespace Logic.Entities
             var updateIntervalAsInt = Int32.Parse(updateInterval);
             DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
 
-            if (DateTime.Today.Equals(updateDueDate))
+            if (DateTime.Today >= updateDueDate)
             {
                 //ladda ner
                 var lastUpdatedSettings = settingsDoc.Element("LastUpdated");
