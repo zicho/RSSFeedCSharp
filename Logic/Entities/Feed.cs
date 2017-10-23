@@ -48,24 +48,22 @@ namespace Logic.Entities
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
-                    // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
-                    //FeedList.Add(feed);
+                    var freshGuid = Guid.NewGuid();
+                    feed.Id = freshGuid;
+                    FeedList.Add(feed);
 
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
                     using (var stream = new StreamWriter("settings.xml"))
                     {
                         Feed settingsFeed = new Feed();
-                        settingsFeed.Id = Guid.NewGuid();
+                        settingsFeed.Id = freshGuid;
                         settingsFeed.Name = name;
                         settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
                         settingsFeed.LastUpdated = DateTime.Now;
                         settingsFeed.Category = category;
                         serializer.Serialize(stream, settingsFeed);
-                        feed.Id = settingsFeed.Id; // Set the ID to the actual feed object as well
                     }
-
-                    FeedList.Add(feed); // add it to list
                 }
             }
         }
