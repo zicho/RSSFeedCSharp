@@ -221,6 +221,7 @@ namespace CSharpProject.Views
                 /*var feedToBeDeleted = feed.Filepath;
                 File.Delete(feedToBeDeleted);*/
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
+                Console.WriteLine(FeedItemList[podListBox.SelectedIndex].Parent);
                 FeedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
                 podListBox.Items.Remove(podListBox.SelectedItem); // remove from listbox
                 

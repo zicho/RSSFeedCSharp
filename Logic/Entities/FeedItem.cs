@@ -23,7 +23,7 @@ namespace Logic.Entities
             String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
             if (Directory.Exists(path))
             {
-                string[] files = System.IO.Directory.GetFiles(path, "*.xml");
+                List<Feed> files = Feed.FeedList;
 
                 foreach (var file in files)
                 {
@@ -32,7 +32,9 @@ namespace Logic.Entities
 
                     try
                     {
-                        xmlDocument = XDocument.Load(file);
+                        xmlDocument = XDocument.Load(file.Filepath);
+
+                        Console.WriteLine(file.Filepath);
 
                         var items = xmlDocument.Descendants("item");
 
@@ -40,6 +42,7 @@ namespace Logic.Entities
                         {
                             Title = element.Descendants("title").Single().Value,
                             Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                            Parent = file.Id.ToString(),
                         });
 
                         foreach (var feedItem in feedItems)
