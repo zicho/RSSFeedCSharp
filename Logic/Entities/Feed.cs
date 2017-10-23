@@ -19,7 +19,7 @@ namespace Logic.Entities
         public DateTime LastUpdated { get; set; }
         public string Category { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
-
+        //Kommentar
         public static List<Feed> FeedList = new List<Feed>();
         public static List<Feed> SettingsList = new List<Feed>();
 
@@ -38,6 +38,8 @@ namespace Logic.Entities
 
                 path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
 
+                Console.WriteLine(path);
+
                 if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
                 {
                     
@@ -49,26 +51,22 @@ namespace Logic.Entities
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
-                    // feed.Category.Name = category; Nåt buggar här, osäker på vad, kommenterar ur den så länge
-                    //FeedList.Add(feed);
-
+                    var freshGuid = Guid.NewGuid();
+                    feed.Id = freshGuid;
+                    FeedList.Add(feed);
+                    //
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
                     using (var stream = new StreamWriter("settings.xml"))
                     {
                         Feed settingsFeed = new Feed();
-                        settingsFeed.Id = Guid.NewGuid();
+                        settingsFeed.Id = freshGuid;
                         settingsFeed.Name = name;
                         settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
                         settingsFeed.LastUpdated = DateTime.Now;
                         settingsFeed.Category = category;
                         serializer.Serialize(stream, settingsFeed);
-                        feed.Id = settingsFeed.Id; // Set the ID to the actual feed object as well
                     }
-
-                    FeedList.Add(feed); // add it to list
-                    Console.WriteLine("NEw feed gets path " + feed.Filepath);
-
                 }
             }
         }

@@ -77,6 +77,18 @@ namespace CSharpProject.Views
             }
 
         }
+        private void RefreshPodcastList(string category)
+        {
+            podListBox.Items.Clear();
+
+            foreach(var item in FeedItemList)
+            {
+                if (item.Category == category)
+                    item.isDownloaded = item.CheckIfDownloaded(item.Link);
+                    podListBox.Items.Add(item);
+            }
+            
+        }
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -84,7 +96,7 @@ namespace CSharpProject.Views
         }
         public void InitializeComboBoxes() //method to add data to comboboxes
         {
-            feedComboBox.Items.Clear();
+            feedFilterBox.Items.Clear();
             categoryComboBox.Items.Clear();
 
             categoryFilterBox.Items.Clear();
@@ -94,8 +106,13 @@ namespace CSharpProject.Views
             foreach (var category in CategoryList)
             {
                 categoryFilterBox.Items.Add(category.Name);
-                categoryComboBox.Items.Add(category.Name);
-                
+                categoryComboBox.Items.Add(category.Name);   
+            }
+
+            foreach (var feed in FeedList)
+            {
+                feedFilterBox.Items.Add(feed.Name);
+                Console.WriteLine(feed);
             }
 
             categoryComboBox.SelectedIndex = 0;
@@ -182,7 +199,8 @@ namespace CSharpProject.Views
             }
             else
             {
-
+                //var category = categoryFilterBox.SelectedItem.ToString() ;
+                //RefreshPodcastList(category);
             }
             /*LoadChannels lc = new LoadChannels();
             string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());

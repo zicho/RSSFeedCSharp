@@ -70,7 +70,7 @@
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
                 <Label Grid.Column="2" Content="Feed:"/>
-                <ComboBox Grid.Column="3" HorizontalAlignment="right" x:Name="feedComboBox" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" Width="120">
+                <ComboBox Grid.Column="3" HorizontalAlignment="right" x:Name="feedFilterBox" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" Width="120">
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
             </Grid>
