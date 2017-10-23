@@ -56,7 +56,7 @@ namespace Logic.Entities
                     FeedList.Add(feed);
                    
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
-                    var serializer = new XmlSerializer(typeof(Feed));
+                    var serializer = new XmlSerializer(typeof(List<Feed>));
                     //var settingsPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", "settings.xml");
                     using (var stream = new StreamWriter("settings.xml")) //istället för "settings.xml"
                     {
@@ -66,7 +66,8 @@ namespace Logic.Entities
                         settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
                         settingsFeed.LastUpdated = DateTime.Today;
                         settingsFeed.Category = category;
-                        serializer.Serialize(stream, settingsFeed);
+                        SettingsList.Add(settingsFeed);
+                        serializer.Serialize(stream, SettingsList);
                     }
                 }
             }
