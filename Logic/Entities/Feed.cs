@@ -57,7 +57,8 @@ namespace Logic.Entities
                    
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
-                    using (var stream = new StreamWriter("settings.xml"))
+                    var settingsPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", "settings.xml");
+                    using (var stream = new StreamWriter(settingsPath)) //istället för "settings.xml"
                     {
                         Feed settingsFeed = new Feed();
                         settingsFeed.Id = freshGuid;

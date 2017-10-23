@@ -110,7 +110,7 @@ namespace CSharpProject.Views
                     var feedItems = items.Select(element => new FeedItem
                     {
                         Title = element.Descendants("title").Single().Value,
-                        Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                        Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                     });
 
                     foreach (var feedItem in feedItems)
@@ -138,17 +138,7 @@ namespace CSharpProject.Views
             }
 
         }
-        private void RefreshPodcastList(string category)
-        {
-            podListBox.Items.Clear();
-
-            foreach(var item in FeedItemList)
-            {
-                if (item.Category == category)
-                    item.isDownloaded = item.CheckIfDownloaded(item.Link);
-                    podListBox.Items.Add(item);
-            }
-        }
+        
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -259,11 +249,6 @@ namespace CSharpProject.Views
                     MessageBox.Show(ex.Message, "Category already exists");
                 }
             }
-            else
-            {
-                //var category = categoryFilterBox.SelectedItem.ToString() ;
-                //RefreshPodcastList(category);
-            }
             /*LoadChannels lc = new LoadChannels();
             string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());
             podListBox.Items.Clear();
@@ -310,6 +295,18 @@ namespace CSharpProject.Views
             {
                 MessageBox.Show(ex.Message, "No item selected!");
             }
+        }
+
+        private void feedFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //filter to selected podcast
+        }
+
+        private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            var category = categoryFilterBox.SelectedItem;
+            List<Feed> genreFiles = Feed.FeedList.Where(file => file.Category.Equals(category)).ToList();
         }
     }
 }
