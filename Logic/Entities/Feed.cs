@@ -57,14 +57,14 @@ namespace Logic.Entities
                    
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
-                    var settingsPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", "settings.xml");
-                    using (var stream = new StreamWriter(settingsPath)) //istället för "settings.xml"
+                    //var settingsPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", "settings.xml");
+                    using (var stream = new StreamWriter("settings.xml")) //istället för "settings.xml"
                     {
                         Feed settingsFeed = new Feed();
                         settingsFeed.Id = freshGuid;
                         settingsFeed.Name = name;
                         settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
-                        settingsFeed.LastUpdated = DateTime.Now;
+                        settingsFeed.LastUpdated = DateTime.Today;
                         settingsFeed.Category = category;
                         serializer.Serialize(stream, settingsFeed);
                     }
@@ -90,12 +90,12 @@ namespace Logic.Entities
             var updateIntervalAsInt = Int32.Parse(updateInterval);
             DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
 
-            if (DateTime.Now.Equals(updateDueDate))
+            if (DateTime.Today.Equals(updateDueDate))
             {
                 //ladda ner
                 var lastUpdatedSettings = settingsDoc.Element("LastUpdated");
 
-                lastUpdatedSettings.Value = DateTime.Now.ToString();
+                lastUpdatedSettings.Value = DateTime.Today.ToString();
                 settingsDoc.Save(path);
             }
         }

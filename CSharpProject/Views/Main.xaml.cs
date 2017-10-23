@@ -38,6 +38,8 @@ namespace CSharpProject.Views
         public Category Category { get => category; set => category = value; }
         public FeedItem FeedItem { get => feedItem; set => feedItem = value; }
 
+        public List<FeedItem> activeList { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,13 +54,13 @@ namespace CSharpProject.Views
 
             //Logic.Podcast.FillPodcastList();
 
-            try
-            {
-                FeedItem.FillItemList();
-            } catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //try
+            //{
+            //    FeedItem.FillItemList();
+            //} catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
 
             RefreshPodcastList();
 
@@ -117,7 +119,6 @@ namespace CSharpProject.Views
                     {
                         FeedItemList.Add(feedItem);
                     }
-
                 }
                 catch
                 {
