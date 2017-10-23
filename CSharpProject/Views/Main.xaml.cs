@@ -48,6 +48,8 @@ namespace CSharpProject.Views
 
             InitializeComboBoxes();
 
+            loadAllFeeds();
+
             //Logic.Podcast.FillPodcastList();
 
 
@@ -65,6 +67,65 @@ namespace CSharpProject.Views
             //{
             //    podListBox.Items.Add(item.Title);
             //}
+        }
+
+        private List<String> loadXML(string directory)
+        {
+            List<String> files = new List<String>();
+
+            try
+            {
+                foreach (string f in Directory.GetFiles(directory))
+                {
+                    files.Add(f);
+                }
+                foreach (string d in Directory.GetDirectories(directory))
+                {
+                    files.AddRange(loadXML(d));
+                }
+            }
+            catch (System.Exception excpt)
+            {
+                MessageBox.Show(excpt.Message);
+            }
+
+            return files;
+        }
+
+        private void loadAllFeeds()
+        {
+            String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
+            var files = loadXML(path);
+
+            foreach (var file in files)
+            {
+
+                XDocument xmlDocument;
+
+                try
+                {
+                    xmlDocument = XDocument.Load(file);
+
+                    var items = xmlDocument.Descendants("item");
+
+                    var feedItems = items.Select(element => new FeedItem
+                    {
+                        Title = element.Descendants("title").Single().Value,
+                        Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                    });
+
+                    foreach (var feedItem in feedItems)
+                    {
+                        FeedItemList.Add(feedItem);
+                    }
+
+                }
+                catch
+                {
+                    // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
+                    // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
+                }
+            }
         }
 
         private void RefreshPodcastList()

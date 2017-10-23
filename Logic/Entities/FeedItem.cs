@@ -21,9 +21,7 @@ namespace Logic.Entities
 
         public static void FillItemList()
         {
-            String path = (Environment.CurrentDirectory + "\\XML-folder"); //Path to a folder containing all XML files in the project directory
-            if (Directory.Exists(path))
-            {
+
                 List<Feed> files = Feed.FeedList;
 
                 foreach (var file in files)
@@ -56,9 +54,7 @@ namespace Logic.Entities
                         // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                     } 
                 }
-            } 
-        }
-        
+            }    
 
         public bool CheckIfDownloaded(string podcastUrl)
         {
