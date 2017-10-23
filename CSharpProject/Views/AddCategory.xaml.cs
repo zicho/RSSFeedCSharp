@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Logic.Entities;
+using Logic.Exceptions;
 using static Logic.Exceptions.ValidationException;
 
 namespace CSharpProject.Views
@@ -31,7 +32,6 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
         }
 
-        public CategoryValidator CategoryValidator { get => categoryValidator; set => categoryValidator = value; }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {

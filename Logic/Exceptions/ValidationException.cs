@@ -83,7 +83,7 @@ namespace Logic.Exceptions
                 String path = (Environment.CurrentDirectory + "/categories.xml");
                 var categoryString = File.ReadAllText(path).ToLower();
 
-                if (string.IsNullOrEmpty(categoryString))
+                if (string.IsNullOrEmpty(categoryName))
                 {
                     throw new Exception($"Please enter a name.");
                 }
