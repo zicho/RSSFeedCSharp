@@ -66,8 +66,6 @@ namespace Logic.Entities
                     }
 
                     FeedList.Add(feed); // add it to list
-                    Console.WriteLine("NEw feed gets path " + feed.Filepath);
-
                 }
             }
         }
