@@ -16,8 +16,9 @@ namespace Logic.Entities
         public string Title { get; set; }
         public string Link { get; set; }
         public string Parent { get; set; }
-        public bool isDownloaded { get; set; }
+        public bool IsDownloaded { get; set; }
         public string Category { get; set; }
+        public string FolderName { get; set; }
 
         public static void FillItemList()
         {
@@ -35,12 +36,13 @@ namespace Logic.Entities
 
                         var items = xmlDocument.Descendants("item");
 
-                        var feedItems = items.Select(element => new FeedItem
-                        {
-                            Title = element.Descendants("title").Single().Value,
-                            Link = element.Descendants("enclosure").Single().Attribute("url").Value,
-                            Category = file.Category.ToString(),
-                            Parent = file.Id.ToString(),
+                    var feedItems = items.Select(element => new FeedItem
+                    {
+                        Title = element.Descendants("title").Single().Value,
+                        Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                        Category = file.Category.ToString(),
+                        Parent = file.Id.ToString(),
+                        FolderName = file.Name.ToString(),
                         });
 
                         foreach (var feedItem in feedItems)
@@ -56,15 +58,15 @@ namespace Logic.Entities
                 }
             }    
 
-        public bool CheckIfDownloaded(string podcastUrl)
+        public bool CheckIfDownloaded(FeedItem item)
         {
             XMLLogic xl = new XMLLogic();
 
-            string path = xl.GetPodcastDirectory();
+            string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";
 
-            string[] fileName = podcastUrl.Split('/');
+            string[] fileName = item.Link.Split('/');
 
-            podcastUrl = fileName[fileName.Length - 1];
+            string podcastUrl = fileName[fileName.Length - 1];
 
             string[] podcasts = System.IO.Directory.GetFiles(path, "*.mp3");
 

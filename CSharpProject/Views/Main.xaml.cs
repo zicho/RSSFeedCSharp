@@ -107,10 +107,13 @@ namespace CSharpProject.Views
 
                     var items = xmlDocument.Descendants("item");
 
+                    string[] filePathSplit = file.Split('\\');
+
                     var feedItems = items.Select(element => new FeedItem
                     {
                         Title = element.Descendants("title").Single().Value,
-                        Link = element.Descendants("enclosure").Single().Attribute("url").Value
+                        Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                        FolderName = filePathSplit[filePathSplit.Length - 2],
                     });
 
                     foreach (var feedItem in feedItems)
@@ -133,7 +136,7 @@ namespace CSharpProject.Views
 
             foreach(var item in FeedItemList)
             {
-                item.isDownloaded = item.CheckIfDownloaded(item.Link);
+                item.IsDownloaded = item.CheckIfDownloaded(item);
                 podListBox.Items.Add(item);
             }
 
@@ -145,7 +148,7 @@ namespace CSharpProject.Views
             foreach(var item in FeedItemList)
             {
                 if (item.Category == category)
-                    item.isDownloaded = item.CheckIfDownloaded(item.Link);
+                    item.IsDownloaded = item.CheckIfDownloaded(item);
                     podListBox.Items.Add(item);
             }
         }

@@ -88,7 +88,7 @@
                             </Label.Content>
                         </Label>
                         <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding isDownloaded }" Value="True" >
+                            <DataTrigger Binding="{Binding IsDownloaded }" Value="True" >
                                 <Setter TargetName="label" Property="Background" Value="Green" />
                             </DataTrigger>
                         </DataTemplate.Triggers>
