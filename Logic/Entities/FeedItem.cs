@@ -17,6 +17,7 @@ namespace Logic.Entities
         public string Link { get; set; }
         public string Parent { get; set; }
         public bool isDownloaded { get; set; }
+        public string Category { get; set; }
 
         public static void FillItemList()
         {
@@ -42,6 +43,7 @@ namespace Logic.Entities
                         {
                             Title = element.Descendants("title").Single().Value,
                             Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                            Category = file.Category.ToString(),
                             Parent = file.Id.ToString(),
                         });
 
@@ -58,6 +60,7 @@ namespace Logic.Entities
                 }
             } 
         }
+        
 
         public bool CheckIfDownloaded(string podcastUrl)
         {

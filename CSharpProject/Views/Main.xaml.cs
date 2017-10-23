@@ -77,6 +77,17 @@ namespace CSharpProject.Views
             }
 
         }
+        private void RefreshPodcastList(string category)
+        {
+            podListBox.Items.Clear();
+            foreach(var item in FeedItemList)
+            {
+                if (item.Category == category)
+                    item.isDownloaded = item.CheckIfDownloaded(item.Link);
+                    podListBox.Items.Add(item);
+            }
+            
+        }
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -182,7 +193,8 @@ namespace CSharpProject.Views
             }
             else
             {
-
+                var category = categoryComboBox.SelectedValue.ToString();
+                RefreshPodcastList(category);
             }
             /*LoadChannels lc = new LoadChannels();
             string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());
