@@ -66,11 +66,11 @@
                     <ColumnDefinition Width="120*" />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="Category:"/>
-                <ComboBox Grid.Column="1" HorizontalAlignment="right" x:Name="categoryFilterBox" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" Width="120">
+                <ComboBox Grid.Column="1" HorizontalAlignment="right" x:Name="categoryFilterBox" SelectionChanged="categoryFilterBox_SelectionChanged" SelectedIndex="0" Width="120">
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
                 <Label Grid.Column="2" Content="Feed:"/>
-                <ComboBox Grid.Column="3" HorizontalAlignment="right" x:Name="feedFilterBox" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" Width="120">
+                <ComboBox Grid.Column="3" HorizontalAlignment="right" x:Name="feedFilterBox" SelectionChanged="feedFilterBox_SelectionChanged" SelectedIndex="0" Width="120">
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
             </Grid>
