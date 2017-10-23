@@ -52,7 +52,6 @@ namespace CSharpProject.Views
 
             //Logic.Podcast.FillPodcastList();
 
-
             try
             {
                 FeedItem.FillItemList();
