@@ -19,7 +19,7 @@ namespace Logic.Entities
         public DateTime LastUpdated { get; set; }
         public string Category { get; set; }
         // public List<FeedItem> Items { get; set; } USE THIS??????????????
-
+        //Kommentar
         public static List<Feed> FeedList = new List<Feed>();
         public static List<Feed> SettingsList = new List<Feed>();
 
