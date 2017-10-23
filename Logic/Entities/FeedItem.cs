@@ -35,8 +35,6 @@ namespace Logic.Entities
                     {
                         xmlDocument = XDocument.Load(file.Filepath);
 
-                        Console.WriteLine(file.Filepath);
-
                         var items = xmlDocument.Descendants("item");
 
                         var feedItems = items.Select(element => new FeedItem

@@ -38,8 +38,11 @@ namespace Logic.Entities
 
                 path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
 
+                Console.WriteLine(path);
+
                 if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
                 {
+                    Console.WriteLine("feed skapas");
                     File.AppendAllText(path, url);
                     
                     feed.Filepath = ($@"{path}"); // append the PATH to the XML. This is useful for deleting items directly from the XML file.
