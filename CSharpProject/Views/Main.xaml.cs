@@ -97,12 +97,15 @@ namespace CSharpProject.Views
         {
             String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
             var files = loadXML(path);
-
+            var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+            
             foreach (var file in files)
             {
 
                 XDocument xmlDocument;
-
+                var podID = Path.GetFileNameWithoutExtension(file);
+                var podSettings /*= settings.Descendants("Feed").Where(feed => feed.Attribute("Id").Value.Equals(podID))*/;
+                MessageBox.Show(podSettings.ToString());
                 try
                 {
                     xmlDocument = XDocument.Load(file);
@@ -116,6 +119,7 @@ namespace CSharpProject.Views
                         Title = element.Descendants("title").Single().Value,
                         Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                         FolderName = filePathSplit[filePathSplit.Length - 2],
+                        //Category = podSettings.Descendants("Category").Single().Value,
                     });
 
                     foreach (var feedItem in feedItems)
