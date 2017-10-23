@@ -29,32 +29,32 @@ namespace Logic.Entities
             {
                 Feed feed = new Feed();
 
-                String path = (Environment.CurrentDirectory + "\\XML-folder"); // Path to a folder containing all XML files in the project directory
+                String path = (Environment.CurrentDirectory + $"\\podcasts\\{name}"); // Path to a folder containing all XML files in the project directory
 
                 if (Directory.Exists(path) == false)
                 {
                     Directory.CreateDirectory(path);
                 }
 
-                path = Path.Combine(Environment.CurrentDirectory, @"XML-folder\", name + ".xml");
+                var freshGuid = Guid.NewGuid();
 
-                Console.WriteLine(path);
+                path = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", freshGuid + ".xml");
 
                 if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
                 {
                     
                     File.AppendAllText(path, url);
                     
-                    feed.Filepath = ($@"{path}"); // append the PATH to the XML. This is useful for deleting items directly from the XML file.
+                    feed.Filepath = ($@"{path}"); // append the PATH to the XML on trhe feed object. This is useful for deleting items directly from the XML file.
                     feed.Name = name;
                     feed.URL = url;
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
-                    var freshGuid = Guid.NewGuid();
+                    
                     feed.Id = freshGuid;
                     FeedList.Add(feed);
-                    //
+                   
                     //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
                     var serializer = new XmlSerializer(typeof(Feed));
                     using (var stream = new StreamWriter("settings.xml"))
@@ -76,7 +76,7 @@ namespace Logic.Entities
             return await Task.Run(async () =>
             {
                 Writer writer = new Writer();
-                return await writer.DownloadURL(url);
+                return await writer.DownloadFeed(url);
             });
         }
 

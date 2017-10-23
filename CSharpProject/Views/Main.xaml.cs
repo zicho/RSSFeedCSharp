@@ -12,12 +12,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Controls;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace CSharpProject.Views
 {
     public partial class MainWindow : Window
     {
-        
+
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
@@ -52,14 +53,14 @@ namespace CSharpProject.Views
 
             try
             {
-              FeedItem.FillItemList();
+                FeedItem.FillItemList();
             } catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
             RefreshPodcastList();
-            
+
             //foreach(var item in feedItemList)
             //{
             //    podListBox.Items.Add(item.Title);
@@ -87,7 +88,6 @@ namespace CSharpProject.Views
                     item.isDownloaded = item.CheckIfDownloaded(item.Link);
                     podListBox.Items.Add(item);
             }
-            
         }
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
@@ -156,6 +156,7 @@ namespace CSharpProject.Views
                 // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
+
                 if (RSS_URL != null)
                 {
                     if (RSS_Name != null)
@@ -166,6 +167,7 @@ namespace CSharpProject.Views
 
                 FeedItem.FillItemList();
                 RefreshPodcastList();
+
             }
             catch (Exception ex)
             { 

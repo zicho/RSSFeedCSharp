@@ -8,7 +8,7 @@ namespace Data
 {
     public class Writer
     {
-        public async Task<string> DownloadURL(string url) //method to get all the data from an RSS feed
+        public async Task<string> DownloadFeed(string url) //method to get all the data from an RSS feed
         {
             return await Task.Run(() =>
             {
