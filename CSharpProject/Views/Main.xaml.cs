@@ -231,19 +231,22 @@ namespace CSharpProject.Views
 
                 var text = "";
 
-                Task<String> RSS_URL = Feed.DownloadFeed(RSSTextBox.Text, text);
+                Task<String> RSS_Content = Feed.DownloadFeed(RSSTextBox.Text, text);
+
                 String RSS_Name = RSSNameTextBox.Text;
-                await RSS_URL; //detta är väl useless i detta fallet men ville testa hur det funkade
+                String RSS_URL = RSSTextBox.Text;
+
+                await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
 
                 // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
 
-                if (RSS_URL != null)
+                if (RSS_Content != null)
                 {
                     if (RSS_Name != null)
                     {
-                        Feed.AddNewFeed(RSS_URL.Result, RSS_Name, updateInterval, categoryName);
+                        Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
                     }
                 }
 

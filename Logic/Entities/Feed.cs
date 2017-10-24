@@ -23,9 +23,9 @@ namespace Logic.Entities
         public static List<Feed> FeedList = new List<Feed>();
         public static List<Feed> SettingsList = new List<Feed>();
 
-        public void AddNewFeed(String url, String name, String updateInterval, String category)
+        public void AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
-            if (url != null)
+            if (content != null)
             {
                 Feed feed = new Feed();
 
@@ -43,11 +43,11 @@ namespace Logic.Entities
                 if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
                 {
                     
-                    File.AppendAllText(path, url);
+                    File.AppendAllText(path, content);
                     
                     feed.Filepath = ($@"{path}"); // append the PATH to the XML on the feed object. This is useful for deleting items directly from the XML file.
                     feed.Name = name;
-                    feed.URL = url;
+                    feed.URL = content;
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
@@ -63,6 +63,7 @@ namespace Logic.Entities
                         Feed settingsFeed = new Feed();
                         settingsFeed.Id = freshGuid;
                         settingsFeed.Name = name;
+                        settingsFeed.URL = url;
                         settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
                         settingsFeed.LastUpdated = DateTime.Today;
                         settingsFeed.Category = category;
