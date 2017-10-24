@@ -112,35 +112,50 @@ namespace CSharpProject.Views
             }
 
             var files = loadXML(path);
-            
+
+            XDocument xmlDocument;
+            var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+            var feeds = from item in settings.Descendants("Feed")
+                        select new Feed
+                        {
+                            Id = new Guid(item.Descendants("Id").Single().Value),
+                            Name = item.Descendants("Name").Single().Value,
+                            URL = item.Descendants("URL").Single().Value,
+                            UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
+                            LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
+                            Category = item.Descendants("Category").Single().Value
+                        };
+            MessageBox.Show(feeds.Count().ToString());
+            foreach (var feed in feeds)
+            {
+                MessageBox.Show(feed.Id.ToString());
+            }
+
             foreach (var file in files)
             {
 
-                XDocument xmlDocument;
-
-                var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+                
 
                 var podID = Path.GetFileNameWithoutExtension(file);
                 var podSettings = (from podcast in settings.Descendants("Feed")
                                    where podcast.Element("Id").Value == podID
                                    select podcast).FirstOrDefault();
 
-                var settingsList = podSettings.Elements();
+                //var settingsList = settings.Elements();
+                 
 
-                var feeds = settingsList.Select(element => new Feed
-                {
-                    Id = new Guid(settingsList.Descendants("Id").Single().Value),
-                    Name = settingsList.Descendants("Name").Single().Value,
-                    URL = settingsList.Descendants("URL").Single().Value,
-                    UpdateInterval = int.Parse(settingsList.Descendants("UpdateInterval").Single().Value),
-                    LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value),
-                    Category = settingsList.Descendants("Category").Single().Value
-                });
+                
 
-                foreach(var feed in feeds)
-                {
-                    MessageBox.Show(feed.Id.ToString());
-                }
+                //var feeds = settingsList.Select(element => new Feed
+                //{
+                //    Id = new Guid(settingsList.Descendants("Id").Single().Value),
+                //    Name = settingsList.Descendants("Name").Single().Value,
+                //    URL = settingsList.Descendants("URL").Single().Value,
+                //    UpdateInterval = int.Parse(settingsList.Descendants("UpdateInterval").Single().Value),
+                //    LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value),
+                //    Category = settingsList.Descendants("Category").Single().Value
+                //});
+                
 
                 //feed.Id = new Guid(settingsList.Descendants("Id").Single().Value);
                 //feed.Name = settingsList.Descendants("Name").Single().Value;
@@ -149,8 +164,7 @@ namespace CSharpProject.Views
                 //feed.LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value);
                 //feed.Category = settingsList.Descendants("Category").Single().Value;
 
-
-                //MessageBox.Show(podSettings.ToString()); kommenterade ut denna tills imorgon (tisdag)
+                
 
                 try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
                 {
@@ -169,6 +183,15 @@ namespace CSharpProject.Views
                         Parent = podID,
                     });
 
+                    foreach (Feed feed in feeds) {
+                        foreach(FeedItem feedItem in feedItems)
+                        {
+                            if(feedItem.Parent.Equals(podSettings.Element("Id").Value))
+                            {
+                                feed.Items.Add(feedItem);
+                            }
+                        }
+                    }
                     //foreach (var feedItem in feedItems)
                     //{
                     //   feed.Items.Add(feedItem); // att Items to the feed objects item list
