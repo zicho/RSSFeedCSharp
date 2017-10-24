@@ -106,7 +106,14 @@ namespace CSharpProject.Views
 
         private void loadAllFeeds()
         {
+
             String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
+
+            if (Directory.Exists(path) == false)
+            {
+                Directory.CreateDirectory(path);
+            }
+
             var files = loadXML(path);
             
             
