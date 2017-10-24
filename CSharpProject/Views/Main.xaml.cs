@@ -45,7 +45,7 @@ namespace CSharpProject.Views
 
         public MainWindow()
         {
-           
+            
             InitializeComponent();
             
             validator.Add(new Validator());
@@ -59,7 +59,7 @@ namespace CSharpProject.Views
 
             loadAllFeeds();
             RefreshPodcastList();
-
+            
 
             //Logic.Podcast.FillPodcastList();
 
