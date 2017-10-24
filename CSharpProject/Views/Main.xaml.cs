@@ -27,7 +27,6 @@ namespace CSharpProject.Views
         private List<Feed> feedList = Feed.FeedList;
         private List<FeedItem> feedItemList = FeedItem.FeedItemList;
         private List<Category> categoryList = Category.CategoryList;
-
         private Feed feed = new Feed();
         private Category category = new Category();
         private FeedItem feedItem = new FeedItem();
@@ -39,7 +38,7 @@ namespace CSharpProject.Views
         public Category Category { get => category; set => category = value; }
         public FeedItem FeedItem { get => feedItem; set => feedItem = value; }
 
-        public List<FeedItem> activeList { get; set; }
+        public List<FeedItem> ActiveList { get; set; }
 
         //private delegate void ButtonAction(FeedItem item);
         //private ButtonAction PlayButtonDel;
@@ -51,9 +50,8 @@ namespace CSharpProject.Views
             
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
-            
-
-            podListBox.ItemsSource = FeedItemList;
+            ActiveList = new List<FeedItem>();
+            podListBox.ItemsSource = ActiveList; //testar ersätta FeedItemList här
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
 
@@ -135,6 +133,7 @@ namespace CSharpProject.Views
                         Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                         FolderName = filePathSplit[filePathSplit.Length - 2],
                         Category = podSettings.Descendants("Category").Single().Value,
+                        Parent = podID,
                     });
 
                     foreach (var feedItem in feedItems)
@@ -161,17 +160,17 @@ namespace CSharpProject.Views
             }
 
         }
-        private void RefreshPodcastList(string category)
-        {
-            podListBox.Items.Clear();
+        //private void RefreshPodcastList(string category)
+        //{
+        //    podListBox.Items.Clear();
 
-            foreach(var item in FeedItemList)
-            {
-                if (item.Category == category)
-                    item.IsDownloaded = item.CheckIfDownloaded(item);
-                    podListBox.Items.Add(item);
-            }
-        }
+        //    foreach(var item in FeedItemList)
+        //    {
+        //        if (item.Category == category)
+        //            item.IsDownloaded = item.CheckIfDownloaded(item);
+        //            podListBox.Items.Add(item);
+        //    }
+        //}
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -356,9 +355,26 @@ namespace CSharpProject.Views
 
         private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-            var category = categoryFilterBox.SelectedItem;
-            List<Feed> genreFiles = Feed.FeedList.Where(file => file.Category.Equals(category)).ToList();
+            if(!categoryFilterBox.IsLoaded)
+            {
+                return;
+            }
+            var category = categoryFilterBox.SelectedItem.ToString();
+            List<FeedItem> genreFiles = FeedItemList.Where(file => file.Category.Equals(category)).ToList();
+            if (ActiveList!=null)
+            {
+                ActiveList.Clear();
+            }
+            if (!genreFiles.Any())
+            {
+                return;
+            }
+            foreach (FeedItem file in genreFiles)
+            {
+                ActiveList.Add(file);
+            }
+            System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
+            view.Refresh();
         }
 
         private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
