@@ -27,14 +27,13 @@ namespace CSharpProject.Views
         private List<Feed> feedList = Feed.FeedList;
         private List<FeedItem> feedItemList = FeedItem.FeedItemList;
         private List<Category> categoryList = Category.CategoryList;
-        private Feed feed = new Feed();
+
         private Category category = new Category();
         private FeedItem feedItem = new FeedItem();
 
         public List<Feed> FeedList { get => feedList; set => feedList = value; }
         public List<FeedItem> FeedItemList { get => feedItemList; set => feedItemList = value; }
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
-        public Feed Feed { get => feed; set => feed = value; }
         public Category Category { get => category; set => category = value; }
         public FeedItem FeedItem { get => feedItem; set => feedItem = value; }
 
@@ -60,7 +59,6 @@ namespace CSharpProject.Views
             loadAllFeeds();
             RefreshPodcastList();
 
-
             //Logic.Podcast.FillPodcastList();
 
             //try
@@ -70,8 +68,6 @@ namespace CSharpProject.Views
             //{
             //    MessageBox.Show(ex.Message);
             //}
-
-
 
             //RefreshPodcastList();<<<<<
 
@@ -116,18 +112,46 @@ namespace CSharpProject.Views
 
             var files = loadXML(path);
             
-            
             foreach (var file in files)
             {
 
                 XDocument xmlDocument;
+
                 var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+
                 var podID = Path.GetFileNameWithoutExtension(file);
                 var podSettings = (from podcast in settings.Descendants("Feed")
                                    where podcast.Element("Id").Value == podID
                                    select podcast).FirstOrDefault();
+
+                var settingsList = podSettings.Elements();
+
+                var feeds = settingsList.Select(element => new Feed
+                {
+                    Id = new Guid(settingsList.Descendants("Id").Single().Value),
+                    Name = settingsList.Descendants("Name").Single().Value,
+                    URL = settingsList.Descendants("URL").Single().Value,
+                    UpdateInterval = int.Parse(settingsList.Descendants("UpdateInterval").Single().Value),
+                    LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value),
+                    Category = settingsList.Descendants("Category").Single().Value
+                });
+
+                foreach(var feed in feeds)
+                {
+                    MessageBox.Show(feed.Id.ToString());
+                }
+
+                //feed.Id = new Guid(settingsList.Descendants("Id").Single().Value);
+                //feed.Name = settingsList.Descendants("Name").Single().Value;
+                //feed.URL = settingsList.Descendants("URL").Single().Value;
+                //feed.UpdateInterval = int.Parse(settingsList.Descendants("UpdateInterval").Single().Value);
+                //feed.LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value);
+                //feed.Category = settingsList.Descendants("Category").Single().Value;
+
+
                 //MessageBox.Show(podSettings.ToString()); kommenterade ut denna tills imorgon (tisdag)
-                try
+
+                try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
                 {
                     xmlDocument = XDocument.Load(file);
 
@@ -144,10 +168,15 @@ namespace CSharpProject.Views
                         Parent = podID,
                     });
 
-                    foreach (var feedItem in feedItems)
-                    {
-                        FeedItemList.Add(feedItem);
-                    }
+                    //foreach (var feedItem in feedItems)
+                    //{
+                    //   feed.Items.Add(feedItem); // att Items to the feed objects item list
+                    //}
+
+                    //foreach(var item in feed.Items)
+                    //{
+                    //    Console.WriteLine(item.Title);
+                    //}
                 }
                 catch
                 {

@@ -18,12 +18,12 @@ namespace Logic.Entities
         public int UpdateInterval { get; set; }
         public DateTime LastUpdated { get; set; }
         public string Category { get; set; }
-        // public List<FeedItem> Items { get; set; } USE THIS??????????????
+        public List<FeedItem> Items { get; set; } // USE THIS??????????????
         
         public static List<Feed> FeedList = new List<Feed>();
         public static List<Feed> SettingsList = new List<Feed>();
 
-        public void AddNewFeed(String content, String name, String url, String updateInterval, String category)
+        public static void AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
             if (content != null)
             {
@@ -74,7 +74,7 @@ namespace Logic.Entities
             }
         }
 
-        public async Task<String> DownloadFeed(string url, string text)
+        public static async Task<String> DownloadFeed(string url, string text)
         {
             return await Task.Run(async () =>
             {
