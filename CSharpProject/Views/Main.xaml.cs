@@ -55,26 +55,9 @@ namespace CSharpProject.Views
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
            
             loadAllFeeds();
-            InitializeComboBoxes();
             RefreshPodcastList();
-
-
-            //Logic.Podcast.FillPodcastList();
-
-            //try
-            //{
-            //    FeedItem.FillItemList();
-            //} catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
-
-            //RefreshPodcastList();<<<<<
-
-            //foreach(var item in feedItemList)
-            //{
-            //    podListBox.Items.Add(item.Title);
-            //}
+            InitializeComboBoxes();
+            UpdateFeedList();
         }
 
         private List<String> loadXML(string directory)
@@ -127,8 +110,6 @@ namespace CSharpProject.Views
                             Category = item.Descendants("Category").Single().Value
                         };
 
-
-
             foreach (var file in files)
             {
                 var podID = Path.GetFileNameWithoutExtension(file);
@@ -163,6 +144,7 @@ namespace CSharpProject.Views
                         }
 
                         FeedList.Add(feed);
+                        Console.WriteLine(feed.Name);
                     }
                 }
                 catch
@@ -204,7 +186,6 @@ namespace CSharpProject.Views
         {
             feedFilterBox.Items.Clear();
             categoryComboBox.Items.Clear();
-
             categoryFilterBox.Items.Clear();
 
             Category.LoadCategories();
@@ -214,8 +195,19 @@ namespace CSharpProject.Views
                 categoryFilterBox.Items.Add(category.Name);
                 categoryComboBox.Items.Add(category.Name);   
             }
+            
+            categoryComboBox.SelectedIndex = 0;
+            IntervalBox.SelectedIndex = 0;
+            categoryFilterBox.SelectedIndex = 0;
+           
+            categoryComboBox.Items.Add("Add new...");
+        }
 
-            if(FeedList.Count() > 0)
+        public void UpdateFeedList()
+        {
+            feedFilterBox.Items.Clear();
+
+            if (FeedList.Count() > 0)
             {
                 foreach (var feed in FeedList)
                 {
@@ -223,35 +215,14 @@ namespace CSharpProject.Views
                 }
 
                 feedFilterBox.SelectedIndex = 0;
-            } else
-            {
-                feedFilterBox.IsEnabled = false;
+                feedFilterBox.IsEnabled = true;
             }
-
-            
-
-            categoryComboBox.SelectedIndex = 0;
-            IntervalBox.SelectedIndex = 0;
-            categoryFilterBox.SelectedIndex = 0;
-           
-            categoryComboBox.Items.Add("Add new...");
-
-            //foreach (var feed in feedList)
-            //{
-            //    Console.WriteLine(feed.Name);
-            //}
-
-
-
-            //LoadChannels lc = new LoadChannels();
-            //List<String> allXMLFiles = lc.GetAllXMLFiles();
-            //foreach(String f in allXMLFiles)
-            //{
-            //    var fileName = f.Split('\\');
-            //    ChannelCBox.Items.Add(fileName[fileName.Length - 1]);     
-            //allXMLFiles.ForEach(i => ChannelCBox.Items.Add(i));
-            //lc.GetAllChannels();
-            //List<Channel> allChannels = lc.GetAllChannels();
+            else
+            {
+                feedFilterBox.Items.Add("No feeds added.");
+                feedFilterBox.IsEnabled = false;
+                feedFilterBox.SelectedIndex = 0;
+            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -286,6 +257,7 @@ namespace CSharpProject.Views
 
                 FeedItem.FillItemList();
                 filterAfterCategory();
+                UpdateFeedList();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
                 //view.Refresh();
                 //RefreshPodcastList();
@@ -321,14 +293,6 @@ namespace CSharpProject.Views
                     MessageBox.Show(ex.Message, "Category already exists");
                 }
             }
-            /*LoadChannels lc = new LoadChannels();
-            string[] selectedPodcast = lc.GetSpecificXMLFile(ChannelCBox.SelectedValue.ToString());
-            podListBox.Items.Clear();
-            foreach (String f in selectedPodcast)
-            {
-                var fileName = f.Split('\\');
-                ChannelCBox.Items.Add(fileName[fileName.Length - 1]);
-            }*/
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
