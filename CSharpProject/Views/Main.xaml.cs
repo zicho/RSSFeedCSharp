@@ -108,18 +108,18 @@ namespace CSharpProject.Views
                             UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
                             LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
                             Category = item.Descendants("Category").Single().Value
-                        };
-
+                        }; //Korrekt antal feeds sparas
+            
             foreach (var file in files)
-            {
-                var podID = Path.GetFileNameWithoutExtension(file);
-                var podSettings = (from podcast in settings.Descendants("Feed")
-                                   where podcast.Element("Id").Value == podID
-                                   select podcast).FirstOrDefault();
-
+            { //Körs korrekt antal gånger
                 try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
                 {
                     xmlDocument = XDocument.Load(file);
+
+                    var podID = Path.GetFileNameWithoutExtension(file);
+                    var podSettings = (from podcast in settings.Descendants("Feed")
+                                       where podcast.Element("Id").Value == podID
+                                       select podcast).FirstOrDefault();
 
                     var items = xmlDocument.Descendants("item");
 
@@ -135,6 +135,7 @@ namespace CSharpProject.Views
                     });
 
                     foreach (Feed feed in feeds) {
+                        //Jag körs fel antal gånger
                         foreach(FeedItem feedItem in feedItems)
                         {
                             if(feedItem.Parent.Equals(feed.Id))
@@ -255,7 +256,6 @@ namespace CSharpProject.Views
                     }
                 }
 
-                FeedItem.FillItemList();
                 filterAfterCategory();
                 UpdateFeedList();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
@@ -388,7 +388,8 @@ namespace CSharpProject.Views
                 return;
             }
             var category = categoryFilterBox.SelectedItem.ToString();
-            List<FeedItem> genreFiles = FeedItemList.Where(file => file.Category.Equals(category)).ToList();
+            List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
+            List<FeedItem> genreFeed = //categoryFeed.GetAllaFeedItems i varje Feed i listan;
             if (ActiveList != null)
             {
                 ActiveList.Clear();
