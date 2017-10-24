@@ -53,10 +53,9 @@ namespace CSharpProject.Views
             podListBox.ItemsSource = ActiveList; //testar ersätta FeedItemList här
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
-
-            InitializeComboBoxes();
-
+           
             loadAllFeeds();
+            InitializeComboBoxes();
             RefreshPodcastList();
 
 
@@ -128,11 +127,10 @@ namespace CSharpProject.Views
                             Category = item.Descendants("Category").Single().Value
                         };
 
+
+
             foreach (var file in files)
             {
-
-                
-
                 var podID = Path.GetFileNameWithoutExtension(file);
                 var podSettings = (from podcast in settings.Descendants("Feed")
                                    where podcast.Element("Id").Value == podID
@@ -163,16 +161,9 @@ namespace CSharpProject.Views
                                 feed.Items.Add(feedItem);
                             }
                         }
-                    }
-                    //foreach (var feedItem in feedItems)
-                    //{
-                    //   feed.Items.Add(feedItem); // att Items to the feed objects item list
-                    //}
 
-                    //foreach(var item in feed.Items)
-                    //{
-                    //    Console.WriteLine(item.Title);
-                    //}
+                        FeedList.Add(feed);
+                    }
                 }
                 catch
                 {
@@ -227,12 +218,12 @@ namespace CSharpProject.Views
             foreach (var feed in FeedList)
             {
                 feedFilterBox.Items.Add(feed.Name);
-                Console.WriteLine(feed);
             }
 
             categoryComboBox.SelectedIndex = 0;
             IntervalBox.SelectedIndex = 0;
             categoryFilterBox.SelectedIndex = 0;
+            feedFilterBox.SelectedIndex = 0;
             categoryComboBox.Items.Add("Add new...");
 
             //foreach (var feed in feedList)
