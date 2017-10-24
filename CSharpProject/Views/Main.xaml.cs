@@ -115,7 +115,9 @@ namespace CSharpProject.Views
 
             XDocument xmlDocument;
             var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+
             var feeds = from item in settings.Descendants("Feed")
+
                         select new Feed
                         {
                             Id = new Guid(item.Descendants("Id").Single().Value),
@@ -125,11 +127,6 @@ namespace CSharpProject.Views
                             LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
                             Category = item.Descendants("Category").Single().Value
                         };
-            MessageBox.Show(feeds.Count().ToString());
-            foreach (var feed in feeds)
-            {
-                MessageBox.Show(feed.Id.ToString());
-            }
 
             foreach (var file in files)
             {
@@ -140,31 +137,6 @@ namespace CSharpProject.Views
                 var podSettings = (from podcast in settings.Descendants("Feed")
                                    where podcast.Element("Id").Value == podID
                                    select podcast).FirstOrDefault();
-
-                //var settingsList = settings.Elements();
-                 
-
-                
-
-                //var feeds = settingsList.Select(element => new Feed
-                //{
-                //    Id = new Guid(settingsList.Descendants("Id").Single().Value),
-                //    Name = settingsList.Descendants("Name").Single().Value,
-                //    URL = settingsList.Descendants("URL").Single().Value,
-                //    UpdateInterval = int.Parse(settingsList.Descendants("UpdateInterval").Single().Value),
-                //    LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value),
-                //    Category = settingsList.Descendants("Category").Single().Value
-                //});
-                
-
-                //feed.Id = new Guid(settingsList.Descendants("Id").Single().Value);
-                //feed.Name = settingsList.Descendants("Name").Single().Value;
-                //feed.URL = settingsList.Descendants("URL").Single().Value;
-                //feed.UpdateInterval = int.Parse(settingsList.Descendants("UpdateInterval").Single().Value);
-                //feed.LastUpdated = DateTime.Parse(settingsList.Descendants("LastUpdated").Single().Value);
-                //feed.Category = settingsList.Descendants("Category").Single().Value;
-
-                
 
                 try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
                 {
