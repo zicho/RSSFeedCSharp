@@ -215,15 +215,25 @@ namespace CSharpProject.Views
                 categoryComboBox.Items.Add(category.Name);   
             }
 
-            foreach (var feed in FeedList)
+            if(FeedList.Count() > 0)
             {
-                feedFilterBox.Items.Add(feed.Name);
+                foreach (var feed in FeedList)
+                {
+                    feedFilterBox.Items.Add(feed.Name);
+                }
+
+                feedFilterBox.SelectedIndex = 0;
+            } else
+            {
+                feedFilterBox.IsEnabled = false;
             }
+
+            
 
             categoryComboBox.SelectedIndex = 0;
             IntervalBox.SelectedIndex = 0;
             categoryFilterBox.SelectedIndex = 0;
-            feedFilterBox.SelectedIndex = 0;
+           
             categoryComboBox.Items.Add("Add new...");
 
             //foreach (var feed in feedList)
