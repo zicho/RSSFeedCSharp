@@ -120,7 +120,7 @@ namespace CSharpProject.Views
                 var podSettings = (from podcast in settings.Descendants("Feed")
                                    where podcast.Element("Id").Value == podID
                                    select podcast).FirstOrDefault();
-                MessageBox.Show(podSettings.ToString());
+                //MessageBox.Show(podSettings.ToString()); kommenterade ut denna tills imorgon (tisdag)
                 try
                 {
                     xmlDocument = XDocument.Load(file);
