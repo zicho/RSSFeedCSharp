@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Logic.Entities
@@ -58,11 +61,31 @@ namespace Logic.Entities
                 }
             }    
 
-        public bool CheckIfDownloaded(FeedItem item)
+        public string GetFilepath(FeedItem item)
         {
             XMLLogic xl = new XMLLogic();
-
             string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";
+            return path;
+        }
+
+        public string GetDownloadFileName(FeedItem item)
+        {
+            string[] fileName = item.Link.Split('/');
+
+            string podcastUrl = fileName[fileName.Length - 1];
+
+            return podcastUrl;
+        }
+
+
+
+        public bool CheckIfDownloaded(FeedItem item)
+        {
+            /*XMLLogic xl = new XMLLogic();
+
+            string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";*/
+
+            string path = GetFilepath(item);
 
             string[] fileName = item.Link.Split('/');
 
@@ -82,17 +105,40 @@ namespace Logic.Entities
         }
 
 
-        public void playItem(string link)
+        public async Task DownloadFile(FeedItem item)
         {
-            System.Diagnostics.Process.Start(link);
+            string downloadURL = item.Link;
+            string path = GetFilepath(item);
+            string fileName = GetDownloadFileName(item);
+            /*XMLLogic xl = new XMLLogic();
+            string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";*/
+
+            try
+            {
+                await new WebClient().DownloadFileTaskAsync(
+                new Uri(downloadURL),
+                path+$@"\{GetDownloadFileName(item)}");
+            }
+            catch (Exception)
+            {
+                throw new Exception("Failed to download file:" + item.Title);
+            }
+            
+        }
+
+        public void PlayFile(FeedItem item)
+        {
+            string itemPath = GetFilepath(item);
+            System.Diagnostics.Process.Start(GetFilepath(item) + @"\" + GetDownloadFileName(item));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(string property)
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

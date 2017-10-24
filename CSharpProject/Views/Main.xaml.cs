@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Windows.Controls;
 using System.Linq;
 using System.Xml.Linq;
+using System.Threading;
 
 namespace CSharpProject.Views
 {
@@ -40,17 +41,27 @@ namespace CSharpProject.Views
 
         public List<FeedItem> activeList { get; set; }
 
+        //private delegate void ButtonAction(FeedItem item);
+        //private ButtonAction PlayButtonDel;
+
         public MainWindow()
         {
+           
             InitializeComponent();
+            
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
+            
+
+            podListBox.ItemsSource = FeedItemList;
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
 
             InitializeComboBoxes();
 
             loadAllFeeds();
+            RefreshPodcastList();
+
 
             //Logic.Podcast.FillPodcastList();
 
@@ -62,7 +73,9 @@ namespace CSharpProject.Views
             //    MessageBox.Show(ex.Message);
             //}
 
-            RefreshPodcastList();
+
+
+            //RefreshPodcastList();<<<<<
 
             //foreach(var item in feedItemList)
             //{
@@ -133,12 +146,12 @@ namespace CSharpProject.Views
 
         private void RefreshPodcastList()
         {
-            podListBox.Items.Clear();
+            //podListBox.Items.Clear();
 
             foreach(var item in FeedItemList)
             {
                 item.IsDownloaded = item.CheckIfDownloaded(item);
-                podListBox.Items.Add(item);
+                //podListBox.Items.Add(item);
             }
 
         }
@@ -230,7 +243,9 @@ namespace CSharpProject.Views
                 }
 
                 FeedItem.FillItemList();
-                RefreshPodcastList();
+                System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
+                view.Refresh();
+                //RefreshPodcastList();
 
             }
             catch (Exception ex)
@@ -273,7 +288,7 @@ namespace CSharpProject.Views
             }*/
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -286,7 +301,24 @@ namespace CSharpProject.Views
 
                 */
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast");
-                FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
+                //FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
+
+                FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
+                int selectedIndex = podListBox.SelectedIndex;
+
+
+                if (selectedItem.IsDownloaded)
+                {
+                    feedItem.PlayFile(selectedItem);
+                }
+                else
+                {
+                   await feedItem.DownloadFile(selectedItem);
+                   selectedItem.IsDownloaded = true;
+                    System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
+                    view.Refresh();
+                }
+
             }
             catch (Exception ex)
             {
@@ -322,5 +354,23 @@ namespace CSharpProject.Views
             var category = categoryFilterBox.SelectedItem;
             List<Feed> genreFiles = Feed.FeedList.Where(file => file.Category.Equals(category)).ToList();
         }
+
+        private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
+            if (selectedItem.IsDownloaded)
+            {
+                buttonPlay.Content = "Play";
+                //PlayButtonDel = feedItem.PlayFile;
+            }
+            else
+            {
+                buttonPlay.Content = "Download";
+                //PlayButtonDel = feedItem.DownloadFile;
+            }
+        }
+        
+
+
     }
 }

@@ -74,7 +74,7 @@
                     <ComboBoxItem>All</ComboBoxItem>
                 </ComboBox>
             </Grid>
-            <ListView x:Name="podListBox" Height="200" Margin="0 0 0 10">
+            <ListView x:Name="podListBox" Height="200" Margin="0 0 0 10" SelectionChanged="podListBox_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Label x:Name="label" Width="360" Margin="0,0,5,0" HorizontalAlignment="Left">
@@ -94,9 +94,6 @@
                         </DataTemplate.Triggers>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-
-                <ListViewItem>Podcast 1</ListViewItem>
-                <ListViewItem>Podcast 2</ListViewItem>
             </ListView>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -104,7 +101,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonListen" Content="Listen" Grid.Column="0" Click="Button_Click_1"/>
+                <Button x:Name="buttonPlay" Content="Play" Grid.Column="0" Click="Button_Click_1"/>
                 <Button x:Name="buttonDelete" Content="Delete" Grid.Column="3" Click="Button_Click_2" Height="20" VerticalAlignment="Top"/>
             </Grid>
 
