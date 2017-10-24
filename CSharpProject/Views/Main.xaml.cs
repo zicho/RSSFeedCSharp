@@ -389,20 +389,20 @@ namespace CSharpProject.Views
             }
             var category = categoryFilterBox.SelectedItem.ToString();
             List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
-            List<FeedItem> genreFeed = //categoryFeed.GetAllaFeedItems i varje Feed i listan;
+            //List<FeedItem> genreFeed = categoryFeed.GetAllaFeedItems i varje Feed i listan;
             if (ActiveList != null)
             {
                 ActiveList.Clear();
             }
-            if (!genreFiles.Any())
-            {
-                refreshListView();
-                return;
-            }
-            foreach (FeedItem file in genreFiles)
-            {
-                ActiveList.Add(file);
-            }
+            //if (!genreFeed.Any())
+            //{
+            //    refreshListView();
+            //    return;
+            //}
+            //foreach (FeedItem file in categoryFeed)
+            //{
+            //    ActiveList.Add(file);
+            //}
             refreshListView();
         }
     }
