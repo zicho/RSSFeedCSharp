@@ -83,20 +83,34 @@ namespace Logic.Entities
             });
         }
 
-        public void ShallFeedBeUpdated(Feed feed)
+        
+        private void ShallFeedBeUpdated(String feedId)
         {
             String path = (Environment.CurrentDirectory + "/settings.xml");
             var settingsDoc = XDocument.Load(path);
-            var updateInterval = settingsDoc.Descendants("UpdateInterval").Single().Value;
-            DateTime lastUpdated = DateTime.Parse(settingsDoc.Descendants("LastUpdated").Single().Value);
+
+            var podSettings = (from podcast in settingsDoc.Descendants("Feed")
+                               where podcast.Element("Id").Value == feedId
+                               select podcast).FirstOrDefault();
+
+            var updateInterval = podSettings.Element("UpdateInterval").Value;
+            DateTime lastUpdated = DateTime.Parse(podSettings.Element("LastUpdated").Value);
             var updateIntervalAsInt = Int32.Parse(updateInterval);
             DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
 
             if (DateTime.Today >= updateDueDate)
             {
-                //ladda ner
-                var lastUpdatedSettings = settingsDoc.Element("LastUpdated");
+                var podGuid = podSettings.Element("Id").Value;
+                var podName = podSettings.Element("Name").Value;
+                var podUrl = podSettings.Element("URL").Value;
+                var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+                File.Delete(folderPath);
 
+                Task<String> newContent = DownloadFeed(podUrl, "text");
+
+                File.AppendAllText(folderPath, newContent.Result);
+
+                var lastUpdatedSettings = podSettings.Element("LastUpdated");
                 lastUpdatedSettings.Value = DateTime.Today.ToString();
                 settingsDoc.Save(path);
             }
