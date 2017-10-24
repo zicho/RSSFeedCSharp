@@ -259,8 +259,9 @@ namespace CSharpProject.Views
                 }
 
                 FeedItem.FillItemList();
-                System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
-                view.Refresh();
+                filterAfterCategory();
+                //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
+                //view.Refresh();
                 //RefreshPodcastList();
 
             }
@@ -331,8 +332,9 @@ namespace CSharpProject.Views
                 {
                    await feedItem.DownloadFile(selectedItem);
                    selectedItem.IsDownloaded = true;
-                    System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
-                    view.Refresh();
+                    refreshListView();
+                    //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
+                    //view.Refresh();
                 }
 
             }
@@ -366,26 +368,7 @@ namespace CSharpProject.Views
 
         private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(!categoryFilterBox.IsLoaded)
-            {
-                return;
-            }
-            var category = categoryFilterBox.SelectedItem.ToString();
-            List<FeedItem> genreFiles = FeedItemList.Where(file => file.Category.Equals(category)).ToList();
-            if (ActiveList!=null)
-            {
-                ActiveList.Clear();
-            }
-            if (!genreFiles.Any())
-            {
-                return;
-            }
-            foreach (FeedItem file in genreFiles)
-            {
-                ActiveList.Add(file);
-            }
-            System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
-            view.Refresh();
+            filterAfterCategory();
         }
 
         private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -402,8 +385,34 @@ namespace CSharpProject.Views
                 //PlayButtonDel = feedItem.DownloadFile;
             }
         }
-        
+        private void refreshListView()
+        {
+            System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
+            view.Refresh();
+        }
 
-
+        public void filterAfterCategory()
+        {
+            if (!categoryFilterBox.IsLoaded)
+            {
+                return;
+            }
+            var category = categoryFilterBox.SelectedItem.ToString();
+            List<FeedItem> genreFiles = FeedItemList.Where(file => file.Category.Equals(category)).ToList();
+            if (ActiveList != null)
+            {
+                ActiveList.Clear();
+            }
+            if (!genreFiles.Any())
+            {
+                refreshListView();
+                return;
+            }
+            foreach (FeedItem file in genreFiles)
+            {
+                ActiveList.Add(file);
+            }
+            refreshListView();
+        }
     }
 }
