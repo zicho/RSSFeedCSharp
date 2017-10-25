@@ -65,7 +65,7 @@ namespace CSharpProject.Views
             LoadAllFeedItemsInFeedList();
             UpdateFeedList();
             
-            //refreshListView();
+            refreshListView();
 
         }
 
@@ -284,7 +284,7 @@ namespace CSharpProject.Views
                         var newFeedsFeedItems = newFeed.fetchFeedItems();
                         newFeed.Items.AddRange(newFeedsFeedItems);
                         FeedList.Add(newFeed);
-                        refreshListView();
+                        filterAfterCategory();
                     }
                 }
                 
