@@ -65,7 +65,6 @@ namespace CSharpProject.Views
             LoadAllFeedItemsInFeedList();
             UpdateFeedList();
             
-            
             //refreshListView();
 
         }
@@ -281,8 +280,11 @@ namespace CSharpProject.Views
                 {
                     if (RSS_Name != null)
                     {
-                        Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
-                        //RefreshFeedList();
+                        var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
+                        var newFeedsFeedItems = newFeed.fetchFeedItems();
+                        newFeed.Items.AddRange(newFeedsFeedItems);
+                        FeedList.Add(newFeed);
+                        refreshListView();
                     }
                 }
                 
@@ -424,7 +426,7 @@ namespace CSharpProject.Views
             var category = categoryFilterBox.SelectedItem.ToString();
             var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
             System.Diagnostics.Debug.WriteLine("geh");
-            System.Diagnostics.Debug.WriteLine("geh");
+            
 
             if (ActiveList != null)
             {

@@ -26,10 +26,10 @@ namespace Logic.Entities
         {
             Items = new List<FeedItem>();
         }
-        public static void AddNewFeed(String content, String name, String url, String updateInterval, String category)
+        public static Feed AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
-            if (content != null)
-            {
+            //if (content != null)
+            //{
                 Feed feed = new Feed();
 
                 String path = (Environment.CurrentDirectory + $"\\podcasts\\{name}"); // Path to a folder containing all XML files in the project directory
@@ -43,8 +43,8 @@ namespace Logic.Entities
 
                 path = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", freshGuid + ".xml");
 
-                if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
-                {
+                //if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
+                //{
                     
                     File.AppendAllText(path, content);
                     
@@ -72,8 +72,9 @@ namespace Logic.Entities
                     {
                         serializer.Serialize(stream, FeedList);
                     }
-                }
-            }
+                    return feed;
+                //}
+            //}
         }
 
         public static async Task<String> DownloadFeed(string url, string text)
@@ -84,13 +85,28 @@ namespace Logic.Entities
                 return await writer.DownloadFeed(url);
             });
         }
+        public List<FeedItem> fetchFeedItems()
+        {
+            string feedFilePath = this.Filepath;
+            var xmlDoc = XDocument.Load(feedFilePath);
 
+            var items = xmlDoc.Descendants("item");
+            var feedItems = items.Select(element => new FeedItem //KOPIA AV KOD FRÅN loadAllFeeds, INTE OK
+            {
+                Title = element.Descendants("title").Single().Value,
+                Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                //FolderName = filePathSplit[filePathSplit.Length - 2],
+                Category = this.Category,
+                Parent = this.Id.ToString(),
+            });
+            return feedItems.ToList();
+        }
         
-        private void ShallFeedBeUpdated(String feedId)
+        public async void ShallFeedBeUpdated(Feed feed)
         {
             String path = (Environment.CurrentDirectory + "/settings.xml");
             var settingsDoc = XDocument.Load(path);
-
+            var feedId = feed.Id.ToString();
             var podSettings = (from podcast in settingsDoc.Descendants("Feed")
                                where podcast.Element("Id").Value == feedId
                                select podcast).FirstOrDefault();
@@ -109,6 +125,7 @@ namespace Logic.Entities
                 File.Delete(folderPath);
 
                 Task<String> newContent = DownloadFeed(podUrl, "text");
+                await newContent;
 
                 File.AppendAllText(folderPath, newContent.Result);
 
