@@ -23,7 +23,6 @@ namespace CSharpProject.Views
 
         public AddCategory(MainWindow main)
         {
-            
             InitializeComponent();
             this.Topmost = true;
             this.Focus();

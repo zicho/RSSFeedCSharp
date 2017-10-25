@@ -346,19 +346,9 @@ namespace CSharpProject.Views
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            try {
-                /*var feedToBeDeleted = feed.Filepath;
-                File.Delete(feedToBeDeleted);*/
-                boxValidator.Validate(podListBox.SelectedIndex, "podcast to delete");
-                Console.WriteLine(FeedItemList[podListBox.SelectedIndex].Parent);
-                FeedItemList.RemoveAt(podListBox.SelectedIndex); // first, we remove it from the ACTUAL list. this is so indexes get updated properly. otherwise you get wrong title for wrong url, etc.
-                podListBox.Items.Remove(podListBox.SelectedItem); // remove from listbox
-                
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "No item selected!");
-            }
+            EditPodcast EditWindow = new EditPodcast(this);
+            EditWindow.Show();
+            this.IsEnabled = false;
         }
 
         private void feedFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
