@@ -64,7 +64,7 @@ namespace Logic.Entities
                     var attributes = new XmlAttributes { XmlIgnore = true };
 
                     var overrides = new XmlAttributeOverrides();
-                    overrides.Add(typeof(Feed), "Content", attributes);
+                    overrides.Add(typeof(Feed), "Items", attributes);
 
                     var serializer = new XmlSerializer(typeof(List<Feed>));
                     
