@@ -117,7 +117,6 @@ namespace CSharpProject.Views
                 {
                     FeedList.Add(feed);
                 }
-                List<FeedItem> feedItems = new List<FeedItem>();
                 foreach (var file in files)
                 { //Körs korrekt antal gånger
                     try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
@@ -133,15 +132,22 @@ namespace CSharpProject.Views
 
                         string[] filePathSplit = file.Split('\\');
 
-                        var newFeedItems = items.Select(element => new FeedItem
+                        var feedItems = items.Select(element => new FeedItem
                         {
                             Title = element.Descendants("title").Single().Value,
                             Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                             FolderName = filePathSplit[filePathSplit.Length - 2],
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
-                        }); //commitkommentar
-                        feedItems.AddRange(newFeedItems);
+                        });
+                         
+                        Feed correctFeed = feeds.SingleOrDefault(feed => feed.Id.ToString().Equals(podID));
+                        //No banan beyond this point
+                        foreach (FeedItem feedItem in feedItems)
+                        {
+                            //Är i add det strular
+                            correctFeed.Items.Add(feedItem);
+                        }
                     }
                     catch
                     {
@@ -151,13 +157,15 @@ namespace CSharpProject.Views
                 }
                 foreach (Feed feed in feeds)
                 {
+                  
 
                     foreach (FeedItem feedItem in feedItems)
                     {
                         if (feedItem.Parent.Equals(feed.Id.ToString()))
                         {
-                            MessageBox.Show(feedItems.Count().ToString());
+                            MessageBox.Show("Banana");
                             feed.Items.Add(feedItem);
+                            
                         }
                     }
                 }
