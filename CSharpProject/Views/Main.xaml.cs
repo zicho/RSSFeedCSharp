@@ -135,17 +135,17 @@ namespace CSharpProject.Views
                     });
 
                     foreach (Feed feed in feeds) {
-                        //Jag körs fel antal gånger
-                        foreach(FeedItem feedItem in feedItems)
+
+                        FeedList.Add(feed);
+                        MessageBox.Show(feed.Name);
+
+                        foreach (FeedItem feedItem in feedItems)
                         {
                             if(feedItem.Parent.Equals(feed.Id))
                             {
                                 feed.Items.Add(feedItem);
                             }
                         }
-
-                        FeedList.Add(feed);
-                        Console.WriteLine(feed.Name);
                     }
                 }
                 catch
