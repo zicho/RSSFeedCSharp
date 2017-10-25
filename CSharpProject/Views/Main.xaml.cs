@@ -151,15 +151,13 @@ namespace CSharpProject.Views
                 }
                 foreach (Feed feed in feeds)
                 {
-                  
 
                     foreach (FeedItem feedItem in feedItems)
                     {
                         if (feedItem.Parent.Equals(feed.Id.ToString()))
                         {
-                            MessageBox.Show("Banana");
+                            MessageBox.Show(feedItems.Count().ToString());
                             feed.Items.Add(feedItem);
-                            
                         }
                     }
                 }
