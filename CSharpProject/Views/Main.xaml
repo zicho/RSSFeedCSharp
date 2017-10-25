@@ -102,7 +102,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button x:Name="buttonPlay" Content="Play" Grid.Column="0" Click="Button_Click_1"/>
-                <Button x:Name="buttonEdit" Content="Edit Podcasts" Grid.Column="3" Click="Button_Click_2" Height="20" VerticalAlignment="Top"/>
+                <Button x:Name="buttonEdit" Content="Edit Podcasts" Grid.Column="2" Click="Button_Click_2"/>
             </Grid>
 
 

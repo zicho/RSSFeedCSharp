@@ -42,6 +42,8 @@ namespace CSharpProject.Views
         //private delegate void ButtonAction(FeedItem item);
         //private ButtonAction PlayButtonDel;
 
+        EditPodcast editWindow = new EditPodcast();
+
         public MainWindow()
         {
             
@@ -364,6 +366,7 @@ namespace CSharpProject.Views
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             EditPodcast EditWindow = new EditPodcast(this);
+            editWindow.Owner = this;
             EditWindow.Show();
             this.IsEnabled = false;
         }

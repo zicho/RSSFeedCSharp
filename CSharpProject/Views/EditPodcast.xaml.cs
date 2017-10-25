@@ -37,6 +37,8 @@ namespace CSharpProject.Views
         private List<Category> categoryList = Category.CategoryList;
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
 
+        
+
         public EditPodcast(MainWindow main)
         {
             InitializeComponent();
@@ -64,6 +66,10 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
 
+        }
+
+        public EditPodcast()
+        {
         }
 
         public void loadInfo()
@@ -133,6 +139,8 @@ namespace CSharpProject.Views
                 if (query.Count() > 0)
                     query.First().Remove();
                 settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+
+                FeedList.RemoveAt(item); // Ta bort ur feedlist också
             }
 
 
@@ -141,6 +149,12 @@ namespace CSharpProject.Views
             directory.Delete(true);
 
             MessageBox.Show($"Feed {Name} was deleted.");
+
+            try
+            {
+                ((MainWindow)this.Owner).UpdateFeedList();
+            } catch
+            { }
         }
     }
 }
