@@ -99,6 +99,8 @@ namespace CSharpProject.Views
 
             var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
 
+            try { 
+
             var feeds = from item in settings.Descendants("Feed")
 
                         select new Feed
@@ -110,57 +112,61 @@ namespace CSharpProject.Views
                             LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
                             Category = item.Descendants("Category").Single().Value
                         }; //Korrekt antal feeds sparas
-            
-            foreach (var file in files)
-            { //Körs korrekt antal gånger
-                try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
+
+                foreach (Feed feed in feeds)
                 {
-                    xmlDocument = XDocument.Load(file);
-
-                    var podID = Path.GetFileNameWithoutExtension(file);
-                    var podSettings = (from podcast in settings.Descendants("Feed")
-                                       where podcast.Element("Id").Value == podID
-                                       select podcast).FirstOrDefault();
-
-                    var items = xmlDocument.Descendants("item");
-
-                    string[] filePathSplit = file.Split('\\');
-
-                    var feedItems = items.Select(element => new FeedItem
-                    {
-                        Title = element.Descendants("title").Single().Value,
-                        Link = element.Descendants("enclosure").Single().Attribute("url").Value,
-                        FolderName = filePathSplit[filePathSplit.Length - 2],
-                        Category = podSettings.Descendants("Category").Single().Value,
-                        Parent = podID,
-                    });
-
-                    //foreach (Feed feed in feeds) {
-
-                    //    FeedList.Add(feed);
-
-                        
-                    //    foreach (FeedItem feedItem in feedItems)
-                    //    {
-                    //        if(feedItem.Parent.Equals(feed.Id))
-                    //        {
-                    //            feed.Items.Add(feedItem);
-                    //        }
-                    //    }
-                    //}
-                }
-                catch
-                {
-                    // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
-                    // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
-                }
-                foreach (Feed feed in feeds) { 
                     FeedList.Add(feed);
                 }
+
+                foreach (var file in files)
+                { //Körs korrekt antal gånger
+                    try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
+                    {
+                        xmlDocument = XDocument.Load(file);
+
+                        var podID = Path.GetFileNameWithoutExtension(file);
+                        var podSettings = (from podcast in settings.Descendants("Feed")
+                                           where podcast.Element("Id").Value == podID
+                                           select podcast).FirstOrDefault();
+
+                        var items = xmlDocument.Descendants("item");
+
+                        string[] filePathSplit = file.Split('\\');
+
+                        var feedItems = items.Select(element => new FeedItem
+                        {
+                            Title = element.Descendants("title").Single().Value,
+                            Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                            FolderName = filePathSplit[filePathSplit.Length - 2],
+                            Category = podSettings.Descendants("Category").Single().Value,
+                            Parent = podID,
+                        });
+
+                        foreach (Feed feed in feeds)
+                        {
+                            foreach (FeedItem feedItem in feedItems)
+                            {
+                                if (feedItem.Parent.Equals(feed.Id))
+                                {
+                                    feed.Items.Add(feedItem);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
+                        // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
+                    }
+                }
+
+            } catch
+            {
+
             }
 
-            MessageBox.Show(FeedList.Count.ToString());
-
+            
+            //
         }
 
         private void RefreshPodcastList()
