@@ -165,9 +165,6 @@ namespace CSharpProject.Views
             {
 
             }
-
-            
-            //
         }
 
         private void RefreshPodcastList()
