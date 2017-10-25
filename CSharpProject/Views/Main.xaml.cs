@@ -165,9 +165,6 @@ namespace CSharpProject.Views
             {
 
             }
-
-            MessageBox.Show(FeedList[0].Items.Count().ToString());
-            //
         }
 
         private void RefreshPodcastList()
