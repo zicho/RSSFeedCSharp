@@ -8,8 +8,8 @@
         Title="EditPodcast" Height="256.404" Width="452.217">
     <Grid Height="198" VerticalAlignment="Top">
         <ComboBox x:Name="feedComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="412" SelectionChanged="feedComboBox_SelectionChanged"/>
-        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Height="23" Margin="82,45,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="340"/>
-        <TextBox x:Name="URLTextBox" HorizontalAlignment="Left" Height="23" Margin="82,73,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="340"/>
+        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Height="23" Margin="82,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="340" TextChanged="nameTextBox_TextChanged"/>
+        <TextBox x:Name="URLTextBox" HorizontalAlignment="Left" Height="23" Margin="82,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="340"/>
         <ComboBox x:Name="intervalComboBox" HorizontalAlignment="Left" Margin="82,101,0,0" VerticalAlignment="Top" Width="340">
             <ComboBoxItem Content="1 day" HorizontalAlignment="Left" Width="219"/>
             <ComboBoxItem Content="3 days" HorizontalAlignment="Left" Width="219"/>
@@ -19,7 +19,7 @@
         <Label Content="URL" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
         <Label Content="Interval" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top"/>
         <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="10,193,0,-15" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click"/>
-        <Button x:Name="buttonSave" Content="Save" HorizontalAlignment="Left" Margin="306,193,0,-15" VerticalAlignment="Top" Width="116"/>
+        <Button x:Name="buttonSave" Content="Save" HorizontalAlignment="Left" Margin="306,193,0,-15" VerticalAlignment="Top" Width="116" Click="buttonSave_Click"/>
         <Button x:Name="buttonDelete" Content="Delete" HorizontalAlignment="Left" Margin="306,168,0,0" VerticalAlignment="Top" Width="116" RenderTransformOrigin="0.021,-0.066" Click="buttonDelete_Click"/>
         <ComboBox x:Name="categoryComboBox" HorizontalAlignment="Left" Margin="82,128,0,0" VerticalAlignment="Top" Width="340">
         </ComboBox>

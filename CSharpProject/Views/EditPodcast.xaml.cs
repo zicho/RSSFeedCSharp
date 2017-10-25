@@ -61,7 +61,7 @@ namespace CSharpProject.Views
                 feedComboBox.IsEnabled = true;
             }
 
-            loadInfo();
+            LoadInfo();
 
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
@@ -72,10 +72,19 @@ namespace CSharpProject.Views
         {
         }
 
-        public void loadInfo()
+        public void LoadInfo()
         {
             var item = feedComboBox.SelectedIndex;
-            var Name = FeedList[item].Name;
+
+            if(FeedList.Count > 0) {
+                
+                feedComboBox.IsEnabled = true;
+                nameTextBox.IsEnabled = true;
+                URLTextBox.IsEnabled = true;
+                intervalComboBox.IsEnabled = true;
+                categoryComboBox.IsEnabled = true;
+
+                var Name = FeedList[item].Name;
             var URL = FeedList[item].URL;
             var Interval = FeedList[item].UpdateInterval;
             var Category = FeedList[item].Category;
@@ -108,17 +117,34 @@ namespace CSharpProject.Views
                     }
                 }
             }
+            } else
+            {
+                feedComboBox.Items.Add("No feeds here yet.");
+                feedComboBox.SelectedIndex = 0;
 
+                feedComboBox.IsEnabled = false;
+                nameTextBox.IsEnabled = false;
+                URLTextBox.IsEnabled = false;
+                intervalComboBox.IsEnabled = false;
+                categoryComboBox.IsEnabled = false;
+            }
         }
 
         private void feedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            loadInfo();
+            LoadInfo();
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            this.Hide();
+            ((MainWindow)this.Owner).IsEnabled = true;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.Hide();
+            ((MainWindow)this.Owner).IsEnabled = true;
         }
 
         private void buttonDelete_Click(object sender, RoutedEventArgs e)
@@ -149,12 +175,18 @@ namespace CSharpProject.Views
             directory.Delete(true);
 
             MessageBox.Show($"Feed {Name} was deleted.");
+            ((MainWindow)this.Owner).UpdateFeedList();
+            LoadInfo();
+        }
 
-            try
-            {
-                ((MainWindow)this.Owner).UpdateFeedList();
-            } catch
-            { }
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

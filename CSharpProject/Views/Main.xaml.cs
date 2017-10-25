@@ -355,7 +355,7 @@ namespace CSharpProject.Views
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             EditPodcast EditWindow = new EditPodcast(this);
-            editWindow.Owner = this;
+            EditWindow.Owner = this;
             EditWindow.Show();
             this.IsEnabled = false;
         }
