@@ -96,27 +96,27 @@ namespace CSharpProject.Views
             var files = loadXML(path);
 
             XDocument xmlDocument;
-            
+
             var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
 
-            try {
-                
+            try
+            {
                 var feeds = from item in settings.Descendants("Feed")
-
-                        select new Feed
-                        {
-                            Id = new Guid(item.Descendants("Id").Single().Value),
-                            Name = item.Descendants("Name").Single().Value,
-                            URL = item.Descendants("URL").Single().Value,
-                            UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
-                            LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
-                            Category = item.Descendants("Category").Single().Value
-                        }; //Korrekt antal feeds sparas
+                            select new Feed
+                            {
+                                Id = new Guid(item.Descendants("Id").Single().Value),
+                                Name = item.Descendants("Name").Single().Value,
+                                URL = item.Descendants("URL").Single().Value,
+                                UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
+                                LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
+                                Category = item.Descendants("Category").Single().Value
+                            }; //Korrekt antal feeds sparas
 
                 foreach (Feed feed in feeds)
                 {
                     FeedList.Add(feed);
                 }
+
                 foreach (var file in files)
                 { //Körs korrekt antal gånger
                     try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
@@ -140,19 +140,18 @@ namespace CSharpProject.Views
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
                         });
-
-                        //var correctFeed = feeds.SingleOrDefault(feed => feed.Id.ToString().Equals(podID)); //Förmodligen ingen referens, så måste ändras
-                        foreach (Feed feed in feeds)
+                        
+                        foreach (Feed feed in FeedList)
                         {
-                            foreach (FeedItem item in feedItems.ToList())
+                            foreach (FeedItem item in feedItems)
                             {
-                                if(item.Parent.Equals(podID))
+                                if (item.Parent.Equals(podID))
                                 {
                                     feed.Items.Add(item);
                                 }
                             }
                         }
-                     
+
                     }
                     catch
                     {
@@ -160,10 +159,13 @@ namespace CSharpProject.Views
                         // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                     }
                 }
-            } catch
-            {
-                
             }
+            catch
+            {
+
+            }
+            System.Diagnostics.Debug.WriteLine("geh");
+            System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
         }
 
         private void RefreshPodcastList()
