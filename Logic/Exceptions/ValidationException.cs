@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Logic.Exceptions
@@ -41,7 +42,20 @@ namespace Logic.Exceptions
             {
                 if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
                     throw new Exception($"The field '{field}' may not be empty.");
-                
+
+         
+                //var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+                //XElement Contact = (from xml2 in settings.Descendants("Feed")
+                //                    where xml2.Element("URL").Value == input
+                //                    select xml2).SingleOrDefault();
+
+                //if (Contact != null)
+                //{
+                //    throw new Exception($"URL is already added.");
+                //}
+
+
                 if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
                 {
                     throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");

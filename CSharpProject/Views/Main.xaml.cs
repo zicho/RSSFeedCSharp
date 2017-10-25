@@ -155,20 +155,19 @@ namespace CSharpProject.Views
                         // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                     }
                 }
-                foreach (Feed feed in feeds)
-                {
+                //foreach (Feed feed in feeds)
+                //{
                   
-
-                    foreach (FeedItem feedItem in feedItems)
-                    {
-                        if (feedItem.Parent.Equals(feed.Id.ToString()))
-                        {
-                            MessageBox.Show("Banana");
-                            feed.Items.Add(feedItem);
+                //    foreach (FeedItem feedItem in feedItems)
+                //    {
+                //        if (feedItem.Parent.Equals(feed.Id.ToString()))
+                //        {
+                //            MessageBox.Show("Banana");
+                //            feed.Items.Add(feedItem);
                             
-                        }
-                    }
-                }
+                //        }
+                //    }
+                //}
                 
 
             } catch
@@ -277,7 +276,7 @@ namespace CSharpProject.Views
                     }
                 }
 
-                filterAfterCategory();
+                //filterAfterCategory();
                 UpdateFeedList();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
                 //view.Refresh();
@@ -379,7 +378,7 @@ namespace CSharpProject.Views
 
         private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            filterAfterCategory();
+            //filterAfterCategory();
         }
 
         private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -402,29 +401,31 @@ namespace CSharpProject.Views
             view.Refresh();
         }
 
-        public void filterAfterCategory()
-        {
-            if (!categoryFilterBox.IsLoaded)
-            {
-                return;
-            }
-            var category = categoryFilterBox.SelectedItem.ToString();
-            List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
-            //List<FeedItem> genreFeed = categoryFeed.GetAllaFeedItems i varje Feed i listan;
-            if (ActiveList != null)
-            {
-                ActiveList.Clear();
-            }
-            //if (!genreFeed.Any())
-            //{
-            //    refreshListView();
-            //    return;
-            //}
-            //foreach (FeedItem file in categoryFeed)
-            //{
-            //    ActiveList.Add(file);
-            //}
-            refreshListView();
-        }
+        //public void filterAfterCategory()
+        //{
+        //    if (!categoryFilterBox.IsLoaded)
+        //    {
+        //        return;
+        //    }
+
+        //    var category = categoryFilterBox.SelectedItem.ToString();
+
+        //    List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
+        //    //List<FeedItem> genreFeed = categoryFeed.GetAllaFeedItems i varje Feed i listan;
+        //    if (ActiveList != null)
+        //    {
+        //        ActiveList.Clear();
+        //    }
+        //    //if (!genreFeed.Any())
+        //    //{
+        //    //    refreshListView();
+        //    //    return;
+        //    //}
+        //    //foreach (FeedItem file in categoryFeed)
+        //    //{
+        //    //    ActiveList.Add(file);
+        //    //}
+        //    refreshListView();
+        //}
     }
 }
