@@ -1,6 +1,7 @@
 ﻿using Logic.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace CSharpProject.Views
 {
@@ -119,8 +122,25 @@ namespace CSharpProject.Views
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you really wish to delete podcast {Name}?", $"Confirm deletion of {Name}", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                MessageBox.Show("ja");
+                var item = feedComboBox.SelectedIndex;
+                var Id = FeedList[item].Id;
+                var Name = FeedList[item].Name;
+
+                XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+                var query = from element in settings.Descendants()
+                          where (string)element.Element("Id") == Id.ToString()
+                          select element;
+                if (query.Count() > 0)
+                    query.First().Remove();
+                settings.Save(Environment.CurrentDirectory + @"\settings.xml");
             }
+
+
+            System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{Name}");
+
+            directory.Delete(true);
+
+            MessageBox.Show($"Feed {Name} was deleted.");
         }
     }
 }
