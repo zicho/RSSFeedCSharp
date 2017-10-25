@@ -155,20 +155,20 @@ namespace CSharpProject.Views
                         // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                     }
                 }
-                //foreach (Feed feed in feeds)
-                //{
+                foreach (Feed feed in feeds)
+                {
                   
 
-                //    foreach (FeedItem feedItem in feedItems)
-                //    {
-                //        if (feedItem.Parent.Equals(feed.Id.ToString()))
-                //        {
-                //            MessageBox.Show("Banana");
-                //            feed.Items.Add(feedItem);
+                    foreach (FeedItem feedItem in feedItems)
+                    {
+                        if (feedItem.Parent.Equals(feed.Id.ToString()))
+                        {
+                            MessageBox.Show("Banana");
+                            feed.Items.Add(feedItem);
                             
-                //        }
-                //    }
-                //}
+                        }
+                    }
+                }
                 
 
             } catch
