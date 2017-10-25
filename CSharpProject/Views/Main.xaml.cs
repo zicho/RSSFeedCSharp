@@ -65,7 +65,7 @@ namespace CSharpProject.Views
             LoadAllFeedItemsInFeedList();
             UpdateFeedList();
             
-            refreshListView();
+            //refreshListView();
 
         }
 
@@ -283,8 +283,9 @@ namespace CSharpProject.Views
                         var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
                         var newFeedsFeedItems = newFeed.fetchFeedItems();
                         newFeed.Items.AddRange(newFeedsFeedItems);
-                        FeedList.Add(newFeed);
+                        //FeedList.Add(newFeed);
                         filterAfterCategory();
+                        UpdateFeedList();
                     }
                 }
                 
