@@ -137,7 +137,6 @@ namespace CSharpProject.Views
                     foreach (Feed feed in feeds) {
 
                         FeedList.Add(feed);
-                        MessageBox.Show(feed.Name);
 
                         foreach (FeedItem feedItem in feedItems)
                         {
