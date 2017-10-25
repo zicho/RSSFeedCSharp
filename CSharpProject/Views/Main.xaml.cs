@@ -50,12 +50,15 @@ namespace CSharpProject.Views
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
             ActiveList = new List<FeedItem>();
+            
             podListBox.ItemsSource = ActiveList; //testar ersätta FeedItemList här
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
            
             loadAllFeeds();
             RefreshPodcastList();
+            InitialLoad();
+            refreshListView();
             InitializeComboBoxes();
             UpdateFeedList();
         }
@@ -164,8 +167,8 @@ namespace CSharpProject.Views
             {
 
             }
-            System.Diagnostics.Debug.WriteLine("geh");
-            System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
+            //System.Diagnostics.Debug.WriteLine("geh");
+            //System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
         }
 
         private void RefreshPodcastList()
@@ -382,32 +385,47 @@ namespace CSharpProject.Views
             System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
             view.Refresh();
         }
+        private void InitialLoad()
+        {
+            foreach(Feed feed in FeedList)
+            {
+                System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
+                foreach (FeedItem item in feed.Items)
+                {
+                    ActiveList.Add(item);
+                    System.Diagnostics.Debug.WriteLine("hej");
+                }
+            }
+        }
 
-        //public void filterAfterCategory()
-        //{
-        //    if (!categoryFilterBox.IsLoaded)
-        //    {
-        //        return;
-        //    }
+        public void filterAfterCategory()
+        {
+            if (!categoryFilterBox.IsLoaded)
+            {
+                return;
+            }
+            var category = categoryFilterBox.SelectedItem.ToString();
+            List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
 
-        //    var category = categoryFilterBox.SelectedItem.ToString();
 
-        //    List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
-        //    //List<FeedItem> genreFeed = categoryFeed.GetAllaFeedItems i varje Feed i listan;
-        //    if (ActiveList != null)
-        //    {
-        //        ActiveList.Clear();
-        //    }
-        //    //if (!genreFeed.Any())
-        //    //{
-        //    //    refreshListView();
-        //    //    return;
-        //    //}
-        //    //foreach (FeedItem file in categoryFeed)
-        //    //{
-        //    //    ActiveList.Add(file);
-        //    //}
-        //    refreshListView();
-        //}
+            if (ActiveList != null)
+            {
+                ActiveList.Clear();
+            }
+            List<FeedItem> categoryFeedItems = new List<FeedItem>();
+            foreach (Feed feed in categoryFeed)
+                categoryFeedItems.AddRange(feed.Items);
+
+            if (!categoryFeedItems.Any())
+            {
+                refreshListView();
+                return;
+            }
+            foreach (FeedItem feedItem in categoryFeedItems)
+            {
+                ActiveList.Add(feedItem);
+            }
+            refreshListView();
+        }
     }
 }
