@@ -61,9 +61,13 @@ namespace CSharpProject.Views
             RefreshPodcastList();
             
             InitializeComboBoxes();
+            //filterAfterCategory();
+            LoadAllFeedItemsInFeedList();
             UpdateFeedList();
-            InitialLoad();
-            refreshListView();
+            
+            
+            //refreshListView();
+
         }
 
         private List<String> loadXML(string directory)
@@ -172,7 +176,12 @@ namespace CSharpProject.Views
             //System.Diagnostics.Debug.WriteLine("geh");
             //System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
         }
-
+        private void RefreshFeedList()
+        {
+            FeedList.Clear();
+            loadAllFeeds();
+            LoadAllFeedItemsInFeedList();
+        }
         private void RefreshPodcastList()
         {
             //podListBox.Items.Clear();
@@ -225,11 +234,14 @@ namespace CSharpProject.Views
         {
             feedFilterBox.Items.Clear();
 
-            if (FeedList.Count() > 0)
+            if (ActiveList.Count() > 0)
             {
                 foreach (var feed in FeedList)
                 {
-                    feedFilterBox.Items.Add(feed.Name);
+                    if(feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
+                    {
+                        feedFilterBox.Items.Add(feed.Name);
+                    }
                 }
 
                 feedFilterBox.SelectedIndex = 0;
@@ -270,12 +282,11 @@ namespace CSharpProject.Views
                     if (RSS_Name != null)
                     {
                         Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
-                        refreshListView();
+                        //RefreshFeedList();
                     }
                 }
                 
-                UpdateFeedList();
-                filterAfterCategory();
+                //UpdateFeedList();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
                 //view.Refresh();
                 //RefreshPodcastList();
@@ -370,6 +381,7 @@ namespace CSharpProject.Views
             if (categoryFilterBox.IsLoaded)
             {
                 filterAfterCategory();
+                UpdateFeedList();
             }
         }
 
@@ -387,14 +399,16 @@ namespace CSharpProject.Views
                 //PlayButtonDel = feedItem.DownloadFile;
             }
         }
+
         private void refreshListView()
         {
             System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
             view.Refresh();
         }
-        private void InitialLoad()
+
+        private void LoadAllFeedItemsInFeedList()
         {
-            foreach(Feed feed in FeedList)
+            foreach (Feed feed in FeedList)
             {
                 System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
                 foreach (FeedItem item in feed.Items)
@@ -407,33 +421,32 @@ namespace CSharpProject.Views
 
         public void filterAfterCategory()
         {
-            //var category = categoryFilterBox.SelectedItem.ToString();
-            //var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
-            //System.Diagnostics.Debug.WriteLine("geh");
-            //System.Diagnostics.Debug.WriteLine("geh");
+            var category = categoryFilterBox.SelectedItem.ToString();
+            var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
+            System.Diagnostics.Debug.WriteLine("geh");
+            System.Diagnostics.Debug.WriteLine("geh");
 
-            //if (ActiveList != null)
-            //{
-            //    ActiveList.Clear();
-            //}
-            //List<FeedItem> categoryFeedItems = new List<FeedItem>();
-            //foreach (Feed feed in categoryFeed)
-            //{
-            //    categoryFeedItems.AddRange(feed.Items);
-            //}
-            
-            //if (!categoryFeedItems.Any())
-            //{
-            //    refreshListView();
-            //    return;
-            //}
+            if (ActiveList != null)
+            {
+                ActiveList.Clear();
+            }
+            List<FeedItem> categoryFeedItems = new List<FeedItem>();
+            foreach (Feed feed in categoryFeed)
+            {
+                categoryFeedItems.AddRange(feed.Items);
+            }
 
-            //foreach (FeedItem feedItem in categoryFeedItems)
-            //{
-            //    ActiveList.Add(feedItem);
-            //}
+            if (!categoryFeedItems.Any())
+            {
+                refreshListView();
+                return;
+            }
 
-            //refreshListView();
+            foreach (FeedItem feedItem in categoryFeedItems)
+            {
+                ActiveList.Add(feedItem);
+            }
+            refreshListView();
         }
     }
 }
