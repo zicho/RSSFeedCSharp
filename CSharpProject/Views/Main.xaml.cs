@@ -270,9 +270,9 @@ namespace CSharpProject.Views
                         Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
                     }
                 }
-
-                //filterAfterCategory();
+                
                 UpdateFeedList();
+                filterAfterCategory();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
                 //view.Refresh();
                 //RefreshPodcastList();
@@ -363,7 +363,10 @@ namespace CSharpProject.Views
 
         private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //filterAfterCategory();
+            if (categoryFilterBox.IsLoaded)
+            {
+                filterAfterCategory();
+            }
         }
 
         private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -400,13 +403,10 @@ namespace CSharpProject.Views
 
         public void filterAfterCategory()
         {
-            if (!categoryFilterBox.IsLoaded)
-            {
-                return;
-            }
             var category = categoryFilterBox.SelectedItem.ToString();
-            List<Feed> categoryFeed = FeedList.Where(feed => feed.Category.Equals(category)).ToList();
-
+            var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
+            System.Diagnostics.Debug.WriteLine("geh");
+            System.Diagnostics.Debug.WriteLine("geh");
 
             if (ActiveList != null)
             {
@@ -414,17 +414,21 @@ namespace CSharpProject.Views
             }
             List<FeedItem> categoryFeedItems = new List<FeedItem>();
             foreach (Feed feed in categoryFeed)
+            {
                 categoryFeedItems.AddRange(feed.Items);
-
+            }
+            
             if (!categoryFeedItems.Any())
             {
                 refreshListView();
                 return;
             }
+
             foreach (FeedItem feedItem in categoryFeedItems)
             {
                 ActiveList.Add(feedItem);
             }
+
             refreshListView();
         }
     }
