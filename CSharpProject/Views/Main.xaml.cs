@@ -96,6 +96,7 @@ namespace CSharpProject.Views
             var files = loadXML(path);
 
             XDocument xmlDocument;
+
             var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
 
             var feeds = from item in settings.Descendants("Feed")
@@ -134,25 +135,32 @@ namespace CSharpProject.Views
                         Parent = podID,
                     });
 
-                    foreach (Feed feed in feeds) {
+                    //foreach (Feed feed in feeds) {
 
-                        FeedList.Add(feed);
+                    //    FeedList.Add(feed);
 
-                        foreach (FeedItem feedItem in feedItems)
-                        {
-                            if(feedItem.Parent.Equals(feed.Id))
-                            {
-                                feed.Items.Add(feedItem);
-                            }
-                        }
-                    }
+                        
+                    //    foreach (FeedItem feedItem in feedItems)
+                    //    {
+                    //        if(feedItem.Parent.Equals(feed.Id))
+                    //        {
+                    //            feed.Items.Add(feedItem);
+                    //        }
+                    //    }
+                    //}
                 }
                 catch
                 {
                     // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
                     // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                 }
+                foreach (Feed feed in feeds) { 
+                    FeedList.Add(feed);
+                }
             }
+
+            MessageBox.Show(FeedList.Count.ToString());
+
         }
 
         private void RefreshPodcastList()
