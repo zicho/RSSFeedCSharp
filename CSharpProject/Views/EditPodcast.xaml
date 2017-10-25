@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CSharpProject.Views"
         mc:Ignorable="d"
-        Title="EditPodcast" Height="300" Width="302.956">
+        Title="EditPodcast" Height="229.064" Width="452.217">
     <Grid>
-        <ComboBox x:Name="feedComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="268" SelectionChanged="feedComboBox_SelectionChanged"/>
-        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Height="23" Margin="57,45,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="221"/>
-        <TextBox x:Name="URLTextBox" HorizontalAlignment="Left" Height="23" Margin="57,73,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="221"/>
-        <ComboBox x:Name="intervalComboBox" HorizontalAlignment="Left" Margin="64,101,0,0" VerticalAlignment="Top" Width="214">
+        <ComboBox x:Name="feedComboBox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="412" SelectionChanged="feedComboBox_SelectionChanged"/>
+        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Height="23" Margin="82,45,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="340"/>
+        <TextBox x:Name="URLTextBox" HorizontalAlignment="Left" Height="23" Margin="82,73,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="340"/>
+        <ComboBox x:Name="intervalComboBox" HorizontalAlignment="Left" Margin="82,101,0,0" VerticalAlignment="Top" Width="340">
             <ComboBoxItem Content="1 day" HorizontalAlignment="Left" Width="219"/>
             <ComboBoxItem Content="3 days" HorizontalAlignment="Left" Width="219"/>
             <ComboBoxItem Content="1 week" HorizontalAlignment="Left" Width="219"/>
@@ -18,8 +18,8 @@
         <Label Content="Name" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top"/>
         <Label Content="URL" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
         <Label Content="Interval" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="buttonSave" Content="Save" HorizontalAlignment="Left" Margin="203,230,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="buttonDelete" Content="Delete" HorizontalAlignment="Left" Margin="203,136,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.021,-0.066"/>
+        <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click"/>
+        <Button x:Name="buttonSave" Content="Save" HorizontalAlignment="Left" Margin="306,161,0,0" VerticalAlignment="Top" Width="116"/>
+        <Button x:Name="buttonDelete" Content="Delete" HorizontalAlignment="Left" Margin="306,136,0,0" VerticalAlignment="Top" Width="116" RenderTransformOrigin="0.021,-0.066" Click="buttonDelete_Click"/>
     </Grid>
 </Window>

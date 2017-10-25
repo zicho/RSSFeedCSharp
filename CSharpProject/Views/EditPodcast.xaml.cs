@@ -80,5 +80,21 @@ namespace CSharpProject.Views
         {
             loadInfo();
         }
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            Name = nameTextBox.Text;
+
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you really wish to delete podcast {Name}?", $"Confirm deletion of {Name}", System.Windows.MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                MessageBox.Show("ja");
+            }
+        }
     }
 }
