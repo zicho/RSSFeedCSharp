@@ -152,15 +152,7 @@ namespace CSharpProject.Views
                                 }
                             }
                         }
-                        
-                        
-
-                        //No banan beyond this point
-                        //foreach (FeedItem feedItem in feedItems)
-                        //{
-                        //    //Är i add det strular
-                        //    correctFeed.Items.Add(feedItem);
-                        //}
+                     
                     }
                     catch
                     {
@@ -168,22 +160,6 @@ namespace CSharpProject.Views
                         // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                     }
                 }
-                //foreach (Feed feed in feeds)
-                //{
-                  
-
-                    foreach (FeedItem feedItem in feedItems)
-                    {
-                        if (feedItem.Parent.Equals(feed.Id.ToString()))
-                        {
-                            MessageBox.Show("Banana");
-                            feed.Items.Add(feedItem);
-                            
-                        }
-                    }
-                }
-                
-
             } catch
             {
                 
