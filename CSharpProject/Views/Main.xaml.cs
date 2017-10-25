@@ -140,14 +140,27 @@ namespace CSharpProject.Views
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
                         });
-                         
-                        Feed correctFeed = feeds.SingleOrDefault(feed => feed.Id.ToString().Equals(podID));
-                        //No banan beyond this point
-                        foreach (FeedItem feedItem in feedItems)
+
+                        //var correctFeed = feeds.SingleOrDefault(feed => feed.Id.ToString().Equals(podID)); //Förmodligen ingen referens, så måste ändras
+                        foreach (Feed feed in feeds)
                         {
-                            //Är i add det strular
-                            correctFeed.Items.Add(feedItem);
+                            foreach (FeedItem item in feedItems.ToList())
+                            {
+                                if(item.Parent.Equals(podID))
+                                {
+                                    feed.Items.Add(item);
+                                }
+                            }
                         }
+                        
+                        
+
+                        //No banan beyond this point
+                        //foreach (FeedItem feedItem in feedItems)
+                        //{
+                        //    //Är i add det strular
+                        //    correctFeed.Items.Add(feedItem);
+                        //}
                     }
                     catch
                     {
@@ -158,16 +171,17 @@ namespace CSharpProject.Views
                 //foreach (Feed feed in feeds)
                 //{
                   
-                //    foreach (FeedItem feedItem in feedItems)
-                //    {
-                //        if (feedItem.Parent.Equals(feed.Id.ToString()))
-                //        {
-                //            MessageBox.Show("Banana");
-                //            feed.Items.Add(feedItem);
+
+                    foreach (FeedItem feedItem in feedItems)
+                    {
+                        if (feedItem.Parent.Equals(feed.Id.ToString()))
+                        {
+                            MessageBox.Show("Banana");
+                            feed.Items.Add(feedItem);
                             
-                //        }
-                //    }
-                //}
+                        }
+                    }
+                }
                 
 
             } catch

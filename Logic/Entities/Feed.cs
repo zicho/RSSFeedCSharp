@@ -22,6 +22,10 @@ namespace Logic.Entities
         
         public static List<Feed> FeedList = new List<Feed>();
 
+        public Feed()
+        {
+            Items = new List<FeedItem>();
+        }
         public static void AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
             if (content != null)
