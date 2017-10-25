@@ -21,7 +21,6 @@ namespace Logic.Entities
         public List<FeedItem> Items { get; set; } // USE THIS??????????????
         
         public static List<Feed> FeedList = new List<Feed>();
-        public static List<Feed> SettingsList = new List<Feed>();
 
         public static void AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
@@ -47,28 +46,27 @@ namespace Logic.Entities
                     
                     feed.Filepath = ($@"{path}"); // append the PATH to the XML on the feed object. This is useful for deleting items directly from the XML file.
                     feed.Name = name;
-                    feed.URL = content;
+                    feed.URL = url;
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
                     
                     feed.Id = freshGuid;
                     FeedList.Add(feed);
-                   
-                    //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+
+                     
+                    //THIS IGNORES ADDING THE CONTENT PROPERTY TO OUR SETTINGS FILES, AS IT IS 
+
+                    var attributes = new XmlAttributes { XmlIgnore = true };
+
+                    var overrides = new XmlAttributeOverrides();
+                    overrides.Add(typeof(Feed), "Content", attributes);
+
                     var serializer = new XmlSerializer(typeof(List<Feed>));
-                    //var settingsPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", "settings.xml");
+                    
                     using (var stream = new StreamWriter("settings.xml"))
                     {
-                        Feed settingsFeed = new Feed();
-                        settingsFeed.Id = freshGuid;
-                        settingsFeed.Name = name;
-                        settingsFeed.URL = url;
-                        settingsFeed.UpdateInterval = Int32.Parse(updateInterval);
-                        settingsFeed.LastUpdated = DateTime.Today;
-                        settingsFeed.Category = category;
-                        SettingsList.Add(settingsFeed);
-                        serializer.Serialize(stream, SettingsList);
+                        serializer.Serialize(stream, FeedList);
                     }
                 }
             }
