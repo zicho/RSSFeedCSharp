@@ -96,12 +96,12 @@ namespace CSharpProject.Views
             var files = loadXML(path);
 
             XDocument xmlDocument;
-
+            
             var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
 
-            try { 
-
-            var feeds = from item in settings.Descendants("Feed")
+            try {
+                
+                var feeds = from item in settings.Descendants("Feed")
 
                         select new Feed
                         {
@@ -117,7 +117,7 @@ namespace CSharpProject.Views
                 {
                     FeedList.Add(feed);
                 }
-
+                List<FeedItem> feedItems = new List<FeedItem>();
                 foreach (var file in files)
                 { //Körs korrekt antal gånger
                     try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
@@ -133,7 +133,7 @@ namespace CSharpProject.Views
 
                         string[] filePathSplit = file.Split('\\');
 
-                        var feedItems = items.Select(element => new FeedItem
+                        var newFeedItems = items.Select(element => new FeedItem
                         {
                             Title = element.Descendants("title").Single().Value,
                             Link = element.Descendants("enclosure").Single().Attribute("url").Value,
@@ -141,17 +141,7 @@ namespace CSharpProject.Views
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
                         });
-
-                        foreach (Feed feed in feeds)
-                        {
-                            foreach (FeedItem feedItem in feedItems)
-                            {
-                                if (feedItem.Parent.Equals(feed.Id))
-                                {
-                                    feed.Items.Add(feedItem);
-                                }
-                            }
-                        }
+                        feedItems.AddRange(newFeedItems);
                     }
                     catch
                     {
@@ -159,6 +149,17 @@ namespace CSharpProject.Views
                         // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
                     }
                 }
+                foreach (Feed feed in feeds)
+                {
+                    foreach (FeedItem feedItem in feedItems)
+                    {
+                        if (feedItem.Parent.Equals(feed.Id))
+                        {
+                            feed.Items.Add(feedItem);
+                        }
+                    }
+                }
+                
 
             } catch
             {
