@@ -28,6 +28,12 @@ namespace CSharpProject.Views
         private List<Feed> feedList = Feed.FeedList;
         public List<Feed> FeedList { get => feedList; set => feedList = value; }
 
+        private Category category = new Category();
+        public Category Category { get => category; set => category = value; }
+
+        private List<Category> categoryList = Category.CategoryList;
+        public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
+
         public EditPodcast(MainWindow main)
         {
             InitializeComponent();
@@ -37,6 +43,13 @@ namespace CSharpProject.Views
                 foreach (var feed in FeedList)
                 {
                     feedComboBox.Items.Add(feed.Name);
+                }
+
+                Category.LoadCategories();
+
+                foreach (var category in CategoryList)
+                {
+                    categoryComboBox.Items.Add(category.Name);
                 }
 
                 feedComboBox.SelectedIndex = 0;
@@ -56,7 +69,8 @@ namespace CSharpProject.Views
             var Name = FeedList[item].Name;
             var URL = FeedList[item].URL;
             var Interval = FeedList[item].UpdateInterval;
-            
+            var Category = FeedList[item].Category;
+
             nameTextBox.Text = Name;
             URLTextBox.Text = URL;
 
@@ -74,6 +88,18 @@ namespace CSharpProject.Views
             {
                 intervalComboBox.SelectedIndex = 2;
             }
+
+            for (int i = 0; i < categoryComboBox.Items.Count; i++)
+            {
+                string value = categoryComboBox.Items[i].ToString();
+                {
+                    if(value == Category)
+                    {
+                        categoryComboBox.SelectedIndex = i;
+                    }
+                }
+            }
+
         }
 
         private void feedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

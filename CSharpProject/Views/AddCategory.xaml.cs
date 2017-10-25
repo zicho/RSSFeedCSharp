@@ -38,7 +38,6 @@ namespace CSharpProject.Views
             try
             {
                 categoryValidator.Validate(NameTxtBox.Text, "Category");
-
                 Category c = new Category();
                 c.AddCategoryToXML(NameTxtBox.Text);
                 this.Close();
