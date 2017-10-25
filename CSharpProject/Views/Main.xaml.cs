@@ -140,15 +140,20 @@ namespace CSharpProject.Views
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
                         });
-                         
-                        var correctFeed = feeds.SingleOrDefault(feed => feed.Id.ToString().Equals(podID)); //Förmodligen ingen referens, så måste ändras
-                        foreach (FeedItem item in feedItems.ToList())
+
+                        //var correctFeed = feeds.SingleOrDefault(feed => feed.Id.ToString().Equals(podID)); //Förmodligen ingen referens, så måste ändras
+                        foreach (Feed feed in feeds)
                         {
-                            //MessageBox.Show("banan"); För mkt banan
-                            correctFeed.Items.Add(item);
-                            
+                            foreach (FeedItem item in feedItems.ToList())
+                            {
+                                if(item.Parent.Equals(podID))
+                                {
+                                    feed.Items.Add(item);
+                                }
+                            }
                         }
-                        //MessageBox.Show(correctFeed.Items[0].Title);
+                        
+                        
 
                         //No banan beyond this point
                         //foreach (FeedItem feedItem in feedItems)
