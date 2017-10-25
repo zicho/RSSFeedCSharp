@@ -140,7 +140,7 @@ namespace CSharpProject.Views
                             FolderName = filePathSplit[filePathSplit.Length - 2],
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
-                        });
+                        }); //commitkommentar
                         feedItems.AddRange(newFeedItems);
                     }
                     catch
