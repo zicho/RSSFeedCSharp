@@ -148,15 +148,19 @@ namespace Logic.Entities
             string feedFilePath = this.Filepath;
             var xmlDoc = XDocument.Load(feedFilePath);
 
+            string[] filePathSplit = feedFilePath.Split('\\');
+            System.Diagnostics.Debug.WriteLine("GUH");
+            System.Diagnostics.Debug.WriteLine(filePathSplit[filePathSplit.Length - 2]);
             var items = xmlDoc.Descendants("item");
             var feedItems = items.Select(element => new FeedItem //KOPIA AV KOD FRÅN loadAllFeeds, INTE OK
             {
                 Title = element.Descendants("title").Single().Value,
                 Link = element.Descendants("enclosure").Single().Attribute("url").Value,
-                //FolderName = filePathSplit[filePathSplit.Length - 2],
+                FolderName = filePathSplit[filePathSplit.Length - 2],
                 Category = this.Category,
                 Parent = this.Id.ToString(),
             });
+            
             return feedItems.ToList();
         }
         
