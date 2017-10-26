@@ -224,7 +224,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void RefreshFeedList()
+        public void RefreshFeedList()
         {
             FeedList.Clear();
             LoadAllFeeds();
@@ -533,8 +533,11 @@ namespace CSharpProject.Views
         public void filterAfterPodcast()
         {
             Feed ActivePodcast = new Feed();// feedFilterBox.SelectedItem;
-            
-            if(!feedFilterBox.SelectedItem.ToString().Equals("All"))
+            if (ActiveList != null)
+            {
+                ActiveList.Clear();
+            }
+            if (!feedFilterBox.SelectedItem.ToString().Equals("All"))
             {
                 foreach (Feed f in FeedList)
                 {
@@ -543,12 +546,6 @@ namespace CSharpProject.Views
                         ActivePodcast = f;
                     }
                 }
-
-                if (ActiveList != null)
-                {
-                    ActiveList.Clear();
-                }
-
                 ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
             }
             
