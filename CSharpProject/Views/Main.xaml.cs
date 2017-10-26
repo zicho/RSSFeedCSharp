@@ -376,7 +376,10 @@ namespace CSharpProject.Views
                 }
                 else
                 {
-                   await feedItem.DownloadFile(selectedItem);
+
+
+                    await feedItem.DownloadFile(selectedItem);
+
                    selectedItem.IsDownloaded = true;
                     refreshListView();
                     UpdatePlayButton();
@@ -521,6 +524,11 @@ if (selectedItem.IsDownloaded)
             }
 
             ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
+        }
+
+        private void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
 }

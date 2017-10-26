@@ -121,14 +121,14 @@ namespace Logic.Entities
             {
                 await new WebClient().DownloadFileTaskAsync(
                 new Uri(downloadURL),
-                path+$@"\{GetDownloadFileName(item)}");
+                path + $@"\{GetDownloadFileName(item)}");
             }
             catch (Exception)
             {
                 throw new Exception("Failed to download file:" + item.Title);
-            }
-            
+            }          
         }
+
 
         public void PlayFile(FeedItem item)
         {
