@@ -62,7 +62,7 @@ namespace CSharpProject.Views
             
             InitializeComboBoxes();
             //filterAfterCategory();
-            LoadAllFeedItemsInFeedList();
+            //LoadAllFeedItemsInFeedList();
             UpdateFeedList();
             
             //refreshListView();
@@ -153,7 +153,7 @@ namespace CSharpProject.Views
                         {
                             foreach (FeedItem item in feedItems)
                             {
-                                if (item.Parent.Equals(podID))
+                                if (item.Parent.Equals(feed.Id.ToString()))
                                 {
                                     feed.Items.Add(item);
                                 }
@@ -174,12 +174,14 @@ namespace CSharpProject.Views
             }
             //System.Diagnostics.Debug.WriteLine("geh");
             //System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
+            Feed f = new Feed();
+            f.CheckAllIfDownloaded();
         }
         private void RefreshFeedList()
         {
             FeedList.Clear();
             loadAllFeeds();
-            LoadAllFeedItemsInFeedList();
+            //LoadAllFeedItemsInFeedList();
         }
         private void RefreshPodcastList()
         {
@@ -233,25 +235,29 @@ namespace CSharpProject.Views
         {
             feedFilterBox.Items.Clear();
 
-            if (ActiveList.Count() > 0)
-            {
+            //if (ActiveList.Count() > 0)
+            //{
                 foreach (var feed in FeedList)
                 {
                     if(feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
                     {
-                        feedFilterBox.Items.Add(feed.Name);
+                        feedFilterBox.Items.Add(feed);
                     }
                 }
 
                 feedFilterBox.SelectedIndex = 0;
                 feedFilterBox.IsEnabled = true;
-            }
-            else
+            //}
+            //else
+            //{
+            if (feedFilterBox.Items.Count == 0)
             {
                 feedFilterBox.Items.Add("No feeds added.");
                 feedFilterBox.IsEnabled = false;
                 feedFilterBox.SelectedIndex = 0;
             }
+                
+            //}
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -272,7 +278,20 @@ namespace CSharpProject.Views
 
                 await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
 
-                // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
+                Feed f = new Feed();
+
+                if (f.CheckIfChannelNameExist(RSS_Name, FeedList))
+                {
+                    MessageBox.Show("Channel with that name already exist");
+                }
+                else
+                {
+                    if (f.CheckIfChannelURLExist(RSS_URL, FeedList))
+                    {
+                        MessageBox.Show("Channel with that URL is already added");
+                    }
+                    else
+                    {
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
 
@@ -288,6 +307,11 @@ namespace CSharpProject.Views
                         UpdateFeedList();
                     }
                 }
+                    }
+                }
+                        // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
+
+                        
                 
                 //UpdateFeedList();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
@@ -355,6 +379,7 @@ namespace CSharpProject.Views
                    await feedItem.DownloadFile(selectedItem);
                    selectedItem.IsDownloaded = true;
                     refreshListView();
+                    UpdatePlayButton();
                     //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
                     //view.Refresh();
                 }
@@ -376,6 +401,12 @@ namespace CSharpProject.Views
 
         private void feedFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (feedFilterBox.SelectedItem != null)
+            {
+                filterAfterPodcast();
+                refreshListView();
+            }
+            
             //filter to selected podcast
         }
 
@@ -390,8 +421,15 @@ namespace CSharpProject.Views
 
         private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            UpdatePlayButton();
+        }
+
+        private void UpdatePlayButton()
+        {
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
-            if (selectedItem.IsDownloaded)
+            if (selectedItem != null)
+            {
+if (selectedItem.IsDownloaded)
             {
                 buttonPlay.Content = "Play";
                 //PlayButtonDel = feedItem.PlayFile;
@@ -401,29 +439,37 @@ namespace CSharpProject.Views
                 buttonPlay.Content = "Download";
                 //PlayButtonDel = feedItem.DownloadFile;
             }
+            }
+            
         }
 
         private void refreshListView()
         {
+            if (podListBox != null)
+            {
             System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
             view.Refresh();
+            }
+            
         }
 
-        private void LoadAllFeedItemsInFeedList()
-        {
-            foreach (Feed feed in FeedList)
-            {
-                System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
-                foreach (FeedItem item in feed.Items)
-                {
-                    ActiveList.Add(item);
-                    System.Diagnostics.Debug.WriteLine("hej");
-                }
-            }
-        }
+        //private void LoadAllFeedItemsInFeedList()
+        //{
+        //    foreach (Feed feed in FeedList)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
+        //        foreach (FeedItem item in feed.Items)
+        //        {
+        //            ActiveList.Add(item);
+        //            System.Diagnostics.Debug.WriteLine("hej");
+        //        }
+        //    }
+        //}
 
         public void filterAfterCategory()
         {
+            if (categoryFilterBox.SelectedItem != null)
+            {
             var category = categoryFilterBox.SelectedItem.ToString();
             var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
             System.Diagnostics.Debug.WriteLine("geh");
@@ -450,6 +496,31 @@ namespace CSharpProject.Views
                 ActiveList.Add(feedItem);
             }
             refreshListView();
+            }
+            
+        }
+
+
+        public void filterAfterPodcast()
+        {
+            Feed ActivePodcast = new Feed();// feedFilterBox.SelectedItem;
+
+
+
+            foreach (Feed f in FeedList)
+            {
+                if (f.Name.Equals(feedFilterBox.SelectedItem.ToString()))
+                {
+                    ActivePodcast = f;
+                }
+            }
+
+            if (ActiveList != null)
+            {
+                ActiveList.Clear();
+            }
+
+            ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
         }
     }
 }

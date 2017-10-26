@@ -61,7 +61,16 @@ namespace CSharpProject.Views
                 feedComboBox.IsEnabled = true;
             }
 
-            LoadInfo();
+
+            try
+            {
+                LoadInfo();
+            }
+            catch(IndexOutOfRangeException)
+            {
+
+            }
+            
 
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category

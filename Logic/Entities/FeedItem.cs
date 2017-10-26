@@ -46,7 +46,7 @@ namespace Logic.Entities
                         Category = file.Category.ToString(),
                         Parent = file.Id.ToString(),
                         FolderName = file.Name.ToString(),
-                        });
+                    });
 
                         foreach (var feedItem in feedItems)
                         {
@@ -70,9 +70,9 @@ namespace Logic.Entities
 
         public string GetDownloadFileName(FeedItem item)
         {
-            string[] fileName = item.Link.Split('/');
+            string podcastUrl = item.Link.Split('/').Last();
 
-            string podcastUrl = fileName[fileName.Length - 1];
+            podcastUrl = podcastUrl.Split('?').First();
 
             return podcastUrl;
         }
@@ -109,6 +109,10 @@ namespace Logic.Entities
         {
             string downloadURL = item.Link;
             string path = GetFilepath(item);
+            //if (!Directory.Exists(path))
+            //{
+            //    Directory.CreateDirectory(path);
+            //}
             string fileName = GetDownloadFileName(item);
             /*XMLLogic xl = new XMLLogic();
             string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";*/
