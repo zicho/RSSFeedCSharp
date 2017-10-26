@@ -61,10 +61,7 @@ namespace CSharpProject.Views
             InitializeComboBoxes();
             LoadAllFeeds();
             RefreshPodcastList();
-
             
-            //filterAfterCategory();
-            //LoadAllFeedItemsInFeedList();
             UpdateFeedList();
         }
 
@@ -244,17 +241,7 @@ namespace CSharpProject.Views
             }
 
         }
-        //private void RefreshPodcastList(string category)
-        //{
-        //    podListBox.Items.Clear();
-
-        //    foreach(var item in FeedItemList)
-        //    {
-        //        if (item.Category == category)
-        //            item.IsDownloaded = item.CheckIfDownloaded(item);
-        //            podListBox.Items.Add(item);
-        //    }
-        //}
+        
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -267,6 +254,8 @@ namespace CSharpProject.Views
             categoryFilterBox.Items.Clear();
 
             Category.LoadCategories();
+
+            categoryFilterBox.Items.Add("All");
 
             foreach (var category in CategoryList)
             {
@@ -284,12 +273,16 @@ namespace CSharpProject.Views
         public void UpdateFeedList()
         {
             feedFilterBox.Items.Clear();
-            //if (ActiveList.Count() > 0)
-            //{
-
+            
+            var selectedCategory = categoryFilterBox.SelectedValue.ToString();
+            feedFilterBox.Items.Add("All");
             foreach (var feed in FeedList)
             {
-                if (feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
+                if (selectedCategory.Equals("All"))
+                {
+                    feedFilterBox.Items.Add(feed);
+                }
+                else if (feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
                 {
                     feedFilterBox.Items.Add(feed);
                 }
@@ -297,11 +290,10 @@ namespace CSharpProject.Views
 
             feedFilterBox.SelectedIndex = 0;
             feedFilterBox.IsEnabled = true;
-            //}
-            //else
-            //{
-            if (feedFilterBox.Items.Count == 0)
+            
+            if (feedFilterBox.Items.Count == 1)
             {
+                feedFilterBox.Items.Clear();
                 feedFilterBox.Items.Add("No feeds added.");
                 feedFilterBox.IsEnabled = false;
                 feedFilterBox.SelectedIndex = 0;
@@ -430,18 +422,31 @@ namespace CSharpProject.Views
         {
             if (feedFilterBox.SelectedItem != null)
             {
-                filterAfterPodcast();
+                if(feedFilterBox.SelectedItem.Equals("All"))
+                {
+                    filterAfterCategory();
+                }
+                else
+                {
+                    filterAfterPodcast();
+                }
+                
                 refreshListView();
             }
-
-            //filter to selected podcast
         }
 
         private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (categoryFilterBox.IsLoaded)
+            if (categoryFilterBox.IsLoaded && !categoryFilterBox.Items.IsEmpty)
             {
-                filterAfterCategory();
+                if(categoryFilterBox.SelectedItem.ToString().Equals("All"))
+                {
+                    LoadAllFeedItemsInFeedList();
+                }
+                else
+                {
+                    filterAfterCategory();
+                }
                 UpdateFeedList();
             }
         }
@@ -479,18 +484,18 @@ namespace CSharpProject.Views
 
         }
 
-        //private void LoadAllFeedItemsInFeedList()
-        //{
-        //    foreach (Feed feed in FeedList)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
-        //        foreach (FeedItem item in feed.Items)
-        //        {
-        //            ActiveList.Add(item);
-        //            System.Diagnostics.Debug.WriteLine("hej");
-        //        }
-        //    }
-        //}
+        private void LoadAllFeedItemsInFeedList()
+        {
+            ActiveList.Clear();
+            foreach (Feed feed in FeedList)
+            {
+                var currentFeedItems = feed.Items;
+                foreach (FeedItem item in currentFeedItems)
+                {
+                    ActiveList.Add(item);
+                }
+            }
+        }
 
         public void filterAfterCategory()
         {
@@ -528,23 +533,25 @@ namespace CSharpProject.Views
         public void filterAfterPodcast()
         {
             Feed ActivePodcast = new Feed();// feedFilterBox.SelectedItem;
-
-
-
-            foreach (Feed f in FeedList)
+            
+            if(!feedFilterBox.SelectedItem.ToString().Equals("All"))
             {
-                if (f.Name.Equals(feedFilterBox.SelectedItem.ToString()))
+                foreach (Feed f in FeedList)
                 {
-                    ActivePodcast = f;
+                    if (f.Name.Equals(feedFilterBox.SelectedItem.ToString()))
+                    {
+                        ActivePodcast = f;
+                    }
                 }
-            }
 
-            if (ActiveList != null)
-            {
-                ActiveList.Clear();
-            }
+                if (ActiveList != null)
+                {
+                    ActiveList.Clear();
+                }
 
-            ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
+                ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
+            }
+            
         }
 
         private void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
