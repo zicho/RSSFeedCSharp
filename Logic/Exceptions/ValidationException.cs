@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logic.Entities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,10 @@ namespace Logic.Exceptions
 {
     public class ValidationException : Exception
     {
+
+        private static Feed Feed = new Feed(); // used to validate existing feeds
+        private static List<Feed> FeedList = Feed.FeedList; // used to validate existing feeds
+
         public interface IValidator
         {
             void Validate(string input, string field);
@@ -36,79 +41,94 @@ namespace Logic.Exceptions
             }
         }
 
-        public class URLValidator : IValidator
+        public class NameValidator : IValidator
         {
             public void Validate(string input, string field)
             {
-                if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
-                    throw new Exception($"The field '{field}' may not be empty.");
-
-         
-                //var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
-
-                //XElement Contact = (from xml2 in settings.Descendants("Feed")
-                //                    where xml2.Element("URL").Value == input
-                //                    select xml2).SingleOrDefault();
-
-                //if (Contact != null)
-                //{
-                //    throw new Exception($"URL is already added.");
-                //}
-
-
-                if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
+                if (Feed.CheckIfChannelNameExist(input, FeedList))
                 {
-                    throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");
+                    throw new Exception($"Channel with that name is already added");
                 }
             }
         }
 
-        public class ValidatorList : List<IValidator>
-        {
-            public void Validate(string input, string field)
+            public class URLValidator : IValidator
             {
-                foreach (var validator in this)
+                public void Validate(string input, string field)
                 {
-                    validator.Validate(input, field);
+                    if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
+                        throw new Exception($"The field '{field}' may not be empty.");
+
+                    if (Feed.CheckIfChannelURLExist(input, FeedList))
+                    {
+                        throw new Exception($"Channel with that URL is already added");
+                    }
+
+                    //var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+                    //XElement Contact = (from xml2 in settings.Descendants("Feed")
+                    //                    where xml2.Element("URL").Value == input
+                    //                    select xml2).SingleOrDefault();
+
+                    //if (Contact != null)
+                    //{
+                    //    throw new Exception($"URL is already added.");
+                    //}
+
+
+                    if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
+                    {
+                        throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");
+                    }
                 }
             }
 
-            public void Validate(string input, string field, bool url)
+            public class ValidatorList : List<IValidator>
             {
-                URLValidator urlValidator = new URLValidator();
-                urlValidator.Validate(input, field);
-            }
-        }
-
-        public class BoxValidator
-        {
-            public void Validate(int index, string boxname) // This method takes the index of a combobox to see if anything in it has become selcted
-            {
-                if(index < 0)
+                public void Validate(string input, string field)
                 {
-                    throw new Exception($"Please choose a {boxname}.");
-                }
-            }
-        }
-        public class CategoryValidator : IValidator
-        {
-            public void Validate (string categoryName, string category)
-            {
-                String path = (Environment.CurrentDirectory + "/categories.xml");
-                var categoryString = File.ReadAllText(path).ToLower();
-
-                if (string.IsNullOrEmpty(categoryString))
-                {
-                    throw new Exception($"Please enter a name.");
+                    foreach (var validator in this)
+                    {
+                        validator.Validate(input, field);
+                    }
                 }
 
-                if (categoryString.Contains(categoryName.ToLower()))
+                public void Validate(string input, string field, bool url)
                 {
-                    throw new Exception($"This category name already exists.");
+                    URLValidator urlValidator = new URLValidator();
+                    urlValidator.Validate(input, field);
+                }
+            }
+
+            public class BoxValidator
+            {
+                public void Validate(int index, string boxname) // This method takes the index of a combobox to see if anything in it has become selcted
+                {
+                    if (index < 0)
+                    {
+                        throw new Exception($"Please choose a {boxname}.");
+                    }
+                }
+            }
+            public class CategoryValidator : IValidator
+            {
+                public void Validate(string categoryName, string category)
+                {
+                    String path = (Environment.CurrentDirectory + "/categories.xml");
+                    var categoryString = File.ReadAllText(path).ToLower();
+
+                    if (string.IsNullOrEmpty(categoryString))
+                    {
+                        throw new Exception($"Please enter a name.");
+                    }
+
+                    if (categoryString.Contains(categoryName.ToLower()))
+                    {
+                        throw new Exception($"This category name already exists.");
+                    }
                 }
             }
         }
     }
+            
 
-
-}

@@ -41,6 +41,7 @@ namespace CSharpProject.Views
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
 
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
+        public Logic.Exceptions.ValidationException.NameValidator nameValidator = new NameValidator();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
         public EditPodcast(MainWindow main)
@@ -211,7 +212,6 @@ namespace CSharpProject.Views
 
             try
             {
-                validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 validator.Validate(nameTextBox.Text, "Name");
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
@@ -222,94 +222,92 @@ namespace CSharpProject.Views
                 //}
                 //else
                 //{
+                //    if (feed.CheckIfChannelURLExist(URLTextBox.Text, FeedList))
+                //    {
+                //        MessageBox.Show("Channel with that URL is already added");
+                //    }
+                //    else
+                //    {
 
+                
+
+                if (feedComboBox.Text != nameTextBox.Text) // THIS CODE RUNS ONLY IF NAME HAS BEEN CHANGED
+                {
+                    if (Feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
+                    {
+                        nameValidator.Validate(nameTextBox.Text, "new name");
+                    }
+                    else
+                    {
+                        var oldName = feedComboBox.Text;
+                        var newName = nameTextBox.Text;
+
+                        System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{oldName}");
+                        directory.MoveTo(Environment.CurrentDirectory + $@"\podcasts\{newName}");
+                    }
+                }
+
+                var item = feedComboBox.SelectedIndex;
+
+                var Id = FeedList[item].Id;
+
+                if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
+                {
+                    validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
+                }
 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-
-                    // THIS CODE RUNS ONLY IF NAME HAS BEEN CHANGED
-                    if (feedComboBox.Text != nameTextBox.Text)
-                    {
-                        if (Feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
-                        {
-                            MessageBox.Show("Channel with that name already exist");
-                        }
-                        else
-                        {
-
-                            var oldName = feedComboBox.Text;
-                            var newName = nameTextBox.Text;
-
-                            System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{oldName}");
-                            directory.MoveTo(Environment.CurrentDirectory + $@"\podcasts\{newName}");
-                        }
-                    }
-
-                    var item = feedComboBox.SelectedIndex;
-
-                    var Id = FeedList[item].Id;
+                    
 
                     var Name = nameTextBox.Text;
                     var URL = URLTextBox.Text;
+                    var Category = categoryComboBox.SelectedValue.ToString();
 
-                    if(FeedList[item].URL != URL) { 
+                    var Interval = 0;
 
-                    if (Feed.CheckIfChannelURLExist(URLTextBox.Text, FeedList))
+                    if (intervalComboBox.SelectedIndex == 0)
                     {
-                        MessageBox.Show("Channel with that URL is already added");
+                        Interval = 1;
                     }
-                    else
+
+                    if (intervalComboBox.SelectedIndex == 1)
                     {
-                        var Category = categoryComboBox.SelectedValue.ToString();
-
-                        var Interval = 0;
-
-                        if (intervalComboBox.SelectedIndex == 0)
-                        {
-                            Interval = 1;
-                        }
-
-                        if (intervalComboBox.SelectedIndex == 1)
-                        {
-                            Interval = 3;
-                        }
-
-                        if (intervalComboBox.SelectedIndex == 2)
-                        {
-                            Interval = 7;
-                        }
-
-                        XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
-
-                        XElement feed = settings
-                        .Descendants("Feed")
-                        .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
-
-                        // Change the XML
-                        feed.Element("Name").Value = Name;
-                        feed.Element("URL").Value = URL;
-                        feed.Element("Category").Value = Category;
-                        feed.Element("UpdateInterval").Value = Interval.ToString();
-
-                        //Change the feedlist object
-                        FeedList[item].Name = Name;
-                        FeedList[item].URL = URL;
-                        FeedList[item].Category = Category;
-                        FeedList[item].UpdateInterval = Interval;
-
-
-
-                        settings.Save(Environment.CurrentDirectory + @"\settings.xml");
-                        MessageBox.Show("Your changes has been saved.", "Congrats!");
-
-                        CheckFeeds();
-                        LoadInfo();
+                        Interval = 3;
                     }
-                    //}
-                    //}
+
+                    if (intervalComboBox.SelectedIndex == 2)
+                    {
+                        Interval = 7;
+                    }
+
+                    XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+                    XElement feed = settings
+                    .Descendants("Feed")
+                    .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
+
+                    // Change the XML
+                    feed.Element("Name").Value = Name;
+                    feed.Element("URL").Value = URL;
+                    feed.Element("Category").Value = Category;
+                    feed.Element("UpdateInterval").Value = Interval.ToString();
+
+                    //Change the feedlist object
+                    FeedList[item].Name = Name;
+                    FeedList[item].URL = URL;
+                    FeedList[item].Category = Category;
+                    FeedList[item].UpdateInterval = Interval;
+
+                    settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+                    MessageBox.Show("Your changes has been saved.", "Congrats!");
+
+                    CheckFeeds();
+                    LoadInfo();
                 }
-                }
+                //}
+                //}
             }
 
             catch (Exception ex)

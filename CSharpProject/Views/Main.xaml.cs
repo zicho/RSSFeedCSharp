@@ -48,6 +48,7 @@ namespace CSharpProject.Views
             InitializeComponent();
 
             validator.Add(new Validator());
+            validator.Add(new NameValidator());
             validator.Add(new LengthValidator(3));
             ActiveList = new List<FeedItem>();
 
@@ -283,14 +284,7 @@ namespace CSharpProject.Views
                 {
                     MessageBox.Show("Channel with that name already exist");
                 }
-                else
-                {
-                    if (f.CheckIfChannelURLExist(RSS_URL, FeedList))
-                    {
-                        MessageBox.Show("Channel with that URL is already added");
-                    }
-                    else
-                    {
+
                         var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                         var categoryName = categoryComboBox.SelectedValue.ToString();
 
@@ -306,8 +300,6 @@ namespace CSharpProject.Views
                                 UpdateFeedList();
                             }
                         }
-                    }
-                }
 
                 // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
                 //UpdateFeedList();
