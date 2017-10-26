@@ -35,6 +35,8 @@ namespace CSharpProject.Views
         private Category category = new Category();
         public Category Category { get => category; set => category = value; }
 
+        private Feed feed = new Feed();
+
         private List<Category> categoryList = Category.CategoryList;
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
 
@@ -48,6 +50,25 @@ namespace CSharpProject.Views
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
 
+            CheckFeeds();
+
+            try
+            {
+                LoadInfo();
+            }
+            catch (IndexOutOfRangeException)
+            {
+
+            }
+
+
+            Closing += (s, e) => main.IsEnabled = true;
+            Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
+
+        }
+
+        public void CheckFeeds()
+        {
             if (FeedList.Count() > 0)
             {
                 foreach (var feed in FeedList)
@@ -65,20 +86,6 @@ namespace CSharpProject.Views
                 feedComboBox.SelectedIndex = 0;
                 feedComboBox.IsEnabled = true;
             }
-
-
-            try
-            {
-                LoadInfo();
-            }
-            catch (IndexOutOfRangeException)
-            {
-
-            }
-
-
-            Closing += (s, e) => main.IsEnabled = true;
-            Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
 
         }
 
@@ -202,6 +209,8 @@ namespace CSharpProject.Views
 
                 MessageBox.Show($"Feed {Name} was deleted.");
                 ((MainWindow)this.Owner).UpdateFeedList();
+                feedComboBox.SelectedIndex = 0;
+                CheckFeeds();
                 LoadInfo();
 
             }
@@ -217,37 +226,66 @@ namespace CSharpProject.Views
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
 
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
-                if (messageBoxResult == MessageBoxResult.Yes)
+                if (feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
                 {
-
-                    var item = feedComboBox.SelectedIndex;
-                    var Id = FeedList[item].Id;
-
-                    var Name = nameTextBox.Text;
-                    var URL = URLTextBox.Text;
-                    var Category = categoryComboBox.SelectedValue;
-
-                    var Interval = 0;
-
-                    if (intervalComboBox.SelectedIndex == 0)
+                    MessageBox.Show("Channel with that name already exist");
+                }
+                else
+                {
+                    if (feed.CheckIfChannelURLExist(URLTextBox.Text, FeedList))
                     {
-                        Interval = 1;
+                        MessageBox.Show("Channel with that URL is already added");
                     }
-
-                    if (intervalComboBox.SelectedIndex == 1)
+                    else
                     {
-                        Interval = 3;
-                    }
 
-                    if (intervalComboBox.SelectedIndex == 2)
-                    {
-                        Interval = 7;
-                    }
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
+                        if (messageBoxResult == MessageBoxResult.Yes)
+                        {
 
-                    MessageBox.Show(Name + URL + Category + Interval);
+                            var item = feedComboBox.SelectedIndex;
+                            var Id = FeedList[item].Id;
+
+                            var Name = nameTextBox.Text;
+                            var URL = URLTextBox.Text;
+                            var Category = categoryComboBox.SelectedValue.ToString();
+
+                            var Interval = 0;
+
+                            if (intervalComboBox.SelectedIndex == 0)
+                            {
+                                Interval = 1;
+                            }
+
+                            if (intervalComboBox.SelectedIndex == 1)
+                            {
+                                Interval = 3;
+                            }
+
+                            if (intervalComboBox.SelectedIndex == 2)
+                            {
+                                Interval = 7;
+                            }
+
+                            
+                            XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+                            XElement feed = settings
+                            .Descendants("Feed")
+                            .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
+
+                            feed.Element("Name").Value = Name;
+                            feed.Element("URL").Value = URL;
+                            feed.Element("Category").Value = Category;
+                            feed.Element("Name").Value = Interval.ToString();
+
+                            settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+                            MessageBox.Show("Your changes has been saved.", "Congrats!");
+                        }
+                    }
                 }
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Cannot save.");
