@@ -179,6 +179,54 @@ namespace CSharpProject.Views
             Feed f = new Feed();
             f.CheckAllIfDownloaded();
         }
+
+        public async void ShallFeedsBeUpdated()
+        {
+            String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
+            var xmlFileList = loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
+            String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+            var settingsDoc = XDocument.Load(settingsPath);
+
+            foreach(var file in xmlFileList)
+            {
+                try
+                {
+                    var fileID = Path.GetFileNameWithoutExtension(file);
+                    var fileSettings = (from podcast in settingsDoc.Descendants("Feed")
+                                        where podcast.Element("Id").Value == fileID
+                                        select podcast).FirstOrDefault();
+
+                    var updateInterval = fileSettings.Element("UpdateInterval").Value;
+                    DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
+                    var updateIntervalAsInt = Int32.Parse(updateInterval);
+                    DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
+
+                    if (DateTime.Today >= updateDueDate)
+                    {
+                        System.Diagnostics.Debug.WriteLine("We're in");
+                        var podGuid = fileSettings.Element("Id").Value;
+                        var podName = fileSettings.Element("Name").Value;
+                        var podUrl = fileSettings.Element("URL").Value.ToString();
+                        var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+
+                        File.Delete(folderPath);
+                        Task<String> newContent = Feed.DownloadFeed(podUrl, "text");
+                        await newContent;
+                        File.AppendAllText(folderPath, newContent.Result);
+
+                        var lastUpdatedSettings = fileSettings.Element("LastUpdated");
+                        lastUpdatedSettings.Value = DateTime.Today.ToString();
+                        settingsDoc.Save(settingsPath);
+                        System.Diagnostics.Debug.WriteLine("Saved");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+
         private void RefreshFeedList()
         {
             FeedList.Clear();
