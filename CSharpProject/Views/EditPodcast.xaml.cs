@@ -199,8 +199,7 @@ namespace CSharpProject.Views
 
                 MessageBox.Show($"Feed {Name} was deleted.");
                 feedComboBox.SelectedIndex = 0;
-                CheckFeeds();
-                LoadInfo();
+                this.Close();
 
             }
         }
@@ -301,8 +300,7 @@ namespace CSharpProject.Views
                     settings.Save(Environment.CurrentDirectory + @"\settings.xml");
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
 
-                    CheckFeeds();
-                    LoadInfo();
+                    this.Close();
                 }
                 //}
                 //}

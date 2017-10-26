@@ -56,8 +56,15 @@
 
 
             </Grid>
-            <Button Content="Add" x:Name="AddButton" Width="80" Margin="0 0 0 10" Background="#FFEEEEEE" Click="Button_Click"/>
-            <Label HorizontalContentAlignment="Center" FontWeight="Bold">My Podcasts</Label>
+            <Grid Margin="0 0 0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+            <Button Content="Add" x:Name="AddButton" Width="80" Margin="0 0 0 0" Background="#FFEEEEEE" Click="Button_Click"/>
+                <Label x:Name="statusLabel" Margin="0 0 0 0" Grid.Column="0" Content="status stuff" HorizontalAlignment="Right"/>
+            </Grid>
+
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />

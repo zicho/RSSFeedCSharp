@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
+using System.Timers;
 
 namespace CSharpProject.Views
 {
@@ -56,6 +57,8 @@ namespace CSharpProject.Views
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
 
+            statusLabel.Visibility = Visibility.Hidden;
+
             //ShallFeedsBeUpdated();
 
             InitializeComboBoxes();
@@ -68,6 +71,8 @@ namespace CSharpProject.Views
         private List<String> loadXML(string directory)
         {
             List<String> files = new List<String>();
+
+            
 
             try
             {
@@ -302,12 +307,19 @@ namespace CSharpProject.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            
+
             try
             {
                 validator.Validate(RSSTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 validator.Validate(RSSNameTextBox.Text, "Name");
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(IntervalBox.SelectedIndex, "download interval");
+
+                statusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                statusLabel.Content = "Working...";
+
+                statusLabel.Visibility = Visibility.Visible;
 
                 var text = "";
 
@@ -317,8 +329,6 @@ namespace CSharpProject.Views
                 String RSS_URL = RSSTextBox.Text;
 
                 await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
-
-                Feed f = new Feed();
 
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
@@ -333,7 +343,18 @@ namespace CSharpProject.Views
                         //FeedList.Add(newFeed);
                         filterAfterCategory();
                         UpdateFeedList();
+                        RSSTextBox.Clear();
+                        RSSNameTextBox.Clear();                      
                     }
+
+                    statusLabel.Foreground = System.Windows.Media.Brushes.ForestGreen;
+                    statusLabel.Content = "Done!";
+
+                    await Task.Delay(2000);
+                    statusLabel.Visibility = Visibility.Hidden;
+                    
+
+
                 }
 
             }
