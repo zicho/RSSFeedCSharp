@@ -56,7 +56,8 @@ namespace CSharpProject.Views
             podListBox.ItemsSource = ActiveList; //testar ersätta FeedItemList här
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
-           
+
+            //ShallFeedsBeUpdated();
             loadAllFeeds();
             RefreshPodcastList();
             
@@ -91,6 +92,55 @@ namespace CSharpProject.Views
             return files;
         }
 
+        public async void ShallFeedsBeUpdated()
+        {
+            String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
+            var xmlFileList = loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
+            String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+            var settingsDoc = XDocument.Load(settingsPath);
+
+            foreach(var file in xmlFileList)
+            {
+                try
+                {
+                    var fileID = Path.GetFileNameWithoutExtension(file);
+                    var fileSettings = (from podcast in settingsDoc.Descendants("Feed")
+                                        where podcast.Element("Id").Value == fileID
+                                        select podcast).FirstOrDefault();
+
+                    var updateInterval = fileSettings.Element("UpdateInterval").Value;
+                    DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
+                    var updateIntervalAsInt = Int32.Parse(updateInterval);
+                    DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
+
+                    if (DateTime.Today >= updateDueDate)
+                    {
+                        System.Diagnostics.Debug.WriteLine("We're in");
+                        var podGuid = fileSettings.Element("Id").Value;
+                        var podName = fileSettings.Element("Name").Value;
+                        var podUrl = fileSettings.Element("URL").Value.ToString();
+                        var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+
+                        File.Delete(folderPath);
+                        Task<String> newContent = Feed.DownloadFeed(podUrl, "text");
+                        await newContent;
+                        File.AppendAllText(folderPath, newContent.Result);
+
+                        var lastUpdatedSettings = fileSettings.Element("LastUpdated");
+                        lastUpdatedSettings.Value = DateTime.Today.ToString();
+                        settingsDoc.Save(settingsPath);
+                        System.Diagnostics.Debug.WriteLine("Saved");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                
+            }
+            
+        }
+
         private void loadAllFeeds()
         {
             String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
@@ -121,6 +171,9 @@ namespace CSharpProject.Views
 
                 foreach (Feed feed in feeds)
                 {
+                    //Försökte minska koden med att ersätta det nedre med detta men tycks inte fungera. Används nedan vid buttonAddNewFeeed
+                    //var feedItems = feed.fetchFeedItems();
+                    //feed.Items.AddRange(feedItems);
                     FeedList.Add(feed);
                 }
 
@@ -431,26 +484,25 @@ namespace CSharpProject.Views
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
             if (selectedItem != null)
             {
-if (selectedItem.IsDownloaded)
-            {
-                buttonPlay.Content = "Play";
-                //PlayButtonDel = feedItem.PlayFile;
-            }
-            else
-            {
-                buttonPlay.Content = "Download";
+                if (selectedItem.IsDownloaded)
+                {
+                    buttonPlay.Content = "Play";
+                    //PlayButtonDel = feedItem.PlayFile;
+                }
+                else
+                {
+                    buttonPlay.Content = "Download";
                 //PlayButtonDel = feedItem.DownloadFile;
+                }
             }
-            }
-            
         }
 
         private void refreshListView()
         {
             if (podListBox != null)
             {
-            System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
-            view.Refresh();
+                System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
+                view.Refresh();
             }
             
         }
@@ -472,34 +524,32 @@ if (selectedItem.IsDownloaded)
         {
             if (categoryFilterBox.SelectedItem != null)
             {
-            var category = categoryFilterBox.SelectedItem.ToString();
-            var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
-            System.Diagnostics.Debug.WriteLine("geh");
-            
+                var category = categoryFilterBox.SelectedItem.ToString();
+                var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
 
-            if (ActiveList != null)
-            {
-                ActiveList.Clear();
-            }
-            List<FeedItem> categoryFeedItems = new List<FeedItem>();
-            foreach (Feed feed in categoryFeed)
-            {
-                categoryFeedItems.AddRange(feed.Items);
-            }
+                if (ActiveList != null)
+                {
+                    ActiveList.Clear();
+                }
 
-            if (!categoryFeedItems.Any())
-            {
+                List<FeedItem> categoryFeedItems = new List<FeedItem>();
+                foreach (Feed feed in categoryFeed)
+                {
+                    categoryFeedItems.AddRange(feed.Items);
+                }
+
+                if (!categoryFeedItems.Any())
+                {
+                    refreshListView();
+                    return;
+                }
+
+                foreach (FeedItem feedItem in categoryFeedItems)
+                {
+                    ActiveList.Add(feedItem);
+                }
                 refreshListView();
-                return;
             }
-
-            foreach (FeedItem feedItem in categoryFeedItems)
-            {
-                ActiveList.Add(feedItem);
-            }
-            refreshListView();
-            }
-            
         }
 
 

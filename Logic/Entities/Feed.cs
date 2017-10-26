@@ -149,8 +149,6 @@ namespace Logic.Entities
             var xmlDoc = XDocument.Load(feedFilePath);
 
             string[] filePathSplit = feedFilePath.Split('\\');
-            System.Diagnostics.Debug.WriteLine("GUH");
-            System.Diagnostics.Debug.WriteLine(filePathSplit[filePathSplit.Length - 2]);
             var items = xmlDoc.Descendants("item");
             var feedItems = items.Select(element => new FeedItem //KOPIA AV KOD FRÅN loadAllFeeds, INTE OK
             {
@@ -163,40 +161,5 @@ namespace Logic.Entities
             
             return feedItems.ToList();
         }
-        
-        public async void ShallFeedBeUpdated(Feed feed)
-        {
-            String path = (Environment.CurrentDirectory + "/settings.xml");
-            var settingsDoc = XDocument.Load(path);
-            var feedId = feed.Id.ToString();
-            var podSettings = (from podcast in settingsDoc.Descendants("Feed")
-                               where podcast.Element("Id").Value == feedId
-                               select podcast).FirstOrDefault();
-
-            var updateInterval = podSettings.Element("UpdateInterval").Value;
-            DateTime lastUpdated = DateTime.Parse(podSettings.Element("LastUpdated").Value);
-            var updateIntervalAsInt = Int32.Parse(updateInterval);
-            DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
-
-            if (DateTime.Today >= updateDueDate)
-            {
-                var podGuid = podSettings.Element("Id").Value;
-                var podName = podSettings.Element("Name").Value;
-                var podUrl = podSettings.Element("URL").Value;
-                var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
-                File.Delete(folderPath);
-
-                Task<String> newContent = DownloadFeed(podUrl, "text");
-                await newContent;
-
-                File.AppendAllText(folderPath, newContent.Result);
-
-                var lastUpdatedSettings = podSettings.Element("LastUpdated");
-                lastUpdatedSettings.Value = DateTime.Today.ToString();
-                settingsDoc.Save(path);
-            }
-        }
-
-        
     }
 }
