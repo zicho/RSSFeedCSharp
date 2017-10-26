@@ -280,26 +280,21 @@ namespace CSharpProject.Views
 
                 Feed f = new Feed();
 
-                if (f.CheckIfChannelNameExist(RSS_Name, FeedList))
+                var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
+                var categoryName = categoryComboBox.SelectedValue.ToString();
+
+                if (RSS_Content != null)
                 {
-                    MessageBox.Show("Channel with that name already exist");
+                    if (RSS_Name != null)
+                    {
+                        var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
+                        var newFeedsFeedItems = newFeed.fetchFeedItems();
+                        newFeed.Items.AddRange(newFeedsFeedItems);
+                        //FeedList.Add(newFeed);
+                        filterAfterCategory();
+                        UpdateFeedList();
+                    }
                 }
-
-                        var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
-                        var categoryName = categoryComboBox.SelectedValue.ToString();
-
-                        if (RSS_Content != null)
-                        {
-                            if (RSS_Name != null)
-                            {
-                                var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
-                                var newFeedsFeedItems = newFeed.fetchFeedItems();
-                                newFeed.Items.AddRange(newFeedsFeedItems);
-                                //FeedList.Add(newFeed);
-                                filterAfterCategory();
-                                UpdateFeedList();
-                            }
-                        }
 
                 // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
                 //UpdateFeedList();
