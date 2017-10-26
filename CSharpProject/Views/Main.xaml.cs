@@ -44,26 +44,26 @@ namespace CSharpProject.Views
 
         public MainWindow()
         {
-            
+
             InitializeComponent();
-            
+
             validator.Add(new Validator());
             validator.Add(new LengthValidator(3));
             ActiveList = new List<FeedItem>();
-            
+
             podListBox.ItemsSource = ActiveList; //testar ersätta FeedItemList här
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
 
             //ShallFeedsBeUpdated();
-            loadAllFeeds();
+            LoadAllFeeds();
             RefreshPodcastList();
-            
+
             InitializeComboBoxes();
             //filterAfterCategory();
             //LoadAllFeedItemsInFeedList();
             UpdateFeedList();
-       }
+        }
 
         private List<String> loadXML(string directory)
         {
@@ -88,7 +88,7 @@ namespace CSharpProject.Views
             return files;
         }
 
-        private void loadAllFeeds()
+        public void LoadAllFeeds()
         {
             String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
 
@@ -147,7 +147,7 @@ namespace CSharpProject.Views
                             Category = podSettings.Descendants("Category").Single().Value,
                             Parent = podID,
                         });
-                        
+
                         foreach (Feed feed in FeedList)
                         {
                             foreach (FeedItem item in feedItems)
@@ -179,14 +179,14 @@ namespace CSharpProject.Views
         private void RefreshFeedList()
         {
             FeedList.Clear();
-            loadAllFeeds();
+            LoadAllFeeds();
             //LoadAllFeedItemsInFeedList();
         }
         private void RefreshPodcastList()
         {
             //podListBox.Items.Clear();
 
-            foreach(var item in FeedItemList)
+            foreach (var item in FeedItemList)
             {
                 item.IsDownloaded = item.CheckIfDownloaded(item);
                 //podListBox.Items.Add(item);
@@ -220,13 +220,13 @@ namespace CSharpProject.Views
             foreach (var category in CategoryList)
             {
                 categoryFilterBox.Items.Add(category.Name);
-                categoryComboBox.Items.Add(category.Name);   
+                categoryComboBox.Items.Add(category.Name);
             }
-            
+
             categoryComboBox.SelectedIndex = 0;
             IntervalBox.SelectedIndex = 0;
             categoryFilterBox.SelectedIndex = 0;
-           
+
             categoryComboBox.Items.Add("Add new...");
         }
 
@@ -236,18 +236,18 @@ namespace CSharpProject.Views
 
             //if (ActiveList.Count() > 0)
             //{
-       
-                foreach (var feed in FeedList)
+
+            foreach (var feed in FeedList)
+            {
+                if (feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
                 {
-                    if (feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
-                    {
-                        feedFilterBox.Items.Add(feed);
-                    }
+                    feedFilterBox.Items.Add(feed);
                 }
             }
 
-                feedFilterBox.SelectedIndex = 0;
-                feedFilterBox.IsEnabled = true;
+
+            feedFilterBox.SelectedIndex = 0;
+            feedFilterBox.IsEnabled = true;
             //}
             //else
             //{
@@ -257,8 +257,6 @@ namespace CSharpProject.Views
                 feedFilterBox.IsEnabled = false;
                 feedFilterBox.SelectedIndex = 0;
             }
-                
-            //}
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -293,21 +291,21 @@ namespace CSharpProject.Views
                     }
                     else
                     {
-                var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
-                var categoryName = categoryComboBox.SelectedValue.ToString();
+                        var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
+                        var categoryName = categoryComboBox.SelectedValue.ToString();
 
-                if (RSS_Content != null)
-                {
-                    if (RSS_Name != null)
-                    {
-                        var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
-                        var newFeedsFeedItems = newFeed.fetchFeedItems();
-                        newFeed.Items.AddRange(newFeedsFeedItems);
-                        //FeedList.Add(newFeed);
-                        filterAfterCategory();
-                        UpdateFeedList();
-                    }
-                }
+                        if (RSS_Content != null)
+                        {
+                            if (RSS_Name != null)
+                            {
+                                var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
+                                var newFeedsFeedItems = newFeed.fetchFeedItems();
+                                newFeed.Items.AddRange(newFeedsFeedItems);
+                                //FeedList.Add(newFeed);
+                                filterAfterCategory();
+                                UpdateFeedList();
+                            }
+                        }
                     }
                 }
 
@@ -319,7 +317,7 @@ namespace CSharpProject.Views
 
             }
             catch (Exception ex)
-            { 
+            {
                 MessageBox.Show(ex.Message, "Validation Error...");
             }
         }
@@ -330,11 +328,11 @@ namespace CSharpProject.Views
             RSSNameTextBox.Text = "";
         }
 
-       
+
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (categoryComboBox.SelectedIndex == categoryComboBox.Items.Count - 1 && categoryComboBox.Items.Count>1)
+            if (categoryComboBox.SelectedIndex == categoryComboBox.Items.Count - 1 && categoryComboBox.Items.Count > 1)
             {
                 try
                 {
@@ -406,7 +404,7 @@ namespace CSharpProject.Views
                 filterAfterPodcast();
                 refreshListView();
             }
-            
+
             //filter to selected podcast
         }
 
@@ -429,15 +427,15 @@ namespace CSharpProject.Views
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
             if (selectedItem != null)
             {
-if (selectedItem.IsDownloaded)
-            {
-                buttonPlay.Content = "Play";
-                //PlayButtonDel = feedItem.PlayFile;
-            }
-            else
-            {
-                buttonPlay.Content = "Download";
-                //PlayButtonDel = feedItem.DownloadFile;
+                if (selectedItem.IsDownloaded)
+                {
+                    buttonPlay.Content = "Play";
+                    //PlayButtonDel = feedItem.PlayFile;
+                }
+                else
+                {
+                    buttonPlay.Content = "Download";
+                    //PlayButtonDel = feedItem.DownloadFile;
                 }
             }
         }
@@ -449,7 +447,7 @@ if (selectedItem.IsDownloaded)
                 System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
                 view.Refresh();
             }
-            
+
         }
 
         //private void LoadAllFeedItemsInFeedList()
