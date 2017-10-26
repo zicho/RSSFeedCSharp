@@ -61,10 +61,10 @@ namespace CSharpProject.Views
 
             }
 
-
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
-
+            Closing += (s, e) => main.loadAllFeeds(); //refreshes the category combobox to display new category
+            Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
         }
 
         public void CheckFeeds()
@@ -87,10 +87,6 @@ namespace CSharpProject.Views
                 feedComboBox.IsEnabled = true;
             }
 
-        }
-
-        public EditPodcast()
-        {
         }
 
         public void LoadInfo()
@@ -166,20 +162,12 @@ namespace CSharpProject.Views
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
-            ((MainWindow)this.Owner).IsEnabled = true;
-            ((MainWindow)this.Owner).Topmost = true;
+            this.Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            this.Hide();
-        }
-
-        private void Window_Closing(object sender, EventArgs e)
-        {
-            this.Hide();
-            ((MainWindow)this.Owner).IsEnabled = true;
+            this.Close();
         }
 
         private void buttonDelete_Click(object sender, RoutedEventArgs e)
@@ -208,7 +196,6 @@ namespace CSharpProject.Views
                 directory.Delete(true);
 
                 MessageBox.Show($"Feed {Name} was deleted.");
-                ((MainWindow)this.Owner).UpdateFeedList();
                 feedComboBox.SelectedIndex = 0;
                 CheckFeeds();
                 LoadInfo();
@@ -219,6 +206,7 @@ namespace CSharpProject.Views
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             Name = feedComboBox.Text;
+
             try
             {
                 validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
@@ -226,24 +214,28 @@ namespace CSharpProject.Views
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
 
-                if (feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
-                {
-                    MessageBox.Show("Channel with that name already exist");
-                }
-                else
-                {
-                    if (feed.CheckIfChannelURLExist(URLTextBox.Text, FeedList))
-                    {
-                        MessageBox.Show("Channel with that URL is already added");
-                    }
-                    else
-                    {
+                //if (feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
+                //{
+                //    MessageBox.Show("Channel with that name already exist");
+                //}
+                //else
+                //{
+                //    if (feed.CheckIfChannelURLExist(URLTextBox.Text, FeedList))
+                //    {
+                //        MessageBox.Show("Channel with that URL is already added");
+                //    }
+                //    else
+                //    {
 
                         MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
                         if (messageBoxResult == MessageBoxResult.Yes)
                         {
+                            var oldName = feedComboBox.SelectedValue.ToString();
+
+                            System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{oldName}");
 
                             var item = feedComboBox.SelectedIndex;
+
                             var Id = FeedList[item].Id;
 
                             var Name = nameTextBox.Text;
@@ -266,24 +258,33 @@ namespace CSharpProject.Views
                             {
                                 Interval = 7;
                             }
-
                             
                             XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
 
                             XElement feed = settings
                             .Descendants("Feed")
                             .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
-
+                            
+                            // Change the XML
                             feed.Element("Name").Value = Name;
                             feed.Element("URL").Value = URL;
                             feed.Element("Category").Value = Category;
-                            feed.Element("Name").Value = Interval.ToString();
+                            feed.Element("UpdateInterval").Value = Interval.ToString();
 
-                            settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+                            //Change the feedlist object
+                            FeedList[item].Name = Name;
+                            FeedList[item].URL = URL;
+                            FeedList[item].Category = Category;
+                            FeedList[item].UpdateInterval = Interval;
+                            
+                            directory.MoveTo(Environment.CurrentDirectory + $@"\podcasts\{Name}");
+
+                    settings.Save(Environment.CurrentDirectory + @"\settings.xml");
                             MessageBox.Show("Your changes has been saved.", "Congrats!");
-                        }
-                    }
+                    LoadInfo();
                 }
+                    //}
+                //}
             }
 
             catch (Exception ex)

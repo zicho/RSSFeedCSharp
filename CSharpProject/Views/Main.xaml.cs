@@ -42,8 +42,6 @@ namespace CSharpProject.Views
         //private delegate void ButtonAction(FeedItem item);
         //private ButtonAction PlayButtonDel;
 
-        EditPodcast editWindow = new EditPodcast();
-
         public MainWindow()
         {
             
@@ -64,9 +62,7 @@ namespace CSharpProject.Views
             //filterAfterCategory();
             //LoadAllFeedItemsInFeedList();
             UpdateFeedList();
-            
-
-        }
+       }
 
         private List<String> loadXML(string directory)
         {
@@ -91,7 +87,7 @@ namespace CSharpProject.Views
             return files;
         }
 
-        private void loadAllFeeds()
+        public void loadAllFeeds()
         {
             String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
 
@@ -236,13 +232,15 @@ namespace CSharpProject.Views
 
             //if (ActiveList.Count() > 0)
             //{
+       
                 foreach (var feed in FeedList)
                 {
-                    if(feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
+                    if (feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
                     {
                         feedFilterBox.Items.Add(feed);
                     }
                 }
+            }
 
                 feedFilterBox.SelectedIndex = 0;
                 feedFilterBox.IsEnabled = true;
@@ -308,10 +306,8 @@ namespace CSharpProject.Views
                 }
                     }
                 }
-                        // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
 
-                        
-                
+                // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
                 //UpdateFeedList();
                 //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
                 //view.Refresh();
@@ -354,7 +350,6 @@ namespace CSharpProject.Views
         {
             try
             {
-
                 /*
 
                 1. Validera med boxvalidatorn att en podcast-item är vald
@@ -396,7 +391,6 @@ namespace CSharpProject.Views
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             EditPodcast EditWindow = new EditPodcast(this);
-            EditWindow.Owner = this;
             EditWindow.Show();
             this.IsEnabled = false;
         }
@@ -431,7 +425,7 @@ namespace CSharpProject.Views
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
             if (selectedItem != null)
             {
-if (selectedItem.IsDownloaded)
+            if (selectedItem.IsDownloaded)
             {
                 buttonPlay.Content = "Play";
                 //PlayButtonDel = feedItem.PlayFile;
