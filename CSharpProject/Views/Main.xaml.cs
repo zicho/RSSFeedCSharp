@@ -57,10 +57,12 @@ namespace CSharpProject.Views
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
 
             //ShallFeedsBeUpdated();
+
+            InitializeComboBoxes();
             LoadAllFeeds();
             RefreshPodcastList();
 
-            InitializeComboBoxes();
+            
             //filterAfterCategory();
             //LoadAllFeedItemsInFeedList();
             UpdateFeedList();
@@ -234,7 +236,6 @@ namespace CSharpProject.Views
         public void UpdateFeedList()
         {
             feedFilterBox.Items.Clear();
-
             //if (ActiveList.Count() > 0)
             //{
 
@@ -245,7 +246,6 @@ namespace CSharpProject.Views
                     feedFilterBox.Items.Add(feed);
                 }
             }
-
 
             feedFilterBox.SelectedIndex = 0;
             feedFilterBox.IsEnabled = true;
@@ -295,12 +295,6 @@ namespace CSharpProject.Views
                         UpdateFeedList();
                     }
                 }
-
-                // CHECK URL AND NAME HERE FOR DUPLICATES MAYBE?
-                //UpdateFeedList();
-                //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
-                //view.Refresh();
-                //RefreshPodcastList();
 
             }
             catch (Exception ex)
