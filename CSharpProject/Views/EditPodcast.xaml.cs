@@ -281,6 +281,8 @@ namespace CSharpProject.Views
 
                     settings.Save(Environment.CurrentDirectory + @"\settings.xml");
                             MessageBox.Show("Your changes has been saved.", "Congrats!");
+
+                    CheckFeeds();
                     LoadInfo();
                 }
                     //}
