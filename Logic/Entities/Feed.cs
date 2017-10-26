@@ -132,7 +132,7 @@ namespace Logic.Entities
                 string podcastName = tempString[tempString.Length - 1];
                 var podcastFiles = Directory.GetFiles(s, "*.mp3"); //all the .mp3s it could find in current folder
 
-                Feed selectedChannel = FeedList.Single(sc => sc.Name.Equals(podcastName));
+                Feed selectedChannel = FeedList.FirstOrDefault(sc => sc.Name.Equals(podcastName));
                 foreach (var pod in podcastFiles) //loop through the files
                 {
                     var podpathSplit = pod.Split('\\');

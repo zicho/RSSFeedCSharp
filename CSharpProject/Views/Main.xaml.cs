@@ -237,8 +237,6 @@ namespace CSharpProject.Views
             //if (ActiveList.Count() > 0)
             //{
 
-            if(categoryFilterBox.SelectedIndex == -1) { return; }
-
             foreach (var feed in FeedList)
             {
                 if (feed.Category.Equals(categoryFilterBox.SelectedValue.ToString()))
