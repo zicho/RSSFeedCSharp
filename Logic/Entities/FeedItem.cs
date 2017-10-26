@@ -22,6 +22,7 @@ namespace Logic.Entities
         public bool IsDownloaded { get; set; }
         public string Category { get; set; }
         public string FolderName { get; set; }
+        public bool IsListenedTo { get; set; }
 
         public static void FillItemList()
         {
@@ -46,6 +47,7 @@ namespace Logic.Entities
                         Category = file.Category.ToString(),
                         Parent = file.Id.ToString(),
                         FolderName = file.Name.ToString(),
+                        IsListenedTo = false,
                     });
 
                         foreach (var feedItem in feedItems)

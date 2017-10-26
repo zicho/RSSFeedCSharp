@@ -96,7 +96,10 @@
                         </Label>
                         <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding IsDownloaded }" Value="True" >
-                                <Setter TargetName="label" Property="Background" Value="Green" />
+                                <Setter TargetName="label" Property="Background" Value="#9CDAEC" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsListenedTo }" Value="True" >
+                                <Setter TargetName="label" Property="Background" Value="#28AAD2" />
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
@@ -108,7 +111,7 @@
                     <ColumnDefinition Width="90*"/>
                     <ColumnDefinition Width="90*" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonPlay" Margin="0 0 12 0" Content="Play" Grid.Column="0" Click="Button_Click_1"/>
+                <Button x:Name="buttonPlay" Margin="0 0 12 0" Content="Play" Grid.Column="0" Click="Button_Click_1" Height="20" VerticalAlignment="Bottom"/>
                 <Button x:Name="buttonCategoryEdit" Margin="12 0 12 0" Content="Edit Categories" Grid.Column="1" Click="Button_Click_1"/>
                 <Button x:Name="buttonPodcastEdit" Margin="12 0 0 0" Content="Edit Podcasts" Grid.Column="2" Click="Button_Click_2"/>
             </Grid>

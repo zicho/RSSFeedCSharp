@@ -118,7 +118,8 @@ namespace CSharpProject.Views
                                 URL = item.Descendants("URL").Single().Value,
                                 UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
                                 LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
-                                Category = item.Descendants("Category").Single().Value
+                                Category = item.Descendants("Category").Single().Value,
+                                ListenedToPods = item.Descendants("ListenedToPods").Descendants("string").Select(element => element.Value).ToList(),
                             }; //Korrekt antal feeds sparas
 
                 foreach (Feed feed in feeds)
@@ -126,6 +127,7 @@ namespace CSharpProject.Views
                     //Försökte minska koden med att ersätta det nedre med detta men tycks inte fungera. Används nedan vid buttonAddNewFeeed
                     //var feedItems = feed.fetchFeedItems();
                     //feed.Items.AddRange(feedItems);
+                    
                     FeedList.Add(feed);
                 }
 
@@ -180,6 +182,7 @@ namespace CSharpProject.Views
             //System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
             Feed f = new Feed();
             f.CheckAllIfDownloaded();
+            f.IntitializeListentedTo();
         }
 
         public async void ShallFeedsBeUpdated()
@@ -405,12 +408,20 @@ namespace CSharpProject.Views
                 //FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
 
                 FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
-                int selectedIndex = podListBox.SelectedIndex;
+                
 
 
                 if (selectedItem.IsDownloaded)
                 {
                     feedItem.PlayFile(selectedItem);
+                    selectedItem.IsListenedTo = true;
+                    Feed parentFeed = FeedList.Single(s => s.Id.ToString() == selectedItem.Parent);
+                    parentFeed.AddListentedTo(selectedItem);
+
+                    parentFeed.SaveSettingsXML();
+
+                    int selectedIndex = podListBox.SelectedIndex;
+                    refreshListView();
                 }
                 else
                 {
