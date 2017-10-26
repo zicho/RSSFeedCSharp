@@ -54,7 +54,8 @@ namespace CSharpProject.Views
             podListBox.ItemsSource = ActiveList; //testar ersätta FeedItemList här
 
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
-           
+
+            //ShallFeedsBeUpdated();
             loadAllFeeds();
             RefreshPodcastList();
             
@@ -87,7 +88,7 @@ namespace CSharpProject.Views
             return files;
         }
 
-        public void loadAllFeeds()
+        private void loadAllFeeds()
         {
             String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
 
@@ -117,6 +118,9 @@ namespace CSharpProject.Views
 
                 foreach (Feed feed in feeds)
                 {
+                    //Försökte minska koden med att ersätta det nedre med detta men tycks inte fungera. Används nedan vid buttonAddNewFeeed
+                    //var feedItems = feed.fetchFeedItems();
+                    //feed.Items.AddRange(feedItems);
                     FeedList.Add(feed);
                 }
 
@@ -425,7 +429,7 @@ namespace CSharpProject.Views
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
             if (selectedItem != null)
             {
-            if (selectedItem.IsDownloaded)
+if (selectedItem.IsDownloaded)
             {
                 buttonPlay.Content = "Play";
                 //PlayButtonDel = feedItem.PlayFile;
@@ -434,17 +438,16 @@ namespace CSharpProject.Views
             {
                 buttonPlay.Content = "Download";
                 //PlayButtonDel = feedItem.DownloadFile;
+                }
             }
-            }
-            
         }
 
         private void refreshListView()
         {
             if (podListBox != null)
             {
-            System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
-            view.Refresh();
+                System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(ActiveList);
+                view.Refresh();
             }
             
         }
@@ -466,34 +469,32 @@ namespace CSharpProject.Views
         {
             if (categoryFilterBox.SelectedItem != null)
             {
-            var category = categoryFilterBox.SelectedItem.ToString();
-            var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
-            System.Diagnostics.Debug.WriteLine("geh");
-            
+                var category = categoryFilterBox.SelectedItem.ToString();
+                var categoryFeed = FeedList.Where(feed => feed.Category.Equals(category));
 
-            if (ActiveList != null)
-            {
-                ActiveList.Clear();
-            }
-            List<FeedItem> categoryFeedItems = new List<FeedItem>();
-            foreach (Feed feed in categoryFeed)
-            {
-                categoryFeedItems.AddRange(feed.Items);
-            }
+                if (ActiveList != null)
+                {
+                    ActiveList.Clear();
+                }
 
-            if (!categoryFeedItems.Any())
-            {
+                List<FeedItem> categoryFeedItems = new List<FeedItem>();
+                foreach (Feed feed in categoryFeed)
+                {
+                    categoryFeedItems.AddRange(feed.Items);
+                }
+
+                if (!categoryFeedItems.Any())
+                {
+                    refreshListView();
+                    return;
+                }
+
+                foreach (FeedItem feedItem in categoryFeedItems)
+                {
+                    ActiveList.Add(feedItem);
+                }
                 refreshListView();
-                return;
             }
-
-            foreach (FeedItem feedItem in categoryFeedItems)
-            {
-                ActiveList.Add(feedItem);
-            }
-            refreshListView();
-            }
-            
         }
 
 
