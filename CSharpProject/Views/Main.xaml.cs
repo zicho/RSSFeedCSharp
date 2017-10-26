@@ -349,18 +349,18 @@ namespace CSharpProject.Views
 
                     statusLabel.Foreground = System.Windows.Media.Brushes.ForestGreen;
                     statusLabel.Content = "Done!";
-
                     await Task.Delay(2000);
                     statusLabel.Visibility = Visibility.Hidden;
-                    
-
-
                 }
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Validation Error...");
+                statusLabel.Foreground = System.Windows.Media.Brushes.IndianRed;
+                statusLabel.Content = "Something went wrong";
+                await Task.Delay(2000);
+                statusLabel.Visibility = Visibility.Hidden;
             }
         }
 
