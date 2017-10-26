@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -11,6 +12,7 @@ namespace Logic.Entities
 {
     public class Feed : IEntity
     {
+        
         public Guid Id { get; set; }
         public String Filepath { get; set; }
         public String Name { get; set; }
@@ -18,14 +20,23 @@ namespace Logic.Entities
         public int UpdateInterval { get; set; }
         public DateTime LastUpdated { get; set; }
         public string Category { get; set; }
+        [XmlIgnore]
         public List<FeedItem> Items { get; set; } // USE THIS??????????????
-        
+
         public static List<Feed> FeedList = new List<Feed>();
+
+   
 
         public Feed()
         {
             Items = new List<FeedItem>();
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public static Feed AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
             //if (content != null)
@@ -67,7 +78,6 @@ namespace Logic.Entities
                     overrides.Add(typeof(Feed), "Items", attributes);
 
                     var serializer = new XmlSerializer(typeof(List<Feed>));
-                    
                     using (var stream = new StreamWriter("settings.xml"))
                     {
                         serializer.Serialize(stream, FeedList);
@@ -85,6 +95,54 @@ namespace Logic.Entities
                 return await writer.DownloadFeed(url);
             });
         }
+
+        public bool CheckIfChannelNameExist(string channelName, List<Feed> allFeeds) //checks a list if the attempted name already exist
+        {
+            foreach (Feed f in allFeeds)
+            {
+                if (f.Name.Equals(channelName))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool CheckIfChannelURLExist(string channelURL, List<Feed> allFeeds) //checks a list if the attempted url already exist
+        {
+            foreach (Feed f in allFeeds)
+            {
+                if (f.URL.Equals(channelURL))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public void CheckAllIfDownloaded()
+        {
+            string path = Directory.GetCurrentDirectory();
+            path += $@"\podcasts\";
+            var allPodcastFolders = Directory.GetDirectories(path); //all subfolders for the podcasts in a variable
+
+            foreach (string s in allPodcastFolders) //loops through them
+            {
+                var tempString = s.Split('\\');
+                string podcastName = tempString[tempString.Length - 1];
+                var podcastFiles = Directory.GetFiles(s, "*.mp3"); //all the .mp3s it could find in current folder
+
+                Feed selectedChannel = FeedList.Single(sc => sc.Name.Equals(podcastName));
+                foreach (var pod in podcastFiles) //loop through the files
+                {
+                    var podpathSplit = pod.Split('\\');
+                    string filename = podpathSplit[podpathSplit.Length - 1]; //gets the file name from the variable
+                    FeedItem selectedItem = selectedChannel.Items.Single(si => si.Link.Split('/').Last().Split('?').First().Equals(filename)); //matches the current file with all podcasts of the channel that fits the folder
+                    selectedItem.IsDownloaded = true;
+                }
+            }
+        }
+
         public List<FeedItem> fetchFeedItems()
         {
             string feedFilePath = this.Filepath;
@@ -134,5 +192,7 @@ namespace Logic.Entities
                 settingsDoc.Save(path);
             }
         }
+
+        
     }
 }
