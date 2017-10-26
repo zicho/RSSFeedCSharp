@@ -252,14 +252,13 @@ namespace CSharpProject.Views
 
                 if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
                 {
-                    validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
+
+             validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 }
 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-                    
-
                     var Name = nameTextBox.Text;
                     var URL = URLTextBox.Text;
                     var Category = categoryComboBox.SelectedValue.ToString();
