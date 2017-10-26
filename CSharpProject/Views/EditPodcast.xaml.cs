@@ -139,9 +139,17 @@ namespace CSharpProject.Views
         {
             this.Hide();
             ((MainWindow)this.Owner).IsEnabled = true;
+            ((MainWindow)this.Owner).Topmost = true;
         }
 
         private void Window_Closed(object sender, EventArgs e)
+        {
+            this.Hide();
+            ((MainWindow)this.Owner).IsEnabled = true;
+            ((MainWindow)this.Owner).Topmost = true;
+        }
+
+        private void Window_Closing(object sender, EventArgs e)
         {
             this.Hide();
             ((MainWindow)this.Owner).IsEnabled = true;
