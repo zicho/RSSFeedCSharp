@@ -65,7 +65,6 @@ namespace CSharpProject.Views
             //LoadAllFeedItemsInFeedList();
             UpdateFeedList();
             
-            //refreshListView();
 
         }
 
@@ -376,11 +375,11 @@ namespace CSharpProject.Views
                 }
                 else
                 {
-
-
+                    progressBar.IsIndeterminate = true;
                     await feedItem.DownloadFile(selectedItem);
+                    progressBar.IsIndeterminate = false;
 
-                   selectedItem.IsDownloaded = true;
+                    selectedItem.IsDownloaded = true;
                     refreshListView();
                     UpdatePlayButton();
                     //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
