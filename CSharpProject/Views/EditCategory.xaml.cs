@@ -84,6 +84,8 @@ namespace CSharpProject.Views
 
                     var newName = nameTextBox.Text;
 
+                    // change categories
+
                     XElement categories = XElement.Load(Environment.CurrentDirectory + @"\categories.xml");
 
                     XElement newCategory = categories
@@ -93,11 +95,30 @@ namespace CSharpProject.Views
                     // Change the XML
                     newCategory.Element("Name").Value = newName;
 
-                    //Change the feedlist object
+                    //Change the category list object
                     CategoryList[category].Name = newName;
 
-
                     categories.Save(Environment.CurrentDirectory + @"\categories.xml");
+
+                    // change settings
+
+                    XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+                    settings
+                    .Descendants("Feed")
+                    .Where(c => (string)c.Element("Category") == oldName)
+                    .ToList()
+                    .ForEach(c =>
+                    {
+                        c.Element("Category").Value = newName;
+                    });
+
+                    // MAN BORDE OCKSÅ ITERERA IGENOM FEEDLIST FÖR ATT UPPDATERA ALLA KATEGORIER DÄR KANSKE? ELLER BARA LADDA OM ALLT?
+                    // CategoryList[category].Name = newName;
+
+
+                    settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
 
                     this.Close();
