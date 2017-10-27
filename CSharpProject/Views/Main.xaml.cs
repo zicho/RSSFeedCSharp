@@ -22,8 +22,8 @@ namespace CSharpProject.Views
     public partial class MainWindow : Window
     {
 
-        public ValidatorList validator = new ValidatorList();
-        public BoxValidator boxValidator = new BoxValidator();
+        public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
+        public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
         // COMPLETE LISTS OF FEEDS AND FEED ITEMS 
         private List<Feed> feedList = Feed.FeedList;
@@ -49,8 +49,6 @@ namespace CSharpProject.Views
 
             InitializeComponent();
 
-            
-
             validator.Add(new Validator());
             validator.Add(new NameValidator());
             validator.Add(new LengthValidator(3));
@@ -67,6 +65,7 @@ namespace CSharpProject.Views
             InitializeComboBoxes();
             LoadAllFeeds();
             RefreshPodcastList();
+            
             UpdateFeedList();
         }
 
@@ -257,7 +256,6 @@ namespace CSharpProject.Views
         {
 
         }
-
         public void InitializeComboBoxes() //method to add data to comboboxes
         {
             feedFilterBox.Items.Clear();
@@ -410,11 +408,60 @@ namespace CSharpProject.Views
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            this.IsEnabled = false;
-            EditCategory editCategory = new EditCategory(this);
-            editCategory.Show();
+            try
+            {
+                /*
+
+                1. Validera med boxvalidatorn att en podcast-item är vald
+                2. hämtar listan över alla feeditems ur klassen FeedITem som ansvarar för den listan
+                3. Hämtar indexet från podcastlistan ur feeditemlistan. Tar länken o konverterar till sträng o visar användaren.
+
+                */
+                boxValidator.Validate(podListBox.SelectedIndex, "podcast");
+                //FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
+
+                FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
+
+                
+
+                if (selectedItem.IsDownloaded)
+                {
+                    feedItem.PlayFile(selectedItem);
+                    selectedItem.IsListenedTo = true;
+                    Feed parentFeed = FeedList.Single(s => s.Id.ToString() == selectedItem.Parent);
+                    parentFeed.AddListentedTo(selectedItem);
+
+                    parentFeed.SaveSettingsXML();
+
+                    int selectedIndex = podListBox.SelectedIndex;
+                    refreshListView();
+                }
+                else
+                {
+                    
+                    WebClient client = new WebClient();
+                    client.DownloadProgressChanged += client_DownloadProgressChanged; //funkar inte som den ska atm
+                    //progressBar.IsIndeterminate = true;
+                    selectedItem.IsCurrentlyDownloading = true;
+                    UpdatePlayButton();
+                    UpdateProgressBarVisibility();
+                    await feedItem.DownloadFile(selectedItem, client);
+                    //progressBar.IsIndeterminate = false;
+
+                    selectedItem.IsDownloaded = true;
+                    refreshListView();
+                    UpdatePlayButton();
+                    //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
+                    //view.Refresh();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "No item selected!");
+            }
         }
 
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) //funkar inte som den ska atm
@@ -427,6 +474,13 @@ namespace CSharpProject.Views
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+            EditCategory editCategory = new EditCategory(this);
+            editCategory.Show();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             EditPodcast EditWindow = new EditPodcast(this);
             EditWindow.Show();

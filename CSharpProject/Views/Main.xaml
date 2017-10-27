@@ -61,7 +61,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-            <Button Content="Add" x:Name="AddButton" Width="80" Margin="0 0 0 0" Background="#FFEEEEEE" Click="Button_Click"/>
+                <Button Content="Add" x:Name="AddButton" Width="80" Margin="0 0 0 0" Background="#FFEEEEEE" Click="Button_Click"/>
                 <Label x:Name="statusLabel" Margin="0 0 0 0" Grid.Column="0" Content="status stuff" HorizontalAlignment="Right"/>
             </Grid>
 
@@ -111,21 +111,21 @@
                     <ColumnDefinition Width="90*"/>
                     <ColumnDefinition Width="90*" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonPlay" Margin="0 0 12 0" Content="Play" Grid.Column="0" Click="Button_Click_1" Height="20" VerticalAlignment="Bottom"/>
-                <Button x:Name="buttonCategoryEdit" Margin="12 0 12 0" Content="Edit Categories" Grid.Column="1" Click="Button_Click_1"/>
-                <Button x:Name="buttonPodcastEdit" Margin="12 0 0 0" Content="Edit Podcasts" Grid.Column="2" Click="Button_Click_2"/>
+                <Button x:Name="buttonPlay" Margin="0 0 12 0" Content="Play" Grid.Column="0" Click="Button_Click_1"/>
+                <Button x:Name="buttonCategoryEdit" Margin="12 0 12 0" Content="Edit Categories" Grid.Column="1" Click="Button_Click_2"/>
+                <Button x:Name="buttonPodcastEdit" Margin="12 0 0 0" Content="Edit Podcasts" Grid.Column="2" Click="Button_Click_3"/>
             </Grid>
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ProgressBar x:Name="progressBar" Height="18" Margin="0,8,0,-2" Grid.Column="0" RenderTransformOrigin="0.504,1.833" VerticalContentAlignment="Stretch" ValueChanged="progressBar_ValueChanged"/>
 
             </Grid>
 
-            
-            
+
+
 
         </StackPanel>
     </Border>
