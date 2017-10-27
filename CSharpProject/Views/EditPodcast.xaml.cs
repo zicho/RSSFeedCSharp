@@ -65,6 +65,7 @@ namespace CSharpProject.Views
 
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
+            Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
             Closing += (s, e) => main.RefreshFeedList(); //refreshes the category combobox to display new category
         }
 
@@ -97,7 +98,6 @@ namespace CSharpProject.Views
 
             if (FeedList.Count > 0)
             {
-
                 feedComboBox.IsEnabled = true;
                 nameTextBox.IsEnabled = true;
                 URLTextBox.IsEnabled = true;
@@ -214,21 +214,6 @@ namespace CSharpProject.Views
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
 
-                //if (feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
-                //{
-                //    MessageBox.Show("Channel with that name already exist");
-                //}
-                //else
-                //{
-                //    if (feed.CheckIfChannelURLExist(URLTextBox.Text, FeedList))
-                //    {
-                //        MessageBox.Show("Channel with that URL is already added");
-                //    }
-                //    else
-                //    {
-
-                
-
                 if (feedComboBox.Text != nameTextBox.Text) // THIS CODE RUNS ONLY IF NAME HAS BEEN CHANGED
                 {
                     if (Feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
@@ -252,7 +237,7 @@ namespace CSharpProject.Views
                 if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
                 {
 
-             validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
+                     validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 }
 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
