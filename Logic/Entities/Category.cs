@@ -14,7 +14,7 @@ namespace Logic.Entities
         public Guid Id { get; set; }
         public String Name { get; set; }
 
-        public Category(String name, Guid Id)
+        public Category(String name)
         {
             this.Name = name;
             Id = Guid.NewGuid();
@@ -49,7 +49,7 @@ namespace Logic.Entities
         {
             if (!File.Exists(path))
             {
-                var baseCategories = new List<Category> { new Category("Gaming", Id), new Category("Programming", Id), new Category("Other", Id) };
+                var baseCategories = new List<Category> { new Category("Gaming"), new Category("Programming"), new Category("Other") };
 
                 var serializer = new XmlSerializer(typeof(List<Category>));
                 using (var stream = new StreamWriter("categories.xml"))
@@ -59,7 +59,7 @@ namespace Logic.Entities
             }
         }
 
-        public void AddCategoryToXML(String categoryName, Guid Id) //method to add a new category to the XML file
+        public void AddCategoryToXML(String categoryName) //method to add a new category to the XML file
         {
             CategoryValidator validator = new CategoryValidator();
             validator.Validate(categoryName, "category");
@@ -68,9 +68,9 @@ namespace Logic.Entities
             var serializer = new XmlSerializer(typeof(List<Category>));
             using (var stream = new StreamWriter("categories.xml"))
             {
-                Category category = new Category(categoryName, Id);
-                CategoryList.Add(category);
+                Category category = new Category(categoryName);
                 serializer.Serialize(stream, CategoryList);
+                CategoryList.Add(category);
             }
         }
 

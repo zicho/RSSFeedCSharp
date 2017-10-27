@@ -68,8 +68,6 @@ namespace CSharpProject.Views
             LoadAllFeeds();
             RefreshPodcastList();
             UpdateFeedList();
-
-            
         }
 
         private List<String> loadXML(string directory)

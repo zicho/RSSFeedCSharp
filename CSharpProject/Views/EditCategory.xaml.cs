@@ -71,40 +71,45 @@ namespace CSharpProject.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(categoryComboBox.Text != nameTextBox.Text) // jämför om namnet överhuvudtaget ändrats
+            if (categoryComboBox.Text != nameTextBox.Text) // jämför om namnet överhuvudtaget ändrats
             {
-                try {
+                try
+                {
 
                     validator.Validate(nameTextBox.Text, "Category");
                     categoryValidator.Validate(nameTextBox.Text, "Category");
-                    
-                    var category = categoryComboBox.SelectedIndex;
-                    var Id = CategoryList[category].Id;
 
-                    var Name = nameTextBox.Text;
+                    var category = categoryComboBox.SelectedIndex;
+                    var oldName = CategoryList[category].Name;
+
+                    var newName = nameTextBox.Text;
 
                     XElement categories = XElement.Load(Environment.CurrentDirectory + @"\categories.xml");
 
-                    MessageBox.Show(Id.ToString());
-
-                    XElement categoryEdit = categories
+                    XElement newCategory = categories
                     .Descendants("Category")
-                    .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
+                    .FirstOrDefault(m => (string)m.Element("Name") == oldName);
 
-                    categoryEdit.Element("Category").Value = Name;
-                    CategoryList[category].Name = Name;
+                    // Change the XML
+                    newCategory.Element("Name").Value = newName;
 
-                    categories.Save(Environment.CurrentDirectory + @"\settings.xml");
+                    //Change the feedlist object
+                    CategoryList[category].Name = newName;
+
+
+                    categories.Save(Environment.CurrentDirectory + @"\categories.xml");
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
 
                     this.Close();
 
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Oh noes");
                 }
-                
-            } else
+
+            }
+            else
             {
                 MessageBox.Show("No changes saved.");
                 this.Close();
@@ -123,6 +128,16 @@ namespace CSharpProject.Views
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var Name = categoryComboBox.Text;
+
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you really wish to delete the category {Name}?\n\nPlease note: ALL feeds in this category will be removed.", $"Confirm deletion of {Name}", System.Windows.MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+            }
         }
     }
 }
