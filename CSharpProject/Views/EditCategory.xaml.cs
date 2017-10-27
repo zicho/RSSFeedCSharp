@@ -1,6 +1,7 @@
 ﻿using Logic.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -174,37 +175,65 @@ namespace CSharpProject.Views
                     {
                         CategoryList.RemoveAt(category);
 
+                        XElement categories = XElement.Load(Environment.CurrentDirectory + @"\categories.xml");
+
+                        categories
+                        .Descendants("Category")
+                        .Where(cat => (string)cat.Element("Name") == categoryComboBox.Text)
+                        .ToList()
+                        .ForEach(cat =>
+                        {
+                            cat.Remove();
+                        });
+
+                        categories.Save(Environment.CurrentDirectory + @"\categories.xml");
+                        
+                        //update settings
                         XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
 
-                        //update settings
+                        List<string> feedNames = new List<string>();
+
                         settings
                         .Descendants("Feed")
                         .Where(f => (string)f.Element("Category") == categoryComboBox.Text)
                         .ToList()
                         .ForEach(f =>
                         {
+                            feedNames.Add((string)f.Element("Name")); // spara namnen på feedsen som tas bort för att radera mappar senare
                             f.Remove();
                         });
+
+                        foreach(var name in feedNames)
+                        {
+                            MessageBox.Show(name);
+                        }
 
                         settings.Save(Environment.CurrentDirectory + @"\settings.xml");
 
                         //remove all folders
 
-                        // TO DO 
+                        if(feedNames.Count > 0) {  // bara om feedNames finns så ska mappar tas bort
+                        String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
+
+                            foreach(var name in feedNames)
+                            {
+                                System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{name}");
+                                directory.Delete(true);
+                            }
+
+                        }
 
                         // Delete from feedlist
-
-                        foreach(var f in FeedList)
-                        {
-                            if (f.Category == categoryComboBox.Text)
-                            {
-                                FeedList.RemoveAt(f);
-                            }
-                        }
+                        try { // kraschar om listan är tom om man inte har try här
+                        FeedList.Remove(FeedList.Single(f => f.Category == categoryComboBox.Text));
+                        } catch { }
 
                         break;
                     }
+
+                    
                 }
+                this.Close();
             }
         }
     }
