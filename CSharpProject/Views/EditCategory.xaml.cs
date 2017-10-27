@@ -246,6 +246,7 @@ namespace CSharpProject.Views
 
                     
                 }
+                MessageBox.Show("Category was deleted", "Bye bye!");
                 this.Close();
             }
         }
