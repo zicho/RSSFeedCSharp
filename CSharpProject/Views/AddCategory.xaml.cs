@@ -26,7 +26,7 @@ namespace CSharpProject.Views
             InitializeComponent();
             this.Topmost = true;
             this.Focus();
-            Closing += (s,e) => main.IsEnabled = true;
+            Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
         }
 
@@ -40,9 +40,9 @@ namespace CSharpProject.Views
                 categoryValidator.Validate(NameTxtBox.Text, "Category");
                 Category c = new Category();
                 c.AddCategoryToXML(NameTxtBox.Text);
-
                 this.Close();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Input error");
             }

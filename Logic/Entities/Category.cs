@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -69,8 +68,8 @@ namespace Logic.Entities
             using (var stream = new StreamWriter("categories.xml"))
             {
                 Category category = new Category(categoryName);
-                serializer.Serialize(stream, CategoryList);
                 CategoryList.Add(category);
+                serializer.Serialize(stream, CategoryList);
             }
         }
 

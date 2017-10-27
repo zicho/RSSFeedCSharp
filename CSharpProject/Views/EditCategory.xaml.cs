@@ -24,11 +24,15 @@ namespace CSharpProject.Views
     {
 
         private CategoryValidator categoryValidator = new CategoryValidator();
+
         private List<Category> categoryList = Category.CategoryList;
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
 
         private Category category = new Category();
         public Category Category { get => category; set => category = value; }
+
+        private List<Feed> feedList = Feed.FeedList;
+        public List<Feed> FeedList { get => feedList; set => feedList = value; }
 
         public ValidatorList validator = new ValidatorList();
 
@@ -113,9 +117,13 @@ namespace CSharpProject.Views
                         c.Element("Category").Value = newName;
                     });
 
-                    // MAN BORDE OCKSÅ ITERERA IGENOM FEEDLIST FÖR ATT UPPDATERA ALLA KATEGORIER DÄR KANSKE? ELLER BARA LADDA OM ALLT?
-                    // CategoryList[category].Name = newName;
-
+                    foreach(var f in FeedList)
+                    {
+                        if(f.Category == oldName)
+                        {
+                            f.Category = newName;
+                        }
+                    }
 
                     settings.Save(Environment.CurrentDirectory + @"\settings.xml");
 
@@ -158,6 +166,13 @@ namespace CSharpProject.Views
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you really wish to delete the category {Name}?\n\nPlease note: ALL feeds in this category will be removed.", $"Confirm deletion of {Name}", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
+                foreach(var c in CategoryList)
+                {
+                    if(c.Name == categoryComboBox.Text)
+                    {
+                        CategoryList.Remove(c);
+                    }
+                }
             }
         }
     }
