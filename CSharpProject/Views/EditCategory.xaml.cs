@@ -166,11 +166,43 @@ namespace CSharpProject.Views
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Do you really wish to delete the category {Name}?\n\nPlease note: ALL feeds in this category will be removed.", $"Confirm deletion of {Name}", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                foreach(var c in CategoryList)
+                var category = categoryComboBox.SelectedIndex;
+
+                foreach (var c in CategoryList)
                 {
                     if(c.Name == categoryComboBox.Text)
                     {
-                        CategoryList.Remove(c);
+                        CategoryList.RemoveAt(category);
+
+                        XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+                        //update settings
+                        settings
+                        .Descendants("Feed")
+                        .Where(f => (string)f.Element("Category") == categoryComboBox.Text)
+                        .ToList()
+                        .ForEach(f =>
+                        {
+                            f.Remove();
+                        });
+
+                        settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+
+                        //remove all folders
+
+                        // TO DO 
+
+                        // Delete from feedlist
+
+                        foreach(var f in FeedList)
+                        {
+                            if (f.Category == categoryComboBox.Text)
+                            {
+                                FeedList.RemoveAt(f);
+                            }
+                        }
+
+                        break;
                     }
                 }
             }
