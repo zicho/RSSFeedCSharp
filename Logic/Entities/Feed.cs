@@ -20,8 +20,10 @@ namespace Logic.Entities
         public int UpdateInterval { get; set; }
         public DateTime LastUpdated { get; set; }
         public string Category { get; set; }
+        public List<string> ListenedToPods { get; set; }
         [XmlIgnore]
         public List<FeedItem> Items { get; set; } // USE THIS??????????????
+        
 
         public static List<Feed> FeedList = new List<Feed>();
 
@@ -30,11 +32,18 @@ namespace Logic.Entities
         public Feed()
         {
             Items = new List<FeedItem>();
+            ListenedToPods = new List<string>();
         }
 
         public override string ToString()
         {
             return Name;
+        }
+
+        public void AddListentedTo(FeedItem item)
+        {
+            ListenedToPods.Add(item.Title);
+            ListenedToPods = ListenedToPods.Distinct().ToList();
         }
 
         public static Feed AddNewFeed(String content, String name, String url, String updateInterval, String category)
@@ -65,7 +74,6 @@ namespace Logic.Entities
                     feed.UpdateInterval = Int32.Parse(updateInterval);
                     feed.LastUpdated = DateTime.Now;
                     feed.Category = category;
-                    
                     feed.Id = freshGuid;
                     FeedList.Add(feed);
 
@@ -86,6 +94,16 @@ namespace Logic.Entities
                 //}
             //}
         }
+
+        public void SaveSettingsXML()
+        {
+            var serializer = new XmlSerializer(typeof(List<Feed>));
+            using (var stream = new StreamWriter("settings.xml"))
+            {
+                serializer.Serialize(stream, FeedList);
+            }
+        }
+        
 
         public static async Task<String> DownloadFeed(string url, string text)
         {
@@ -119,6 +137,15 @@ namespace Logic.Entities
             return false;
         }
 
+
+        public void IntitializeListentedTo()
+        {
+            foreach (Feed f in FeedList)
+            {
+                var playedItems = f.Items.Where(i => f.ListenedToPods.Contains(i.Title));
+                playedItems.ToList().ForEach(i => i.IsListenedTo = true);
+            }
+        }
 
         public void CheckAllIfDownloaded()
         {
