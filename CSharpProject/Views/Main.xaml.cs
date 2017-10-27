@@ -319,6 +319,8 @@ namespace CSharpProject.Views
                 statusLabel.Foreground = System.Windows.Media.Brushes.Black;
                 statusLabel.Content = "Working...";
 
+                progressBar.IsIndeterminate = true;
+
                 statusLabel.Visibility = Visibility.Visible;
 
                 var text = "";
@@ -347,20 +349,31 @@ namespace CSharpProject.Views
                         RSSNameTextBox.Clear();                      
                     }
 
+                    progressBar.IsIndeterminate = false;
+                    progressBar.Value = 100;
+
                     statusLabel.Foreground = System.Windows.Media.Brushes.ForestGreen;
                     statusLabel.Content = "Done!";
                     await Task.Delay(2000);
                     statusLabel.Visibility = Visibility.Hidden;
+                    progressBar.Value = 0;
                 }
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Validation Error...");
+
+                progressBar.IsIndeterminate = false;
+                progressBar.Foreground = System.Windows.Media.Brushes.IndianRed;
+                progressBar.Value = 100;
+
                 statusLabel.Foreground = System.Windows.Media.Brushes.IndianRed;
                 statusLabel.Content = "Something went wrong";
+
                 await Task.Delay(2000);
                 statusLabel.Visibility = Visibility.Hidden;
+                progressBar.Value = 0;
             }
         }
 
