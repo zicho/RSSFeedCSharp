@@ -68,10 +68,23 @@ namespace CSharpProject.Views
 
         public void LoadInfo()
         {
-            var category = categoryComboBox.SelectedIndex;
+            if(CategoryList.Count > 0) {
+                categoryComboBox.IsEnabled = true;
+                nameTextBox.IsEnabled = true;
+                buttonDelete.IsEnabled = true;
+                buttonSave.IsEnabled = true;
+
+                var category = categoryComboBox.SelectedIndex;
             var Name = CategoryList[category].Name;
 
             nameTextBox.Text = Name;
+            } else
+            {
+                categoryComboBox.IsEnabled = false;
+                nameTextBox.IsEnabled = false;
+                buttonDelete.IsEnabled = false;
+                buttonSave.IsEnabled = false;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
