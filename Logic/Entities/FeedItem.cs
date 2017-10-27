@@ -23,6 +23,7 @@ namespace Logic.Entities
         public string Category { get; set; }
         public string FolderName { get; set; }
         public bool IsListenedTo { get; set; }
+        public bool IsCurrentlyDownloading { get; set; }
 
         public static void FillItemList()
         {
@@ -48,6 +49,7 @@ namespace Logic.Entities
                         Parent = file.Id.ToString(),
                         FolderName = file.Name.ToString(),
                         IsListenedTo = false,
+                        IsCurrentlyDownloading=false,
                     });
 
                         foreach (var feedItem in feedItems)
@@ -107,29 +109,25 @@ namespace Logic.Entities
         }
 
 
-        public async Task DownloadFile(FeedItem item)
+        public async Task DownloadFile(FeedItem item, WebClient webclient)
         {
             string downloadURL = item.Link;
             string path = GetFilepath(item);
-            //if (!Directory.Exists(path))
-            //{
-            //    Directory.CreateDirectory(path);
-            //}
             string fileName = GetDownloadFileName(item);
-            /*XMLLogic xl = new XMLLogic();
-            string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";*/
-
             try
             {
-                await new WebClient().DownloadFileTaskAsync(
+                await webclient.DownloadFileTaskAsync(
                 new Uri(downloadURL),
                 path + $@"\{GetDownloadFileName(item)}");
+                item.IsCurrentlyDownloading = false;
             }
             catch (Exception)
             {
+                item.IsCurrentlyDownloading = false;
                 throw new Exception("Failed to download file:" + item.Title);
             }          
         }
+
 
 
         public void PlayFile(FeedItem item)

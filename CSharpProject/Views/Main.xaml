@@ -123,6 +123,7 @@
                 <ProgressBar x:Name="progressBar" Height="18" Margin="0 6 0 0" Grid.Column="0" RenderTransformOrigin="0.504,1.833" VerticalContentAlignment="Stretch" ValueChanged="progressBar_ValueChanged"/>
 
             </Grid>
+
             
             
 

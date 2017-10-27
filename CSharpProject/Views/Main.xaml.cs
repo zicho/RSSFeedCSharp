@@ -15,6 +15,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Threading;
 using System.Timers;
+using System.Net;
 
 namespace CSharpProject.Views
 {
@@ -408,8 +409,8 @@ namespace CSharpProject.Views
                 //FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
 
                 FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
-                
 
+                
 
                 if (selectedItem.IsDownloaded)
                 {
@@ -425,9 +426,15 @@ namespace CSharpProject.Views
                 }
                 else
                 {
-                    progressBar.IsIndeterminate = true;
-                    await feedItem.DownloadFile(selectedItem);
-                    progressBar.IsIndeterminate = false;
+                    
+                    WebClient client = new WebClient();
+                    client.DownloadProgressChanged += client_DownloadProgressChanged; //funkar inte som den ska atm
+                    //progressBar.IsIndeterminate = true;
+                    selectedItem.IsCurrentlyDownloading = true;
+                    UpdatePlayButton();
+                    UpdateProgressBarVisibility();
+                    await feedItem.DownloadFile(selectedItem, client);
+                    //progressBar.IsIndeterminate = false;
 
                     selectedItem.IsDownloaded = true;
                     refreshListView();
@@ -441,6 +448,15 @@ namespace CSharpProject.Views
             {
                 MessageBox.Show(ex.Message, "No item selected!");
             }
+        }
+
+        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) //funkar inte som den ska atm
+        {
+            double bytesIn = double.Parse(e.BytesReceived.ToString());
+            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            double percentage = bytesIn / totalBytes * 100;
+            
+            progressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -486,6 +502,27 @@ namespace CSharpProject.Views
         private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdatePlayButton();
+            UpdateProgressBarVisibility();
+            
+            
+        }
+
+        private void UpdateProgressBarVisibility()
+        {
+            if (podListBox.SelectedItem != null)
+            {
+                FeedItem si = (FeedItem)podListBox.SelectedItem;
+
+                if (si.IsCurrentlyDownloading)
+                {
+                    progressBar.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    progressBar.Visibility = Visibility.Hidden;
+                }
+
+            }
         }
 
         private void UpdatePlayButton()
@@ -493,15 +530,23 @@ namespace CSharpProject.Views
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
             if (selectedItem != null)
             {
+                if (selectedItem.IsCurrentlyDownloading)
+                {
+                    buttonPlay.Content = "Downloading...";
+                    buttonPlay.IsEnabled = false;
+                }
+                else
+                {
+                    buttonPlay.IsEnabled = true;
+                }
                 if (selectedItem.IsDownloaded)
                 {
                     buttonPlay.Content = "Play";
-                    //PlayButtonDel = feedItem.PlayFile;
                 }
                 else
                 {
                     buttonPlay.Content = "Download";
-                    //PlayButtonDel = feedItem.DownloadFile;
+                   
                 }
             }
         }
