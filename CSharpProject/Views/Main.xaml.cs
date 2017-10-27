@@ -41,6 +41,8 @@ namespace CSharpProject.Views
 
         public List<FeedItem> ActiveList { get; set; }
 
+        public Dictionary<FeedItem, WebClient> FeedClientD = new Dictionary<FeedItem, WebClient>();
+
         //private delegate void ButtonAction(FeedItem item);
         //private ButtonAction PlayButtonDel;
 
@@ -65,7 +67,7 @@ namespace CSharpProject.Views
             InitializeComboBoxes();
             LoadAllFeeds();
             RefreshPodcastList();
-            
+
             UpdateFeedList();
         }
 
@@ -73,7 +75,7 @@ namespace CSharpProject.Views
         {
             List<String> files = new List<String>();
 
-            
+
 
             try
             {
@@ -128,7 +130,7 @@ namespace CSharpProject.Views
                     //Försökte minska koden med att ersätta det nedre med detta men tycks inte fungera. Används nedan vid buttonAddNewFeeed
                     //var feedItems = feed.fetchFeedItems();
                     //feed.Items.AddRange(feedItems);
-                    
+
                     FeedList.Add(feed);
                 }
 
@@ -193,7 +195,7 @@ namespace CSharpProject.Views
             String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
             var settingsDoc = XDocument.Load(settingsPath);
 
-            foreach(var file in xmlFileList)
+            foreach (var file in xmlFileList)
             {
                 try
                 {
@@ -250,7 +252,7 @@ namespace CSharpProject.Views
             }
 
         }
-        
+
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -282,7 +284,7 @@ namespace CSharpProject.Views
         public void UpdateFeedList()
         {
             feedFilterBox.Items.Clear();
-            
+
             var selectedCategory = categoryFilterBox.SelectedValue.ToString();
             feedFilterBox.Items.Add("All");
             foreach (var feed in FeedList)
@@ -299,7 +301,7 @@ namespace CSharpProject.Views
 
             feedFilterBox.SelectedIndex = 0;
             feedFilterBox.IsEnabled = true;
-            
+
             if (feedFilterBox.Items.Count == 1)
             {
                 feedFilterBox.Items.Clear();
@@ -311,7 +313,7 @@ namespace CSharpProject.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            
+
 
             try
             {
@@ -350,7 +352,7 @@ namespace CSharpProject.Views
                         filterAfterCategory();
                         UpdateFeedList();
                         RSSTextBox.Clear();
-                        RSSNameTextBox.Clear();                      
+                        RSSNameTextBox.Clear();
                     }
 
                     progressBar.IsIndeterminate = false;
@@ -368,10 +370,11 @@ namespace CSharpProject.Views
             {
                 MessageBox.Show(ex.Message, "Validation Error...");
 
-                if(statusLabel.Visibility == Visibility.Visible) { 
-                progressBar.IsIndeterminate = false;
-                progressBar.Foreground = System.Windows.Media.Brushes.IndianRed;
-                progressBar.Value = 100;
+                if (statusLabel.Visibility == Visibility.Visible)
+                {
+                    progressBar.IsIndeterminate = false;
+                    progressBar.Foreground = System.Windows.Media.Brushes.IndianRed;
+                    progressBar.Value = 100;
                 }
                 statusLabel.Foreground = System.Windows.Media.Brushes.IndianRed;
                 statusLabel.Content = "Something went wrong";
@@ -424,7 +427,7 @@ namespace CSharpProject.Views
 
                 FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
 
-                
+
 
                 if (selectedItem.IsDownloaded)
                 {
@@ -440,11 +443,13 @@ namespace CSharpProject.Views
                 }
                 else
                 {
-                    
+                    progressBar.Value = 0;
                     WebClient client = new WebClient();
                     client.DownloadProgressChanged += client_DownloadProgressChanged; //funkar inte som den ska atm
                     //progressBar.IsIndeterminate = true;
                     selectedItem.IsCurrentlyDownloading = true;
+                    FeedClientD[selectedItem] = client;
+
                     UpdatePlayButton();
                     UpdateProgressBarVisibility();
                     await feedItem.DownloadFile(selectedItem, client);
@@ -466,11 +471,31 @@ namespace CSharpProject.Views
 
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) //funkar inte som den ska atm
         {
-            double bytesIn = double.Parse(e.BytesReceived.ToString());
-            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            double percentage = bytesIn / totalBytes * 100;
-            
-            progressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
+            if (podListBox.SelectedItem != null)
+            {
+                FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
+                WebClient foundClient = new WebClient();
+                List<WebClient> wcl = new List<WebClient>();
+
+                FeedClientD.TryGetValue(selectedItem, out foundClient);
+
+                if (sender == foundClient)
+                {
+                    progressBar.Value = e.ProgressPercentage;
+                }
+
+
+
+
+
+            }
+
+            //double bytesIn = double.Parse(e.BytesReceived.ToString());
+            //double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            //double percentage = bytesIn / totalBytes * 100;
+
+            //progressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -491,7 +516,7 @@ namespace CSharpProject.Views
         {
             if (feedFilterBox.SelectedItem != null)
             {
-                if(feedFilterBox.SelectedItem.Equals("All"))
+                if (feedFilterBox.SelectedItem.Equals("All"))
                 {
                     filterAfterCategory();
                 }
@@ -499,7 +524,7 @@ namespace CSharpProject.Views
                 {
                     filterAfterPodcast();
                 }
-                
+
                 refreshListView();
             }
         }
@@ -508,7 +533,7 @@ namespace CSharpProject.Views
         {
             if (categoryFilterBox.IsLoaded && !categoryFilterBox.Items.IsEmpty)
             {
-                if(categoryFilterBox.SelectedItem.ToString().Equals("All"))
+                if (categoryFilterBox.SelectedItem.ToString().Equals("All"))
                 {
                     LoadAllFeedItemsInFeedList();
                 }
@@ -524,8 +549,8 @@ namespace CSharpProject.Views
         {
             UpdatePlayButton();
             UpdateProgressBarVisibility();
-            
-            
+
+
         }
 
         private void UpdateProgressBarVisibility()
@@ -567,7 +592,7 @@ namespace CSharpProject.Views
                 else
                 {
                     buttonPlay.Content = "Download";
-                   
+
                 }
             }
         }
@@ -646,7 +671,7 @@ namespace CSharpProject.Views
                 }
                 ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
             }
-            
+
         }
 
         private void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
