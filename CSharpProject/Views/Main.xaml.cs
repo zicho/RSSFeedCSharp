@@ -516,7 +516,13 @@ namespace CSharpProject.Views
         {
             if (feedFilterBox.SelectedItem != null)
             {
-                if (feedFilterBox.SelectedItem.Equals("All"))
+                var selectedFeed = feedFilterBox.SelectedItem;
+                var selectedCategory = categoryFilterBox.SelectedItem;
+                if (selectedFeed.Equals("All") && selectedCategory.Equals("All")) 
+                {
+                    LoadAllFeedItemsInFeedList();
+                }
+                else if (selectedFeed.Equals("All"))
                 {
                     filterAfterCategory();
                 }
@@ -531,7 +537,7 @@ namespace CSharpProject.Views
 
         private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (categoryFilterBox.IsLoaded && !categoryFilterBox.Items.IsEmpty)
+            if (categoryFilterBox.IsLoaded && categoryFilterBox.SelectedItem != null)
             {
                 if (categoryFilterBox.SelectedItem.ToString().Equals("All"))
                 {
@@ -610,14 +616,16 @@ namespace CSharpProject.Views
         private void LoadAllFeedItemsInFeedList()
         {
             ActiveList.Clear();
-            foreach (Feed feed in FeedList)
+            foreach(Feed feed in FeedList)
             {
-                var currentFeedItems = feed.Items;
-                foreach (FeedItem item in currentFeedItems)
+                System.Diagnostics.Debug.WriteLine(feed.Id);
+                foreach (FeedItem item in feed.Items)
                 {
+                    System.Diagnostics.Debug.WriteLine(item.Title);
                     ActiveList.Add(item);
                 }
             }
+            refreshListView();
         }
 
         public void filterAfterCategory()
