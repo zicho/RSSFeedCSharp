@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace Logic.Exceptions
 {
     public class ValidationException : Exception
     {
-
+        private static Regex regex = new Regex(@"^\w+$");
         private static Feed Feed = new Feed(); // used to validate existing feeds
         private static List<Feed> FeedList = Feed.FeedList; // used to validate existing feeds
 
@@ -24,6 +25,9 @@ namespace Logic.Exceptions
             {
                 if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input)) //testar ersätta input.Length == 0
                     throw new Exception($"The field '{field}' may not be empty.");
+                var validName = regex.Match(input);
+                if (!validName.Success)
+                    throw new Exception("Only letters, numbers and words are allowed as podcast names. No sentences!");
             }
         }
 
