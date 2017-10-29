@@ -61,9 +61,7 @@ namespace CSharpProject.Views
             this.Title = "Ultra Epic Podcast Application (Extreme Edition)";
 
             statusLabel.Visibility = Visibility.Hidden;
-
-            //ShallFeedsBeUpdated();
-
+            
             InitializeComboBoxes();
             LoadAllFeeds();
             RefreshPodcastList();
@@ -76,6 +74,9 @@ namespace CSharpProject.Views
         public void LoadAllFeeds()
         {
             Feed f = new Feed();
+
+            f.ShallFeedsBeUpdated();
+
             f.LoadAllFeeds();
             
             

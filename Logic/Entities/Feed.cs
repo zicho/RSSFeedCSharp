@@ -231,7 +231,7 @@ namespace Logic.Entities
             String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
             var xmlFileList = xmld.loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
             String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
-            var settingsDoc = XDocument.Load(settingsPath);
+            var settingsDoc = xmld.LoadSettings();
 
             foreach (var file in xmlFileList)
             {
@@ -256,10 +256,10 @@ namespace Logic.Entities
                         var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
 
                         File.Delete(folderPath);
-                        Task<String> newContent = Feed.DownloadFeed(podUrl, "text");
-                        await newContent;
+                        
+                        var newContent = Task.Run(() => Feed.DownloadFeed(podUrl, "text"));
+                        newContent.Wait();
                         File.AppendAllText(folderPath, newContent.Result);
-
                         var lastUpdatedSettings = fileSettings.Element("LastUpdated");
                         lastUpdatedSettings.Value = DateTime.Today.ToString();
                         settingsDoc.Save(settingsPath);
