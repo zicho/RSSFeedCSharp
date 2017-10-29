@@ -77,6 +77,63 @@ namespace Data
 
             return files.Where(i => i.EndsWith(".xml")).ToList();
         }
+
+        public static async Task<String> DownloadFeed(string url, string text) //Oklart om den hör hemma i datalagret eller i logik, skapar 
+        {
+            return await Task.Run(async () =>
+            {
+                Reader writer = new Reader();
+                return await writer.DownloadFeed(url);
+            });
+        }
+
+        public void updateXmlFilesOrNot()
+        {
+            XMLData xmld = new XMLData();
+            String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
+            var xmlFileList = xmld.loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
+            String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+            var settingsDoc = xmld.LoadSettings();
+
+            foreach (var file in xmlFileList)
+            {
+                try
+                {
+                    var fileID = Path.GetFileNameWithoutExtension(file);
+                    var fileSettings = (from podcast in settingsDoc.Descendants("Channel")
+                                        where podcast.Element("Id").Value == fileID
+                                        select podcast).FirstOrDefault();
+
+                    var updateInterval = fileSettings.Element("UpdateInterval").Value;
+                    DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
+                    var updateIntervalAsInt = Int32.Parse(updateInterval);
+                    DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
+
+                    if (DateTime.Today >= updateDueDate)
+                    {
+                        var podGuid = fileSettings.Element("Id").Value;
+                        var podName = fileSettings.Element("Name").Value;
+                        var podUrl = fileSettings.Element("URL").Value.ToString();
+                        var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+
+
+                        File.Delete(folderPath);
+
+                        var newContent = Task.Run(() => XMLData.DownloadFeed(podUrl, "text"));
+                        newContent.Wait();
+                        File.AppendAllText(folderPath, newContent.Result);
+                        var lastUpdatedSettings = fileSettings.Element("LastUpdated");
+                        lastUpdatedSettings.Value = DateTime.Today.ToString();
+                        settingsDoc.Save(settingsPath);
+                        System.Diagnostics.Debug.WriteLine("Saved");
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
     }
 
 

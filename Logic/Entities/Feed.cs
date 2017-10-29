@@ -225,52 +225,54 @@ namespace Logic.Entities
             LoadAllItems();
         }
 
-        public async void ShallFeedsBeUpdated()
+        public void ShallFeedsBeUpdated()
         {
-            XMLData xmld = new XMLData();
-            String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
-            var xmlFileList = xmld.loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
-            String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
-            var settingsDoc = xmld.LoadSettings();
+            XMLData xmlAccess = new XMLData();
+            xmlAccess.updateXmlFilesOrNot();
+            //XMLData xmld = new XMLData();
+            //String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
+            //var xmlFileList = xmld.loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
+            //String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+            //var settingsDoc = xmld.LoadSettings();
 
-            foreach (var file in xmlFileList)
-            {
-                try
-                {
-                    var fileID = Path.GetFileNameWithoutExtension(file);
-                    var fileSettings = (from podcast in settingsDoc.Descendants("Channel")
-                                        where podcast.Element("Id").Value == fileID
-                                        select podcast).FirstOrDefault();
+            //foreach (var file in xmlFileList)
+            //{
+            //    try
+            //    {
+            //        var fileID = Path.GetFileNameWithoutExtension(file);
+            //        var fileSettings = (from podcast in settingsDoc.Descendants("Channel")
+            //                            where podcast.Element("Id").Value == fileID
+            //                            select podcast).FirstOrDefault();
 
-                    var updateInterval = fileSettings.Element("UpdateInterval").Value;
-                    DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
-                    var updateIntervalAsInt = Int32.Parse(updateInterval);
-                    DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
+            //        var updateInterval = fileSettings.Element("UpdateInterval").Value;
+            //        DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
+            //        var updateIntervalAsInt = Int32.Parse(updateInterval);
+            //        DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
 
-                    if (DateTime.Today >= updateDueDate)
-                    {
-                        System.Diagnostics.Debug.WriteLine("We're in");
-                        var podGuid = fileSettings.Element("Id").Value;
-                        var podName = fileSettings.Element("Name").Value;
-                        var podUrl = fileSettings.Element("URL").Value.ToString();
-                        var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+            //        if (DateTime.Today >= updateDueDate)
+            //        {
+            //            var podGuid = fileSettings.Element("Id").Value;
+            //            var podName = fileSettings.Element("Name").Value;
+            //            var podUrl = fileSettings.Element("URL").Value.ToString();
+            //            var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+            
 
-                        File.Delete(folderPath);
-                        
-                        var newContent = Task.Run(() => Feed.DownloadFeed(podUrl, "text"));
-                        newContent.Wait();
-                        File.AppendAllText(folderPath, newContent.Result);
-                        var lastUpdatedSettings = fileSettings.Element("LastUpdated");
-                        lastUpdatedSettings.Value = DateTime.Today.ToString();
-                        settingsDoc.Save(settingsPath);
-                        System.Diagnostics.Debug.WriteLine("Saved");
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-            }
+            //            File.Delete(folderPath);
+
+            //            var newContent = Task.Run(() => Feed.DownloadFeed(podUrl, "text"));
+            //            newContent.Wait();
+            //            File.AppendAllText(folderPath, newContent.Result);
+            //            var lastUpdatedSettings = fileSettings.Element("LastUpdated");
+            //            lastUpdatedSettings.Value = DateTime.Today.ToString();
+            //            settingsDoc.Save(settingsPath);
+            //            System.Diagnostics.Debug.WriteLine("Saved");
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        throw e;
+            //    }
+            //}
         }
 
         public XDocument LoadSettings()
