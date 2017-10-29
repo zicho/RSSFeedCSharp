@@ -267,7 +267,7 @@ namespace CSharpProject.Views
                     XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
 
                     XElement feed = settings
-                    .Descendants("Feed")
+                    .Descendants("Channel")
                     .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
 
                     // Change the XML

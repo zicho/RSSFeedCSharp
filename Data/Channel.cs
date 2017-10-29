@@ -7,41 +7,31 @@ using System.Xml.Serialization;
 
 namespace Data
 { 
-    [Serializable,XmlRoot("user")] //ingen aning om man ska göra såhär, såg att folk gjorde det men kom aldrig långt nog för att testa ifall det fungerade
     public class Channel
     {
-        [XmlElement(ElementName = "title")] //ingen aning om man ska göra såhär, såg att folk gjorde det men kom aldrig långt nog för att testa ifall det fungerade
-        public String title { get; set; }
+        public Guid Id { get; set; }
+        public String Filepath { get; set; }
+        public String Name { get; set; }
+        public String URL { get; set; }
+        public int UpdateInterval { get; set; }
+        public DateTime LastUpdated { get; set; }
+        public string Category { get; set; }
+        public List<string> ListenedToPods { get; set; }
 
-        DateTime lastUpdated { get; set; }
-        int updateInterval;
-        List<Podcast> podcastList;
-
-        public Channel(String title, int updateInterval)
+        public Channel(Guid Id, String Filepath, String Name, String URL, int UpdateInterval, DateTime LastUpdated, string Category, List<string> ListenedToPods)
         {
-            this.title = title;
-            lastUpdated = DateTime.Now;
-            podcastList = new List<Podcast>();
-            this.updateInterval = updateInterval;
+            this.Id = Id;
+            this.Filepath = Filepath;
+            this.Name = Name;
+            this.URL = URL;
+            this.UpdateInterval = UpdateInterval;
+            this.LastUpdated = LastUpdated;
+            this.Category = Category;
+            this.ListenedToPods = ListenedToPods;
         }
-
-        public void ShallChannelBeUpdated()
-        {
-            DateTime updateDate = lastUpdated.AddDays(updateInterval);
-            
-            if(DateTime.Now.Equals(updateDate)) {
-                //Podcast.FillPodcastList();
-            }
-            lastUpdated = DateTime.Now.AddDays(updateInterval); //bara sketch, vet att detta nya datum inte kommer sparas vid avstängning
-        }
-
         public Channel()
         {
 
-        }
-        public void AddPodcast(Podcast episode)
-        {
-            podcastList.Add(episode);
         }
     }
 }

@@ -71,169 +71,22 @@ namespace CSharpProject.Views
             UpdateFeedList();
         }
 
-        private List<String> loadXML(string directory)
-        {
-            List<String> files = new List<String>();
-
-
-
-            try
-            {
-                foreach (string f in Directory.GetFiles(directory))
-                {
-                    files.Add(f);
-                }
-                foreach (string d in Directory.GetDirectories(directory))
-                {
-                    files.AddRange(loadXML(d));
-                }
-            }
-            catch (System.Exception excpt)
-            {
-                MessageBox.Show(excpt.Message);
-            }
-
-            return files;
-        }
+        
 
         public void LoadAllFeeds()
         {
-            String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
-
-            if (Directory.Exists(path) == false)
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            var files = loadXML(path);
-
-            XDocument xmlDocument;
-
-            var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
-
-            try
-            {
-                var feeds = from item in settings.Descendants("Feed")
-                            select new Feed
-                            {
-                                Id = new Guid(item.Descendants("Id").Single().Value),
-                                Name = item.Descendants("Name").Single().Value,
-                                URL = item.Descendants("URL").Single().Value,
-                                UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
-                                LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
-                                Category = item.Descendants("Category").Single().Value,
-                                ListenedToPods = item.Descendants("ListenedToPods").Descendants("string").Select(element => element.Value).ToList(),
-                            }; //Korrekt antal feeds sparas
-
-                foreach (Feed feed in feeds)
-                {
-                    //Försökte minska koden med att ersätta det nedre med detta men tycks inte fungera. Används nedan vid buttonAddNewFeeed
-                    //var feedItems = feed.fetchFeedItems();
-                    //feed.Items.AddRange(feedItems);
-
-                    FeedList.Add(feed);
-                }
-
-                foreach (var file in files)
-                { //Körs korrekt antal gånger
-                    try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
-                    {
-                        xmlDocument = XDocument.Load(file);
-
-                        var podID = Path.GetFileNameWithoutExtension(file);
-                        var podSettings = (from podcast in settings.Descendants("Feed")
-                                           where podcast.Element("Id").Value == podID
-                                           select podcast).FirstOrDefault();
-
-                        var items = xmlDocument.Descendants("item");
-
-                        string[] filePathSplit = file.Split('\\');
-
-                        var feedItems = items.Select(element => new FeedItem
-                        {
-                            Title = element.Descendants("title").Single().Value,
-                            Link = element.Descendants("enclosure").Single().Attribute("url").Value,
-                            FolderName = filePathSplit[filePathSplit.Length - 2],
-                            Category = podSettings.Descendants("Category").Single().Value,
-                            Parent = podID,
-                        });
-
-                        foreach (Feed feed in FeedList)
-                        {
-                            foreach (FeedItem item in feedItems)
-                            {
-                                if (item.Parent.Equals(feed.Id.ToString()))
-                                {
-                                    feed.Items.Add(item);
-                                }
-                            }
-                        }
-
-                    }
-                    catch
-                    {
-                        // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
-                        // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
-                    }
-                }
-            }
-            catch
-            {
-
-            }
+            Feed f = new Feed();
+            f.LoadAllFeeds();
+            
+            
             //System.Diagnostics.Debug.WriteLine("geh");
             //System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
-            Feed f = new Feed();
+            
             f.CheckAllIfDownloaded();
             f.IntitializeListentedTo();
         }
 
-        public async void ShallFeedsBeUpdated()
-        {
-            String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
-            var xmlFileList = loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
-            String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
-            var settingsDoc = XDocument.Load(settingsPath);
-
-            foreach (var file in xmlFileList)
-            {
-                try
-                {
-                    var fileID = Path.GetFileNameWithoutExtension(file);
-                    var fileSettings = (from podcast in settingsDoc.Descendants("Feed")
-                                        where podcast.Element("Id").Value == fileID
-                                        select podcast).FirstOrDefault();
-
-                    var updateInterval = fileSettings.Element("UpdateInterval").Value;
-                    DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
-                    var updateIntervalAsInt = Int32.Parse(updateInterval);
-                    DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
-
-                    if (DateTime.Today >= updateDueDate)
-                    {
-                        System.Diagnostics.Debug.WriteLine("We're in");
-                        var podGuid = fileSettings.Element("Id").Value;
-                        var podName = fileSettings.Element("Name").Value;
-                        var podUrl = fileSettings.Element("URL").Value.ToString();
-                        var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
-
-                        File.Delete(folderPath);
-                        Task<String> newContent = Feed.DownloadFeed(podUrl, "text");
-                        await newContent;
-                        File.AppendAllText(folderPath, newContent.Result);
-
-                        var lastUpdatedSettings = fileSettings.Element("LastUpdated");
-                        lastUpdatedSettings.Value = DateTime.Today.ToString();
-                        settingsDoc.Save(settingsPath);
-                        System.Diagnostics.Debug.WriteLine("Saved");
-                    }
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
-        }
+        
 
         public void RefreshFeedList()
         {

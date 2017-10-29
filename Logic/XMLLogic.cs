@@ -45,23 +45,6 @@ namespace Logic
             string[] file = Directory.GetFiles(path, searchWord);
             return file;
         }*/
-        
-        public List<Channel> GetAllChannels() //denna fungerar ej i nuläget, börjar läsa filerna men ger error
-        {
-            List<String> allXMLFiles = GetAllXMLFiles();
-            List<Channel> allChannels = new List<Channel>();
-            var serializer = new XmlSerializer(typeof(Channel));
-            
-            foreach (String f in allXMLFiles)
-            {
-                using (var stream = new StreamReader(f))
-                {
-                    var deChannel = (Channel)serializer.Deserialize(stream);
-                    allChannels.Add(deChannel);
-                }
-            }
-            return allChannels;
-        }
 
         
         /*public List<Podcast> GetAllPodcasts(String channelName)

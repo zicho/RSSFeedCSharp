@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class Writer
+    public class Reader
     {
         public async Task<string> DownloadFeed(string url) //method to get all the data from an RSS feed
         {

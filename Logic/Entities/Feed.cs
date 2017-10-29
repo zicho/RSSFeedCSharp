@@ -12,7 +12,7 @@ namespace Logic.Entities
 {
     public class Feed : IEntity
     {
-        
+
         public Guid Id { get; set; }
         public String Filepath { get; set; }
         public String Name { get; set; }
@@ -23,11 +23,11 @@ namespace Logic.Entities
         public List<string> ListenedToPods { get; set; }
         [XmlIgnore]
         public List<FeedItem> Items { get; set; } // USE THIS??????????????
-        
+
 
         public static List<Feed> FeedList = new List<Feed>();
 
-   
+
 
         public Feed()
         {
@@ -50,66 +50,77 @@ namespace Logic.Entities
         {
             //if (content != null)
             //{
-                Feed feed = new Feed();
+            Feed feed = new Feed();
 
-                String path = (Environment.CurrentDirectory + $"\\podcasts\\{name}"); // Path to a folder containing all XML files in the project directory
+            String path = (Environment.CurrentDirectory + $"\\podcasts\\{name}"); // Path to a folder containing all XML files in the project directory
 
-                if (Directory.Exists(path) == false)
-                {
-                    Directory.CreateDirectory(path);
-                }
+            if (Directory.Exists(path) == false)
+            {
+                Directory.CreateDirectory(path);
+            }
 
-                var freshGuid = Guid.NewGuid();
+            var freshGuid = Guid.NewGuid();
 
-                path = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", freshGuid + ".xml");
+            path = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{name}", freshGuid + ".xml");
 
-                //if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
-                //{
-                    
-                    File.AppendAllText(path, content);
-                    
-                    feed.Filepath = ($@"{path}"); // append the PATH to the XML on the feed object. This is useful for deleting items directly from the XML file.
-                    feed.Name = name;
-                    feed.URL = url;
-                    feed.UpdateInterval = Int32.Parse(updateInterval);
-                    feed.LastUpdated = DateTime.Now;
-                    feed.Category = category;
-                    feed.Id = freshGuid;
-                    FeedList.Add(feed);
+            //if (!File.Exists(path)) //if there is no file with such name we go ahead and create it
+            //{
 
-                     
-                    //THIS IGNORES ADDING THE CONTENT PROPERTY TO OUR SETTINGS FILES, AS IT IS 
+            File.AppendAllText(path, content);
 
-                    var attributes = new XmlAttributes { XmlIgnore = true };
+            feed.Filepath = ($@"{path}"); // append the PATH to the XML on the feed object. This is useful for deleting items directly from the XML file.
+            feed.Name = name;
+            feed.URL = url;
+            feed.UpdateInterval = Int32.Parse(updateInterval);
+            feed.LastUpdated = DateTime.Now;
+            feed.Category = category;
+            feed.Id = freshGuid;
+            FeedList.Add(feed);
 
-                    var overrides = new XmlAttributeOverrides();
-                    overrides.Add(typeof(Feed), "Items", attributes);
 
-                    var serializer = new XmlSerializer(typeof(List<Feed>));
-                    using (var stream = new StreamWriter("settings.xml"))
-                    {
-                        serializer.Serialize(stream, FeedList);
-                    }
-                    return feed;
-                //}
+            //THIS IGNORES ADDING THE CONTENT PROPERTY TO OUR SETTINGS FILES, AS IT IS 
+
+            var attributes = new XmlAttributes { XmlIgnore = true };
+
+            var overrides = new XmlAttributeOverrides();
+            overrides.Add(typeof(Feed), "Items", attributes);
+
+
+            feed.SaveSettingsXML();
+            //var serializer = new XmlSerializer(typeof(List<Feed>));
+            //using (var stream = new StreamWriter("settings.xml"))
+            //{
+            //    serializer.Serialize(stream, FeedList);
+            //}
+            return feed;
+            //}
             //}
         }
 
         public void SaveSettingsXML()
         {
-            var serializer = new XmlSerializer(typeof(List<Feed>));
-            using (var stream = new StreamWriter("settings.xml"))
-            {
-                serializer.Serialize(stream, FeedList);
-            }
+            XMLData xmld = new XMLData();
+
+            List<Channel> AllChannels = new List<Channel>();
+
+            FeedList.ForEach(i => AllChannels.Add(new Channel(i.Id, i.Filepath, i.Name, i.URL, i.UpdateInterval, i.LastUpdated, i.Category, i.ListenedToPods)));
+
+            xmld.SaveAllData(AllChannels);
+
+
+            //var serializer = new XmlSerializer(typeof(List<Feed>));
+            //using (var stream = new StreamWriter("settings.xml"))
+            //{
+            //    serializer.Serialize(stream, FeedList);
+            //}
         }
-        
+
 
         public static async Task<String> DownloadFeed(string url, string text)
         {
             return await Task.Run(async () =>
             {
-                Writer writer = new Writer();
+                Reader writer = new Reader();
                 return await writer.DownloadFeed(url);
             });
         }
@@ -170,6 +181,105 @@ namespace Logic.Entities
             }
         }
 
+
+        public void LoadAllFeeds()
+        {
+            XMLData xmld = new XMLData();
+            //xmld.LoadAllFeeds();
+            String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
+
+            if (Directory.Exists(path) == false)
+            {
+                Directory.CreateDirectory(path);
+            }
+
+
+
+            XDocument settings = xmld.LoadSettings();
+
+
+
+            try
+            {
+                var feeds = from item in settings.Descendants("Channel")
+                            select new Feed
+                            {
+                                Id = new Guid(item.Descendants("Id").Single().Value),
+                                Name = item.Descendants("Name").Single().Value,
+                                URL = item.Descendants("URL").Single().Value,
+                                UpdateInterval = int.Parse(item.Descendants("UpdateInterval").Single().Value),
+                                LastUpdated = DateTime.Parse(item.Descendants("LastUpdated").Single().Value),
+                                Category = item.Descendants("Category").Single().Value,
+                                ListenedToPods = item.Descendants("ListenedToPods").Descendants("string").Select(element => element.Value).ToList(),
+                            }; //Korrekt antal feeds sparas
+
+                foreach (Feed feed in feeds)
+                { 
+                    FeedList.Add(feed);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            LoadAllItems();
+        }
+
+        public async void ShallFeedsBeUpdated()
+        {
+            XMLData xmld = new XMLData();
+            String podcastPath = (Environment.CurrentDirectory + $"\\podcasts");
+            var xmlFileList = xmld.loadXML(podcastPath).Where(x => Path.GetExtension(x) == ".xml");
+            String settingsPath = (Environment.CurrentDirectory + "/settings.xml");
+            var settingsDoc = XDocument.Load(settingsPath);
+
+            foreach (var file in xmlFileList)
+            {
+                try
+                {
+                    var fileID = Path.GetFileNameWithoutExtension(file);
+                    var fileSettings = (from podcast in settingsDoc.Descendants("Channel")
+                                        where podcast.Element("Id").Value == fileID
+                                        select podcast).FirstOrDefault();
+
+                    var updateInterval = fileSettings.Element("UpdateInterval").Value;
+                    DateTime lastUpdated = DateTime.Parse(fileSettings.Element("LastUpdated").Value);
+                    var updateIntervalAsInt = Int32.Parse(updateInterval);
+                    DateTime updateDueDate = lastUpdated.AddDays(updateIntervalAsInt);
+
+                    if (DateTime.Today >= updateDueDate)
+                    {
+                        System.Diagnostics.Debug.WriteLine("We're in");
+                        var podGuid = fileSettings.Element("Id").Value;
+                        var podName = fileSettings.Element("Name").Value;
+                        var podUrl = fileSettings.Element("URL").Value.ToString();
+                        var folderPath = Path.Combine(Environment.CurrentDirectory, $@"podcasts\\{podName}", podGuid + ".xml");
+
+                        File.Delete(folderPath);
+                        Task<String> newContent = Feed.DownloadFeed(podUrl, "text");
+                        await newContent;
+                        File.AppendAllText(folderPath, newContent.Result);
+
+                        var lastUpdatedSettings = fileSettings.Element("LastUpdated");
+                        lastUpdatedSettings.Value = DateTime.Today.ToString();
+                        settingsDoc.Save(settingsPath);
+                        System.Diagnostics.Debug.WriteLine("Saved");
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+
+        public XDocument LoadSettings()
+        {
+            XMLData xmld = new XMLData();
+            XDocument settings = xmld.LoadSettings();
+            return settings;
+        }
+
         public List<FeedItem> fetchFeedItems()
         {
             string feedFilePath = this.Filepath;
@@ -185,8 +295,70 @@ namespace Logic.Entities
                 Category = this.Category,
                 Parent = this.Id.ToString(),
             });
-            
+
             return feedItems.ToList();
         }
+
+        
+
+        public void LoadAllItems()
+        {
+            XMLData xmld = new XMLData();
+            XDocument settings = LoadSettings();
+            String path = (Environment.CurrentDirectory + $"\\podcasts");
+            var files = xmld.loadXML(path);
+
+            XDocument xmlDocument;
+            foreach (var file in files)
+            { //Körs korrekt antal gånger
+                try // SKAPAR NY FEED O LÄGGER TILL OBJEKT I DESS ITEMS-LISTA
+                {
+                    xmlDocument = XDocument.Load(file);
+
+                    var podID = Path.GetFileNameWithoutExtension(file);
+                    //var podSettings = (from podcast in settings.Descendants("Channel")
+                    //                   where podcast.Element("Id").Value == podID
+                    //                   select podcast).FirstOrDefault();
+
+                    //var items = xmlDocument.Descendants("item");
+                    
+                    var items = xmld.LoadChannelItems(xmlDocument, out var podSettings, file);
+
+                    string[] filePathSplit = file.Split('\\');
+
+                    var feedItems = items.Select(element => new FeedItem
+                    {
+                        Title = element.Descendants("title").Single().Value,
+                        Link = element.Descendants("enclosure").Single().Attribute("url").Value,
+                        FolderName = filePathSplit[filePathSplit.Length - 2],
+                        Category = podSettings.Descendants("Category").Single().Value,
+                        Parent = podID,
+                    });
+
+
+
+                    foreach (Feed feed in FeedList)
+                    {
+                        //List<FeedItem> feedI = ;
+                        feed.Items.AddRange(feedItems.ToList().Where(i => i.Parent.Equals(feed.Id.ToString())).ToList());
+                        //foreach (FeedItem item in feedItems)
+                        //{
+                        //    if (item.Parent.Equals(feed.Id.ToString()))
+                        //    {
+                        //        feed.Items.Add(item);
+                        //    }
+                        //}
+                    }
+
+                }
+                catch
+                {
+                    // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
+                    //MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM?? !
+
+                }
+            }
+        }
     }
+    
 }
