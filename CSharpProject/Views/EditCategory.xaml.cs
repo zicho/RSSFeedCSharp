@@ -124,7 +124,7 @@ namespace CSharpProject.Views
                     XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
 
                     settings
-                    .Descendants("Feed")
+                    .Descendants("Channel")
                     .Where(c => (string)c.Element("Category") == oldName)
                     .ToList()
                     .ForEach(c =>
