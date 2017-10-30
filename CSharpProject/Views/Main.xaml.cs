@@ -46,7 +46,7 @@ namespace CSharpProject.Views
         //private delegate void ButtonAction(FeedItem item);
         //private ButtonAction PlayButtonDel;
 
-        public MainWindow()
+        internal MainWindow()
         {
 
             InitializeComponent();
