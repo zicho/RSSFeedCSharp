@@ -65,7 +65,6 @@ namespace CSharpProject.Views
             InitializeComboBoxes();
             LoadAllFeeds();
             RefreshPodcastList();
-
             UpdateFeedList();
         }
 
@@ -78,10 +77,7 @@ namespace CSharpProject.Views
             f.ShallFeedsBeUpdated();
 
             f.LoadAllFeeds();
-            
-            
-            //System.Diagnostics.Debug.WriteLine("geh");
-            //System.Diagnostics.Debug.WriteLine(FeedList[0].Items.Count);
+           
             
             f.CheckAllIfDownloaded();
             f.IntitializeListentedTo();
@@ -95,7 +91,7 @@ namespace CSharpProject.Views
             LoadAllFeeds();
             //LoadAllFeedItemsInFeedList();
         }
-        private void RefreshPodcastList()
+        public void RefreshPodcastList()
         {
             //podListBox.Items.Clear();
 
@@ -106,7 +102,6 @@ namespace CSharpProject.Views
             }
 
         }
-
 
         private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
@@ -409,8 +404,6 @@ namespace CSharpProject.Views
         {
             UpdatePlayButton();
             UpdateProgressBarVisibility();
-
-
         }
 
         private void UpdateProgressBarVisibility()
@@ -472,10 +465,8 @@ namespace CSharpProject.Views
             ActiveList.Clear();
             foreach(Feed feed in FeedList)
             {
-                System.Diagnostics.Debug.WriteLine(feed.Id);
                 foreach (FeedItem item in feed.Items)
                 {
-                    System.Diagnostics.Debug.WriteLine(item.Title);
                     ActiveList.Add(item);
                 }
             }

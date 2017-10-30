@@ -23,11 +23,9 @@ namespace Logic.Entities
         public List<string> ListenedToPods { get; set; }
         [XmlIgnore]
         public List<FeedItem> Items { get; set; } // USE THIS??????????????
-
-
         public static List<Feed> FeedList = new List<Feed>();
 
-
+        private XMLData Data = new XMLData();
 
         public Feed()
         {
@@ -218,7 +216,7 @@ namespace Logic.Entities
                     FeedList.Add(feed);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -301,7 +299,12 @@ namespace Logic.Entities
             return feedItems.ToList();
         }
 
-        
+        public void DeleteFeed(Guid Id, int item, string Name)
+        {
+            FeedList.RemoveAt(item); // Ta bort ur feedlist
+
+            Data.DeleteFeed(Id, Name);
+        }
 
         public void LoadAllItems()
         {

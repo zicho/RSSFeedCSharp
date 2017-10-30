@@ -125,12 +125,79 @@ namespace Data
                         var lastUpdatedSettings = fileSettings.Element("LastUpdated");
                         lastUpdatedSettings.Value = DateTime.Today.ToString();
                         settingsDoc.Save(settingsPath);
-                        System.Diagnostics.Debug.WriteLine("Saved");
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                }
+            }
+        }
+
+        public void DeleteFeed(Guid Id, string Name)
+        {
+
+            XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+            var query = from element in settings.Descendants()
+                        where (string)element.Element("Id") == Id.ToString()
+                        select element;
+            if (query.Count() > 0)
+                query.First().Remove();
+            settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+
+            System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{Name}");
+            try { 
+            directory.Delete(true);
+            } catch
+            {
+
+            }
+        }
+
+        public void DeleteCategory(string categoryName)
+        {
+            XElement categories = XElement.Load(Environment.CurrentDirectory + @"\categories.xml");
+
+            categories
+            .Descendants("Category")
+            .Where(cat => (string)cat.Element("Name") == categoryName)
+            .ToList()
+            .ForEach(cat =>
+            {
+                cat.Remove();
+            });
+
+            categories.Save(Environment.CurrentDirectory + @"\categories.xml");
+
+            //update settings
+            XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+            List<string> feedNames = new List<string>();
+
+            settings
+            .Descendants("Channel")
+            .Where(f => (string)f.Element("Category") == categoryName)
+            .ToList()
+            .ForEach(f =>
+            {
+                feedNames.Add((string)f.Element("Name")); // spara namnen på feedsen som tas bort för att radera mappar senare
+                f.Remove();
+            });
+
+            settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+
+            Console.WriteLine(feedNames.Count);
+
+            //remove all folders
+
+            if (feedNames.Count > 0)
+            {  // bara om feedNames finns så ska mappar tas bort
+
+                String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
+
+                foreach (var feedName in feedNames)
+                {
+                    System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{feedName}");
+                    directory.Delete(true);
                 }
             }
         }

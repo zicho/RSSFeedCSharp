@@ -183,19 +183,7 @@ namespace CSharpProject.Views
                 var Id = FeedList[item].Id;
                 var Name = FeedList[item].Name;
 
-                XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
-                var query = from element in settings.Descendants()
-                            where (string)element.Element("Id") == Id.ToString()
-                            select element;
-                if (query.Count() > 0)
-                    query.First().Remove();
-                settings.Save(Environment.CurrentDirectory + @"\settings.xml");
-
-                FeedList.RemoveAt(item); // Ta bort ur feedlist också
-
-                System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{Name}");
-
-                directory.Delete(true);
+                Feed.DeleteFeed(Id, item, Name);
 
                 MessageBox.Show($"Feed {Name} was deleted.");
                 feedComboBox.SelectedIndex = 0;

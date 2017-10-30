@@ -49,8 +49,9 @@ namespace CSharpProject.Views
             this.Focus();
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
+            Closing += (s, e) => main.LoadAllFeeds();
             Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
-            Closing += (s, e) => main.RefreshFeedList(); //refreshes the category combobox to display new category         
+            Closing += (s, e) => main.RefreshPodcastList(); //refreshes the category combobox to display new category   
         }
 
         public void LoadCategories()
@@ -181,74 +182,13 @@ namespace CSharpProject.Views
             if (messageBoxResult == MessageBoxResult.Yes)
             {
                 var category = categoryComboBox.SelectedIndex;
+                var name = categoryComboBox.Text;
+                var categoryName = categoryComboBox.Text;
 
-                foreach (var c in CategoryList)
-                {
-                    if(c.Name == categoryComboBox.Text)
-                    {
-                        CategoryList.RemoveAt(category);
-
-                        XElement categories = XElement.Load(Environment.CurrentDirectory + @"\categories.xml");
-
-                        categories
-                        .Descendants("Category")
-                        .Where(cat => (string)cat.Element("Name") == categoryComboBox.Text)
-                        .ToList()
-                        .ForEach(cat =>
-                        {
-                            cat.Remove();
-                        });
-
-                        categories.Save(Environment.CurrentDirectory + @"\categories.xml");
-                        
-                        //update settings
-                        XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
-
-                        List<string> feedNames = new List<string>();
-
-                        settings
-                        .Descendants("Feed")
-                        .Where(f => (string)f.Element("Category") == categoryComboBox.Text)
-                        .ToList()
-                        .ForEach(f =>
-                        {
-                            feedNames.Add((string)f.Element("Name")); // spara namnen på feedsen som tas bort för att radera mappar senare
-                            f.Remove();
-                        });
-
-                        foreach(var name in feedNames)
-                        {
-                            MessageBox.Show(name);
-                        }
-
-                        settings.Save(Environment.CurrentDirectory + @"\settings.xml");
-
-                        //remove all folders
-
-                        if(feedNames.Count > 0) {  // bara om feedNames finns så ska mappar tas bort
-                        String path = (Environment.CurrentDirectory + $"\\podcasts"); // Path to a folder containing all XML files in the project directory
-
-                            foreach(var name in feedNames)
-                            {
-                                System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{name}");
-                                directory.Delete(true);
-                            }
-
-                        }
-
-                        // Delete from feedlist
-                        try { // kraschar om listan är tom om man inte har try här
-                        FeedList.Remove(FeedList.Single(f => f.Category == categoryComboBox.Text));
-                        } catch { }
-
-                        break;
-                    }
-
-                    
+                Category.DeleteCategory(category, name, categoryName);
                 }
                 MessageBox.Show("Category was deleted", "Bye bye!");
                 this.Close();
             }
         }
     }
-}

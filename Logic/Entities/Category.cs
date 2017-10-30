@@ -10,8 +10,12 @@ namespace Logic.Entities
 {
     public class Category : IEntity
     {
+
         public Guid Id { get; set; }
         public String Name { get; set; }
+
+        public List<Feed> FeedList;
+        private Data.XMLData Data = new Data.XMLData();
 
         public Category(String name)
         {
@@ -62,7 +66,6 @@ namespace Logic.Entities
         {
             CategoryValidator validator = new CategoryValidator();
             validator.Validate(categoryName, "category");
-
             String path = (Environment.CurrentDirectory + "/categories.xml");
             var serializer = new XmlSerializer(typeof(List<Category>));
             using (var stream = new StreamWriter("categories.xml"))
@@ -73,6 +76,26 @@ namespace Logic.Entities
             }
         }
 
+        public void DeleteCategory(int category, string name, string categoryName)
+        {
+            foreach (var c in CategoryList)
+            {
+                if (c.Name == name)
+                {
+                   CategoryList.RemoveAt(category);
 
+                   Data.DeleteCategory(categoryName);
+
+                    // Delete from feedlist
+                    try
+                    { // kraschar om listan är tom om man inte har try här
+                        FeedList.Remove(FeedList.Single(f => f.Category == categoryName));
+                    }
+                    catch { }
+
+                    break;
+                }
+            }
+        }
     }
 }
