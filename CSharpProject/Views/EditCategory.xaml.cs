@@ -49,7 +49,7 @@ namespace CSharpProject.Views
             this.Focus();
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
-            Closing += (s, e) => main.LoadAllFeeds();
+            Closing += (s, e) => main.RefreshFeedList();
             Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
             Closing += (s, e) => main.RefreshPodcastList(); //refreshes the category combobox to display new category   
         }
