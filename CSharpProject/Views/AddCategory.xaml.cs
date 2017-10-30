@@ -13,7 +13,7 @@ namespace CSharpProject.Views
 
         private CategoryValidator categoryValidator = new CategoryValidator();
 
-        internal AddCategory(MainWindow main)
+        public AddCategory(MainWindow main)
         {
             InitializeComponent();
             this.Topmost = true;
@@ -24,7 +24,7 @@ namespace CSharpProject.Views
 
         public CategoryValidator CategoryValidator { get => categoryValidator; set => categoryValidator = value; }
 
-        internal void AddBtn_Click(object sender, RoutedEventArgs e)
+        public void AddBtn_Click(object sender, RoutedEventArgs e)
         {
 
             try

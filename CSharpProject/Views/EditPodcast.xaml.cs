@@ -44,7 +44,7 @@ namespace CSharpProject.Views
         public Logic.Exceptions.ValidationException.NameValidator nameValidator = new NameValidator();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
-        internal EditPodcast(MainWindow main)
+        public EditPodcast(MainWindow main)
         {
             InitializeComponent();
 
@@ -69,7 +69,7 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.RefreshFeedList(); //refreshes the category combobox to display new category
         }
 
-        internal void CheckFeeds()
+        public void CheckFeeds()
         {
             if (FeedList.Count() > 0)
             {
@@ -92,7 +92,7 @@ namespace CSharpProject.Views
 
         }
 
-        internal void LoadInfo()
+        public void LoadInfo()
         {
             var item = feedComboBox.SelectedIndex;
 
@@ -157,22 +157,22 @@ namespace CSharpProject.Views
             }
         }
 
-        internal void feedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void feedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadInfo();
         }
 
-        internal void buttonCancel_Click(object sender, RoutedEventArgs e)
+        public void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        internal void Window_Closed(object sender, EventArgs e)
+        public void Window_Closed(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        internal void buttonDelete_Click(object sender, RoutedEventArgs e)
+        public void buttonDelete_Click(object sender, RoutedEventArgs e)
         {
             Name = feedComboBox.Text;
 
@@ -192,7 +192,7 @@ namespace CSharpProject.Views
             }
         }
 
-        internal void buttonSave_Click(object sender, RoutedEventArgs e)
+        public void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             Name = feedComboBox.Text;
 
@@ -265,7 +265,7 @@ namespace CSharpProject.Views
             }
         }
 
-        internal void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        public void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }

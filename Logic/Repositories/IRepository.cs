@@ -4,7 +4,7 @@ using Logic.Entities;
 
 namespace Logic.Repositories
 {
-    internal interface IRepository<T> where T : IEntity
+    public interface IRepository<T> where T : IEntity
     {
         void Save();
         void Update(T item);
