@@ -338,19 +338,21 @@ namespace Logic.Entities
                     });
 
 
+                    Feed feed = FeedList.Single(i => i.Id.ToString().Equals(podID));
+                    feed.Items.AddRange(feedItems.ToList()); //Adds all items gotten from the LoadChannelItems function to the feed
 
-                    foreach (Feed feed in FeedList)
-                    {
-                        //List<FeedItem> feedI = ;
-                        feed.Items.AddRange(feedItems.ToList().Where(i => i.Parent.Equals(feed.Id.ToString())).ToList());
-                        //foreach (FeedItem item in feedItems)
-                        //{
-                        //    if (item.Parent.Equals(feed.Id.ToString()))
-                        //    {
-                        //        feed.Items.Add(item);
-                        //    }
-                        //}
-                    }
+                    //foreach (Feed feed in FeedList)
+                    //{
+                    //List<FeedItem> feedI = ;
+
+                    //foreach (FeedItem item in feedItems)
+                    //{
+                    //    if (item.Parent.Equals(feed.Id.ToString()))
+                    //    {
+                    //        feed.Items.Add(item);
+                    //    }
+                    //}
+                    //}
 
                 }
                 catch
