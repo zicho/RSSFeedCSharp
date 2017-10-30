@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Logic.Exceptions
@@ -56,38 +57,41 @@ namespace Logic.Exceptions
             }
         }
 
-            public class URLValidator : IValidator
+        public class URLValidator : IValidator
+        {
+            public void Validate(string input, string field)
             {
-                public void Validate(string input, string field)
+                if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
+                    throw new Exception($"The field '{field}' may not be empty.");
+
+                if (Feed.CheckIfChannelURLExist(input, FeedList))
                 {
-                    if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
-                        throw new Exception($"The field '{field}' may not be empty.");
+                    throw new Exception($"Channel with that URL is already added");
+                }
 
-                    if (Feed.CheckIfChannelURLExist(input, FeedList))
-                    {
-                        throw new Exception($"Channel with that URL is already added");
-                    }
-
-                    //var settings = XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
-
-                    //XElement Contact = (from xml2 in settings.Descendants("Feed")
-                    //                    where xml2.Element("URL").Value == input
-                    //                    select xml2).SingleOrDefault();
-
-                    //if (Contact != null)
-                    //{
-                    //    throw new Exception($"URL is already added.");
-                    //}
-
-
-                    if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
-                    {
-                        throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");
-                    }
+                if (!Uri.IsWellFormedUriString(input, UriKind.Absolute) /*&& DoesRSSUrlContainMp3(input)*/)
+                {
+                    throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");
                 }
             }
 
-            public class ValidatorList : List<IValidator>
+            //private bool DoesRSSUrlContainMp3(string input)
+            //{
+            //    var newContent = Task.Run(() => Feed.DownloadFeed(input, "text"));
+            //    newContent.Wait();
+            //    var checkIfMp3Rss = XDocument.Load(newContent.Result).Descendants("enclosure").ToList();
+            //    if (checkIfMp3Rss.Count == 0)
+            //    {
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        return true;
+            //    }
+            //}
+        }
+
+        public class ValidatorList : List<IValidator>
             {
                 public void Validate(string input, string field)
                 {
