@@ -77,15 +77,7 @@ namespace Data
 
             return files.Where(i => i.EndsWith(".xml")).ToList();
         }
-
-        public static async Task<String> DownloadFeed(string url, string text) //Oklart om den hör hemma i datalagret eller i logik, skapar 
-        {
-            return await Task.Run(async () =>
-            {
-                Reader writer = new Reader();
-                return await writer.DownloadFeed(url);
-            });
-        }
+        
 
         public void updateXmlFilesOrNot()
         {
@@ -118,8 +110,8 @@ namespace Data
 
 
                         File.Delete(folderPath);
-
-                        var newContent = Task.Run(() => XMLData.DownloadFeed(podUrl, "text"));
+                        Reader downloader = new Reader();
+                        var newContent = Task.Run(() => downloader.DownloadFeed(podUrl));
                         newContent.Wait();
                         File.AppendAllText(folderPath, newContent.Result);
                         var lastUpdatedSettings = fileSettings.Element("LastUpdated");

@@ -69,26 +69,22 @@ namespace Logic.Exceptions
                     throw new Exception($"Channel with that URL is already added");
                 }
 
-                if (!Uri.IsWellFormedUriString(input, UriKind.Absolute) /*&& DoesRSSUrlContainMp3(input)*/)
+                if (!Uri.IsWellFormedUriString(input, UriKind.Absolute))
                 {
                     throw new Exception($"Entry of field '{field}' is not a valid RSS URL.");
                 }
             }
-
-            //private bool DoesRSSUrlContainMp3(string input)
-            //{
-            //    var newContent = Task.Run(() => Feed.DownloadFeed(input, "text"));
-            //    newContent.Wait();
-            //    var checkIfMp3Rss = XDocument.Load(newContent.Result).Descendants("enclosure").ToList();
-            //    if (checkIfMp3Rss.Count == 0)
-            //    {
-            //        return false;
-            //    }
-            //    else
-            //    {
-            //        return true;
-            //    }
-            //}
+        }
+        public class RSSValidator : IValidator
+        {
+            public void Validate(string input, string field)
+            {
+                var checkIfMp3Rss = XDocument.Load(input).Descendants("enclosure").ToList();
+                if (checkIfMp3Rss.Count == 0)
+                {
+                    throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
+                }
+            }
         }
 
         public class ValidatorList : List<IValidator>
