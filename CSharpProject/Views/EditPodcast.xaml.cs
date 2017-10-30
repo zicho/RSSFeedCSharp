@@ -202,35 +202,38 @@ namespace CSharpProject.Views
                 boxValidator.Validate(categoryComboBox.SelectedIndex, "category");
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
 
-                if (feedComboBox.Text != nameTextBox.Text) // THIS CODE RUNS ONLY IF NAME HAS BEEN CHANGED
-                {
-                    if (Feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
-                    {
-                        nameValidator.Validate(nameTextBox.Text, "new name");
-                    }
-                    else
-                    {
-                        var oldName = feedComboBox.Text;
-                        var newName = nameTextBox.Text;
-                        Feed.RenameFeed(oldName, newName);
-                    }
-                }
-
                 var item = feedComboBox.SelectedIndex;
 
                 var Id = FeedList[item].Id;
-
-                if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
-                {
-                     validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
-                }
-
+                
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
+                    if (feedComboBox.Text != nameTextBox.Text) // THIS CODE RUNS ONLY IF NAME HAS BEEN CHANGED
+                    {
+                        if (Feed.CheckIfChannelNameExist(nameTextBox.Text, FeedList))
+                        {
+                            nameValidator.Validate(nameTextBox.Text, "new name");
+                        }
+                        else
+                        {
+                            var oldName = feedComboBox.Text;
+                            var newName = nameTextBox.Text;
+
+                            Feed.RenameFeed(oldName, newName);
+                        }
+                    }
+
+                    if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
+                    {
+
+                        validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
+                    }
+
                     var Name = nameTextBox.Text;
                     var URL = URLTextBox.Text;
                     var Category = categoryComboBox.SelectedValue.ToString();
+
                     var Interval = 0;
 
                     if (intervalComboBox.SelectedIndex == 0)
@@ -249,6 +252,7 @@ namespace CSharpProject.Views
                     }
 
                     Feed.EditFeed(item, Id, Name, URL, Category, Interval);
+
 
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
 

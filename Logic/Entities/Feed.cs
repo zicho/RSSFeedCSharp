@@ -367,7 +367,7 @@ namespace Logic.Entities
             }
         }
 
-        public void EditFeed(int item, Guid Id, string Name, string URL, string Cartegoy, int Interval)
+        public void EditFeed(int item, Guid Id, string Name, string URL, string Category, int Interval)
         {
             Data.EditFeed(Id, Name, URL, Category, Interval);
 
