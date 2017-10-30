@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using Logic.Entities;
 using static Logic.Exceptions.ValidationException;
 
@@ -21,7 +13,7 @@ namespace CSharpProject.Views
 
         private CategoryValidator categoryValidator = new CategoryValidator();
 
-        public AddCategory(MainWindow main)
+        internal AddCategory(MainWindow main)
         {
             InitializeComponent();
             this.Topmost = true;
@@ -32,7 +24,7 @@ namespace CSharpProject.Views
 
         public CategoryValidator CategoryValidator { get => categoryValidator; set => categoryValidator = value; }
 
-        private void AddBtn_Click(object sender, RoutedEventArgs e)
+        internal void AddBtn_Click(object sender, RoutedEventArgs e)
         {
 
             try

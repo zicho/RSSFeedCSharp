@@ -44,7 +44,7 @@ namespace CSharpProject.Views
         public Logic.Exceptions.ValidationException.NameValidator nameValidator = new NameValidator();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
-        public EditPodcast(MainWindow main)
+        internal EditPodcast(MainWindow main)
         {
             InitializeComponent();
 
@@ -69,7 +69,7 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.RefreshFeedList(); //refreshes the category combobox to display new category
         }
 
-        public void CheckFeeds()
+        internal void CheckFeeds()
         {
             if (FeedList.Count() > 0)
             {
@@ -92,7 +92,7 @@ namespace CSharpProject.Views
 
         }
 
-        public void LoadInfo()
+        internal void LoadInfo()
         {
             var item = feedComboBox.SelectedIndex;
 
@@ -157,22 +157,22 @@ namespace CSharpProject.Views
             }
         }
 
-        private void feedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        internal void feedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadInfo();
         }
 
-        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        internal void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        internal void Window_Closed(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        internal void buttonDelete_Click(object sender, RoutedEventArgs e)
         {
             Name = feedComboBox.Text;
 
@@ -192,7 +192,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        internal void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             Name = feedComboBox.Text;
 
@@ -203,7 +203,6 @@ namespace CSharpProject.Views
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
 
                 var item = feedComboBox.SelectedIndex;
-
                 var Id = FeedList[item].Id;
                 
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
@@ -253,9 +252,7 @@ namespace CSharpProject.Views
 
                     Feed.EditFeed(item, Id, Name, URL, Category, Interval);
 
-
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
-
                     this.Close();
                 }
                 //}
@@ -268,7 +265,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        internal void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }

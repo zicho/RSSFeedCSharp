@@ -37,7 +37,7 @@ namespace CSharpProject.Views
 
         public ValidatorList validator = new ValidatorList();
 
-        public EditCategory(MainWindow main)
+        internal EditCategory(MainWindow main)
         {
             InitializeComponent();
             LoadCategories();
@@ -54,7 +54,7 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.RefreshPodcastList(); //refreshes the category combobox to display new category   
         }
 
-        public void LoadCategories()
+        internal void LoadCategories()
         {
             Category.LoadCategories();
 
@@ -67,7 +67,7 @@ namespace CSharpProject.Views
             LoadInfo();
         }
 
-        public void LoadInfo()
+        internal void LoadInfo()
         {
             if(CategoryList.Count > 0) {
                 categoryComboBox.IsEnabled = true;
@@ -88,7 +88,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        internal void Button_Click(object sender, RoutedEventArgs e)
         {
             if (categoryComboBox.Text != nameTextBox.Text) // jämför om namnet överhuvudtaget ändrats
             {
@@ -160,21 +160,21 @@ namespace CSharpProject.Views
             }
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        internal void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        internal void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadInfo();
         }
 
-        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        internal void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        internal void buttonDelete_Click(object sender, RoutedEventArgs e)
         {
             var Name = categoryComboBox.Text;
 

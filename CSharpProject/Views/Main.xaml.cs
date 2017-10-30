@@ -70,7 +70,7 @@ namespace CSharpProject.Views
 
         
 
-        public void LoadAllFeeds()
+        internal void LoadAllFeeds()
         {
             Feed f = new Feed();
 
@@ -83,15 +83,15 @@ namespace CSharpProject.Views
             f.IntitializeListentedTo();
         }
 
-        
 
-        public void RefreshFeedList()
+
+        internal void RefreshFeedList()
         {
             FeedList.Clear();
             LoadAllFeeds();
             //LoadAllFeedItemsInFeedList();
         }
-        public void RefreshPodcastList()
+        internal void RefreshPodcastList()
         {
             //podListBox.Items.Clear();
 
@@ -103,11 +103,11 @@ namespace CSharpProject.Views
 
         }
 
-        private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
+        internal void ListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
 
         }
-        public void InitializeComboBoxes() //method to add data to comboboxes
+        internal void InitializeComboBoxes() //method to add data to comboboxes
         {
             feedFilterBox.Items.Clear();
             categoryComboBox.Items.Clear();
@@ -130,7 +130,7 @@ namespace CSharpProject.Views
             categoryComboBox.Items.Add("Add new...");
         }
 
-        public void UpdateFeedList()
+        internal void UpdateFeedList()
         {
             feedFilterBox.Items.Clear();
 
@@ -160,7 +160,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        internal async void Button_Click(object sender, RoutedEventArgs e)
         {
 
 
@@ -234,7 +234,7 @@ namespace CSharpProject.Views
             }
         }
 
-        public void ClearAllFields() //method to reset the app upon successful podcast add
+        internal void ClearAllFields() //method to reset the app upon successful podcast add
         {
             RSSTextBox.Text = "";
             RSSNameTextBox.Text = "";
@@ -242,7 +242,7 @@ namespace CSharpProject.Views
 
 
 
-        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        internal void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (categoryComboBox.SelectedIndex == categoryComboBox.Items.Count - 1 && categoryComboBox.Items.Count > 1)
             {
@@ -260,7 +260,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        internal async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -318,7 +318,7 @@ namespace CSharpProject.Views
             }
         }
 
-        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) //funkar inte som den ska atm
+        internal void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) //funkar inte som den ska atm
         {
             if (podListBox.SelectedItem != null)
             {
@@ -347,21 +347,21 @@ namespace CSharpProject.Views
 
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        internal void Button_Click_2(object sender, RoutedEventArgs e)
         {
             this.IsEnabled = false;
             EditCategory editCategory = new EditCategory(this);
             editCategory.Show();
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        internal void Button_Click_3(object sender, RoutedEventArgs e)
         {
             EditPodcast EditWindow = new EditPodcast(this);
             EditWindow.Show();
             this.IsEnabled = false;
         }
 
-        private void feedFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        internal void feedFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (feedFilterBox.SelectedItem != null)
             {
@@ -384,7 +384,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        internal void categoryFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (categoryFilterBox.IsLoaded && categoryFilterBox.SelectedItem != null)
             {
@@ -400,13 +400,13 @@ namespace CSharpProject.Views
             }
         }
 
-        private void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        internal void podListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdatePlayButton();
             UpdateProgressBarVisibility();
         }
 
-        private void UpdateProgressBarVisibility()
+        internal void UpdateProgressBarVisibility()
         {
             if (podListBox.SelectedItem != null)
             {
@@ -424,7 +424,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void UpdatePlayButton()
+        internal void UpdatePlayButton()
         {
             FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
             if (selectedItem != null)
@@ -450,7 +450,7 @@ namespace CSharpProject.Views
             }
         }
 
-        private void refreshListView()
+        internal void refreshListView()
         {
             if (podListBox != null)
             {
@@ -460,7 +460,7 @@ namespace CSharpProject.Views
 
         }
 
-        private void LoadAllFeedItemsInFeedList()
+        internal void LoadAllFeedItemsInFeedList()
         {
             ActiveList.Clear();
             foreach(Feed feed in FeedList)
@@ -473,7 +473,7 @@ namespace CSharpProject.Views
             refreshListView();
         }
 
-        public void filterAfterCategory()
+        internal void filterAfterCategory()
         {
             if (categoryFilterBox.SelectedItem != null)
             {
@@ -506,7 +506,7 @@ namespace CSharpProject.Views
         }
 
 
-        public void filterAfterPodcast()
+        internal void filterAfterPodcast()
         {
             Feed ActivePodcast = new Feed();// feedFilterBox.SelectedItem;
             if (ActiveList != null)
@@ -527,7 +527,7 @@ namespace CSharpProject.Views
 
         }
 
-        private void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        internal void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
         }
