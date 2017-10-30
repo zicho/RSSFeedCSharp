@@ -180,7 +180,7 @@ namespace CSharpProject.Views
             if (messageBoxResult == MessageBoxResult.Yes)
             {
                 var item = feedComboBox.SelectedIndex;
-                var Id = FeedList[item].Id;
+                var Id = FeedList[item].getID();
                 var Name = FeedList[item].Name;
 
                 Feed.DeleteFeed(Id, item, Name);
@@ -203,8 +203,8 @@ namespace CSharpProject.Views
                 boxValidator.Validate(intervalComboBox.SelectedIndex, "download interval");
 
                 var item = feedComboBox.SelectedIndex;
-                var Id = FeedList[item].Id;
-                
+                var Id = FeedList[item].getID();
+
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show($"Save changes to {Name}?", $"Confirm edit of {Name}", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {

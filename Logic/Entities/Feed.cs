@@ -12,7 +12,6 @@ namespace Logic.Entities
 {
     public class Feed : IEntity
     {
-
         public Guid Id { get; set; }
         public String Filepath { get; set; }
         public String Name { get; set; }
@@ -31,6 +30,11 @@ namespace Logic.Entities
         {
             Items = new List<FeedItem>();
             ListenedToPods = new List<string>();
+        }
+
+        public Guid getID()
+        {
+            return Id;
         }
 
         public override string ToString()
@@ -101,7 +105,7 @@ namespace Logic.Entities
 
             List<Channel> AllChannels = new List<Channel>();
 
-            FeedList.ForEach(i => AllChannels.Add(new Channel(i.Id, i.Filepath, i.Name, i.URL, i.UpdateInterval, i.LastUpdated, i.Category, i.ListenedToPods)));
+            FeedList.ForEach(i => AllChannels.Add(new Channel(i.getID(), i.Filepath, i.Name, i.URL, i.UpdateInterval, i.LastUpdated, i.Category, i.ListenedToPods)));
 
             xmld.SaveAllData(AllChannels);
 
@@ -293,7 +297,7 @@ namespace Logic.Entities
                 Link = element.Descendants("enclosure").Single().Attribute("url").Value,
                 FolderName = filePathSplit[filePathSplit.Length - 2],
                 Category = this.Category,
-                Parent = this.Id.ToString(),
+                Parent = this.getID().ToString(),
             });
 
             return feedItems.ToList();
@@ -341,7 +345,7 @@ namespace Logic.Entities
                     });
 
 
-                    Feed feed = FeedList.Single(i => i.Id.ToString().Equals(podID));
+                    Feed feed = FeedList.Single(i => i.getID().ToString().Equals(podID));
                     feed.Items.AddRange(feedItems.ToList()); //Adds all items gotten from the LoadChannelItems function to the feed
 
                     //foreach (Feed feed in FeedList)

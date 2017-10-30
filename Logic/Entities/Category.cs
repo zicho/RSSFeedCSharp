@@ -26,6 +26,11 @@ namespace Logic.Entities
         {
         }
 
+        public Guid getID()
+        {
+            return Id;
+        }
+
         public static List<Category> CategoryList = new List<Category>();
 
         public void LoadCategories()
