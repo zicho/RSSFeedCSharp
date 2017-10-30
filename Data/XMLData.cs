@@ -145,9 +145,11 @@ namespace Data
             settings.Save(Environment.CurrentDirectory + @"\settings.xml");
 
             System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{Name}");
-            try { 
-            directory.Delete(true);
-            } catch
+            try
+            {
+                directory.Delete(true);
+            }
+            catch
             {
 
             }
@@ -200,6 +202,29 @@ namespace Data
                     directory.Delete(true);
                 }
             }
+        }
+
+        public void EditFeed(Guid Id, string Name, string URL, string Category, int Interval)
+        {
+            XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+            XElement feed = settings
+            .Descendants("Channel")
+            .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
+
+            // Change the XML
+            feed.Element("Name").Value = Name;
+            feed.Element("URL").Value = URL;
+            feed.Element("Category").Value = Category;
+            feed.Element("UpdateInterval").Value = Interval.ToString();
+
+            settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+        }
+
+        public void RenameFeed(string oldName, string newName)
+        {
+            System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{oldName}");
+            directory.MoveTo(Environment.CurrentDirectory + $@"\podcasts\{newName}");
         }
     }
 

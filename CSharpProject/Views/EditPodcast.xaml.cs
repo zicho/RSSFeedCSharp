@@ -212,9 +212,7 @@ namespace CSharpProject.Views
                     {
                         var oldName = feedComboBox.Text;
                         var newName = nameTextBox.Text;
-
-                        System.IO.DirectoryInfo directory = new DirectoryInfo(Environment.CurrentDirectory + $@"\podcasts\{oldName}");
-                        directory.MoveTo(Environment.CurrentDirectory + $@"\podcasts\{newName}");
+                        Feed.RenameFeed(oldName, newName);
                     }
                 }
 
@@ -224,7 +222,6 @@ namespace CSharpProject.Views
 
                 if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
                 {
-
                      validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
                 }
 
@@ -234,7 +231,6 @@ namespace CSharpProject.Views
                     var Name = nameTextBox.Text;
                     var URL = URLTextBox.Text;
                     var Category = categoryComboBox.SelectedValue.ToString();
-
                     var Interval = 0;
 
                     if (intervalComboBox.SelectedIndex == 0)
@@ -252,25 +248,8 @@ namespace CSharpProject.Views
                         Interval = 7;
                     }
 
-                    XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+                    Feed.EditFeed(item, Id, Name, URL, Category, Interval);
 
-                    XElement feed = settings
-                    .Descendants("Channel")
-                    .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
-
-                    // Change the XML
-                    feed.Element("Name").Value = Name;
-                    feed.Element("URL").Value = URL;
-                    feed.Element("Category").Value = Category;
-                    feed.Element("UpdateInterval").Value = Interval.ToString();
-
-                    //Change the feedlist object
-                    FeedList[item].Name = Name;
-                    FeedList[item].URL = URL;
-                    FeedList[item].Category = Category;
-                    FeedList[item].UpdateInterval = Interval;
-
-                    settings.Save(Environment.CurrentDirectory + @"\settings.xml");
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
 
                     this.Close();

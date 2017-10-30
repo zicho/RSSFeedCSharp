@@ -366,6 +366,22 @@ namespace Logic.Entities
                 }
             }
         }
+
+        public void EditFeed(int item, Guid Id, string Name, string URL, string Cartegoy, int Interval)
+        {
+            Data.EditFeed(Id, Name, URL, Category, Interval);
+
+            //Change the feedlist object
+            FeedList[item].Name = Name;
+            FeedList[item].URL = URL;
+            FeedList[item].Category = Category;
+            FeedList[item].UpdateInterval = Interval;
+        }
+
+        public void RenameFeed(string oldName, string newName)
+        {
+            Data.RenameFeed(oldName, newName);    
+        }
     }
     
 }
