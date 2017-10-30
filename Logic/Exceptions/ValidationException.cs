@@ -21,7 +21,7 @@ namespace Logic.Exceptions
 
         public class Validator : IValidator
         {
-            public void Validate(string input, string field)
+            public virtual void Validate(string input, string field)
             {
                 if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input)) //testar ersätta input.Length == 0
                     throw new Exception($"The field '{field}' may not be empty.");

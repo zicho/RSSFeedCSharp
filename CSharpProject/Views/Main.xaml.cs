@@ -68,8 +68,6 @@ namespace CSharpProject.Views
             UpdateFeedList();
         }
 
-        
-
         internal void LoadAllFeeds()
         {
             Feed f = new Feed();
