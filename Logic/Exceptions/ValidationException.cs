@@ -57,7 +57,7 @@ namespace Logic.Exceptions
             }
         }
 
-        public class URLValidator : Validator,
+        public class URLValidator : Validator
         {
             public override void Validate(string input, string field)
             {
