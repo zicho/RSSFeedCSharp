@@ -20,9 +20,14 @@ namespace Logic.Exceptions
             void Validate(string input, string field);
         }
 
-        public class Validator : IValidator
+        public abstract class Validator
         {
-            public virtual void Validate(string input, string field)
+            public abstract void Validate(string input, string field);
+        }
+
+        public class InputValidator : Validator, IValidator
+        {
+            public override void Validate(string input, string field)
             {
                 if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input)) //testar ersätta input.Length == 0
                     throw new Exception($"The field '{field}' may not be empty.");
@@ -32,23 +37,23 @@ namespace Logic.Exceptions
             }
         }
 
-        public class LengthValidator : IValidator
+        public class LengthValidator : Validator, IValidator
         {
             private int length;
             public LengthValidator(int length)
             {
                 this.length = length;
             }
-            public void Validate(string input, string field)
+            public override void Validate(string input, string field)
             {
                 if (input.Length < length)
                     throw new Exception($"Longer input is needed for field '{field}'. (At least three symbols)");
             }
         }
 
-        public class NameValidator : IValidator
+        public class NameValidator : Validator, IValidator
         {
-            public void Validate(string input, string field)
+            public override void Validate(string input, string field)
             {
                 if (Feed.CheckIfChannelNameExist(input, FeedList))
                 {
@@ -57,9 +62,9 @@ namespace Logic.Exceptions
             }
         }
 
-        public class URLValidator : IValidator
+        public class URLValidator : Validator, IValidator
         {
-            public void Validate(string input, string field)
+            public override void Validate(string input, string field)
             {
                 if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
                     throw new Exception($"The field '{field}' may not be empty.");
@@ -75,9 +80,9 @@ namespace Logic.Exceptions
                 }
             }
         }
-        public class RSSValidator : IValidator
+        public class RSSValidator : Validator, IValidator
         {
-            public void Validate(string input, string field)
+            public override void Validate(string input, string field)
             {
                 try
                 {
@@ -92,6 +97,25 @@ namespace Logic.Exceptions
                     throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
                 }
                 
+            }
+        }
+
+        public class CategoryValidator : Validator, IValidator
+        {
+            public override void Validate(string categoryName, string category)
+            {
+                String path = (Environment.CurrentDirectory + "/categories.xml");
+                var categoryString = File.ReadAllText(path).ToLower();
+
+                if (string.IsNullOrEmpty(categoryString))
+                {
+                    throw new Exception($"Please enter a name.");
+                }
+
+                if (categoryString.Contains(categoryName.ToLower()))
+                {
+                    throw new Exception($"This category name already exists.");
+                }
             }
         }
 
@@ -122,24 +146,7 @@ namespace Logic.Exceptions
                     }
                 }
             }
-            public class CategoryValidator : IValidator
-            {
-                public void Validate(string categoryName, string category)
-                {
-                    String path = (Environment.CurrentDirectory + "/categories.xml");
-                    var categoryString = File.ReadAllText(path).ToLower();
-
-                    if (string.IsNullOrEmpty(categoryString))
-                    {
-                        throw new Exception($"Please enter a name.");
-                    }
-
-                    if (categoryString.Contains(categoryName.ToLower()))
-                    {
-                        throw new Exception($"This category name already exists.");
-                    }
-                }
-            }
+            
         }
     }
             

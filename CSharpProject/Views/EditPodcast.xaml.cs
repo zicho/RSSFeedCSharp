@@ -48,7 +48,7 @@ namespace CSharpProject.Views
         {
             InitializeComponent();
 
-            validator.Add(new Validator());
+            validator.Add(new InputValidator());
             validator.Add(new LengthValidator(3));
 
             CheckFeeds();

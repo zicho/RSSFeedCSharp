@@ -42,7 +42,7 @@ namespace CSharpProject.Views
             InitializeComponent();
             LoadCategories();
 
-            validator.Add(new Validator());
+            validator.Add(new InputValidator());
             validator.Add(new LengthValidator(3));
 
             this.Topmost = true;
