@@ -184,12 +184,13 @@ namespace CSharpProject.Views
                 var text = "";
 
                 Task<String> RSS_Content = Feed.DownloadFeed(RSSTextBox.Text, text);
+                //RSSValidator rssChecker = new RSSValidator();
 
                 String RSS_Name = RSSNameTextBox.Text;
                 String RSS_URL = RSSTextBox.Text;
 
                 await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
-
+                //rssChecker.Validate(RSS_Content.Result, "Correct RSS");
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
 
