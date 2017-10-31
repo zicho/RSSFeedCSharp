@@ -23,7 +23,7 @@ namespace Data
                     }
                     catch (Exception)
                     {
-                        throw new Exception();
+                        throw new Exception("Something went wrong.");
                     }
                 }
                 return text;

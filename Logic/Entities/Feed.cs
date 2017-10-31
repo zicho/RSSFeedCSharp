@@ -310,6 +310,13 @@ namespace Logic.Entities
             Data.DeleteFeed(Id, Name);
         }
 
+        public void DeleteFeedItems(Guid Id, int item, string Name, string URL)
+        {
+            FeedList[item].URL = URL;
+
+            Data.DeleteFeedItems(Name);
+        }
+
         public void LoadAllItems()
         {
             XMLData xmld = new XMLData();

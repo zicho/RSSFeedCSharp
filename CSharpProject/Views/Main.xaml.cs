@@ -21,7 +21,6 @@ namespace CSharpProject.Views
 {
     public partial class MainWindow : Window
     {
-
         public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
         public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
 
@@ -73,10 +72,8 @@ namespace CSharpProject.Views
             Feed f = new Feed();
 
             f.ShallFeedsBeUpdated();
-
             f.LoadAllFeeds();
            
-            
             f.CheckAllIfDownloaded();
             f.IntitializeListentedTo();
         }
@@ -196,7 +193,7 @@ namespace CSharpProject.Views
                         var newFeedsFeedItems = newFeed.fetchFeedItems();
                         newFeed.Items.AddRange(newFeedsFeedItems);
                         //FeedList.Add(newFeed);
-                        filterAfterCategory();
+                        FilterAfterCategory();
                         UpdateFeedList();
                         RSSTextBox.Clear();
                         RSSNameTextBox.Clear();
@@ -371,11 +368,11 @@ namespace CSharpProject.Views
                 }
                 else if (selectedFeed.Equals("All"))
                 {
-                    filterAfterCategory();
+                    FilterAfterCategory();
                 }
                 else
                 {
-                    filterAfterPodcast();
+                    FilterAfterPodcast();
                 }
 
                 refreshListView();
@@ -392,7 +389,7 @@ namespace CSharpProject.Views
                 }
                 else
                 {
-                    filterAfterCategory();
+                    FilterAfterCategory();
                 }
                 UpdateFeedList();
             }
@@ -471,7 +468,7 @@ namespace CSharpProject.Views
             refreshListView();
         }
 
-        internal void filterAfterCategory()
+        internal void FilterAfterCategory()
         {
             if (categoryFilterBox.SelectedItem != null)
             {
@@ -504,7 +501,7 @@ namespace CSharpProject.Views
         }
 
 
-        internal void filterAfterPodcast()
+        internal void FilterAfterPodcast()
         {
             Feed ActivePodcast = new Feed();// feedFilterBox.SelectedItem;
             if (ActiveList != null)

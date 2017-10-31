@@ -147,6 +147,20 @@ namespace Data
             }
         }
 
+        public void DeleteFeedItems(string Name)
+        {
+            string[] files = Directory.GetFiles(Environment.CurrentDirectory + $@"\podcasts\{Name}");
+            try
+            {
+                foreach (string file in files)
+                    File.Delete(file);
+            }
+            catch
+            {
+
+            }
+        }
+
         public void DeleteCategory(string categoryName)
         {
             XElement categories = XElement.Load(Environment.CurrentDirectory + @"\categories.xml");
