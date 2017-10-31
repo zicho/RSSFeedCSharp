@@ -78,8 +78,7 @@ namespace Logic.Entities
             feed.Category = category;
             feed.Id = freshGuid;
             FeedList.Add(feed);
-
-
+            
             //THIS IGNORES ADDING THE CONTENT PROPERTY TO OUR SETTINGS FILES, AS IT IS 
 
             var attributes = new XmlAttributes { XmlIgnore = true };
@@ -306,7 +305,6 @@ namespace Logic.Entities
         public void DeleteFeed(Guid Id, int item, string Name)
         {
             FeedList.RemoveAt(item); // Ta bort ur feedlist
-
             Data.DeleteFeed(Id, Name);
         }
 
@@ -315,6 +313,29 @@ namespace Logic.Entities
             FeedList[item].URL = URL;
 
             Data.DeleteFeedItems(Name);
+        }
+
+        public void UpdateFeedId(string Name)
+        {
+            String path = (Environment.CurrentDirectory + $"\\podcasts\\{Name}"); // Path to a folder containing all XML files in the project directory
+
+            string[] files = System.IO.Directory.GetFiles(path, "*.xml");
+
+            var newID = Path.GetFileNameWithoutExtension(files[0]);
+
+            Console.WriteLine(newID);
+
+            XElement settings = XElement.Load(Environment.CurrentDirectory + @"\settings.xml");
+
+            XElement feed = settings
+            .Descendants("Channel")
+            .FirstOrDefault(m => (string)m.Element("Id") == Id.ToString());
+
+            // Change the XML
+            feed.Element("Id").Value = newID;
+
+            settings.Save(Environment.CurrentDirectory + @"\settings.xml");
+
         }
 
         public void LoadAllItems()

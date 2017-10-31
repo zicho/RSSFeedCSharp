@@ -38,8 +38,6 @@ namespace Data
                                where podcast.Element("Id").Value == podID
                                select podcast).FirstOrDefault();
 
-
-
                 var items = xmlDocument.Descendants("item");
                 return items;
             }

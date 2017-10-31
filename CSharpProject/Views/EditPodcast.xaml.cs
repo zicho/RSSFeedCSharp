@@ -265,8 +265,7 @@ namespace CSharpProject.Views
 
                                 String RSS_Name = Name;
                                 String RSS_URL = URL;
-
-
+                                
                                 await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
 
                                 var updateInterval = intervalComboBox.SelectedValue.ToString(); //Returns tag in combo-box
@@ -279,6 +278,8 @@ namespace CSharpProject.Views
                                         var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
                                         var newFeedsFeedItems = newFeed.fetchFeedItems();
                                         newFeed.Items.AddRange(newFeedsFeedItems);
+
+                                       Feed.UpdateFeedId(Name);
                                     }
                                     else
                                     {
