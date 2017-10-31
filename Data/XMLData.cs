@@ -22,6 +22,10 @@ namespace Data
 
         public XDocument LoadSettings()
         {
+            if (!File.Exists(Environment.CurrentDirectory + @"\settings.xml"))//(Environment.CurrentDirectory )
+            {
+                SaveAllData(new List<Channel>());
+            }
             return XDocument.Load(Environment.CurrentDirectory + @"\settings.xml");
         }
 
@@ -70,7 +74,7 @@ namespace Data
             }
             catch (System.Exception excpt)
             {
-                throw excpt;
+                //throw excpt;
             }
 
             return files.Where(i => i.EndsWith(".xml")).ToList();

@@ -161,25 +161,33 @@ namespace Logic.Entities
 
         public void CheckAllIfDownloaded()
         {
-            string path = Directory.GetCurrentDirectory();
-            path += $@"\podcasts\";
-            var allPodcastFolders = Directory.GetDirectories(path); //all subfolders for the podcasts in a variable
-
-            foreach (string s in allPodcastFolders) //loops through them
+            try
             {
-                var tempString = s.Split('\\');
-                string podcastName = tempString[tempString.Length - 1];
-                var podcastFiles = Directory.GetFiles(s, "*.mp3"); //all the .mp3s it could find in current folder
+                string path = Directory.GetCurrentDirectory();
+                path += $@"\podcasts\";
+                var allPodcastFolders = Directory.GetDirectories(path); //all subfolders for the podcasts in a variable
 
-                Feed selectedChannel = FeedList.FirstOrDefault(sc => sc.Name.Equals(podcastName));
-                foreach (var pod in podcastFiles) //loop through the files
+                foreach (string s in allPodcastFolders) //loops through them
                 {
-                    var podpathSplit = pod.Split('\\');
-                    string filename = podpathSplit[podpathSplit.Length - 1]; //gets the file name from the variable
-                    FeedItem selectedItem = selectedChannel.Items.Single(si => si.Link.Split('/').Last().Split('?').First().Equals(filename)); //matches the current file with all podcasts of the channel that fits the folder
-                    selectedItem.IsDownloaded = true;
+                    var tempString = s.Split('\\');
+                    string podcastName = tempString[tempString.Length - 1];
+                    var podcastFiles = Directory.GetFiles(s, "*.mp3"); //all the .mp3s it could find in current folder
+
+                    Feed selectedChannel = FeedList.FirstOrDefault(sc => sc.Name.Equals(podcastName));
+                    foreach (var pod in podcastFiles) //loop through the files
+                    {
+                        var podpathSplit = pod.Split('\\');
+                        string filename = podpathSplit[podpathSplit.Length - 1]; //gets the file name from the variable
+                        FeedItem selectedItem = selectedChannel.Items.Single(si => si.Link.Split('/').Last().Split('?').First().Equals(filename)); //matches the current file with all podcasts of the channel that fits the folder
+                        selectedItem.IsDownloaded = true;
+                    }
                 }
             }
+            catch (Exception)
+            {
+                throw new Exception("There was an error loading the podcasts");
+            }
+            
         }
 
 
