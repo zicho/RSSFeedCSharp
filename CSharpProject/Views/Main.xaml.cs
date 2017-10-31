@@ -65,13 +65,6 @@ namespace CSharpProject.Views
             LoadAllFeeds();
             RefreshPodcastList();
             UpdateFeedList();
-
-            MessageBox.Show(FeedList.Count.ToString());
-
-            foreach (var f in FeedList)
-            {
-                MessageBox.Show(f.Filepath);
-            }
         }
 
         internal void LoadAllFeeds()

@@ -319,7 +319,7 @@ namespace Logic.Entities
         {
             String path = (Environment.CurrentDirectory + $"\\podcasts\\{Name}"); // Path to a folder containing all XML files in the project directory
 
-            string[] files = System.IO.Directory.GetFiles(path, "*.xml");
+            string[] files = System.IO.Directory.GetFiles(path);
 
             var newID = Path.GetFileNameWithoutExtension(files[0]);
 
@@ -335,7 +335,6 @@ namespace Logic.Entities
             feed.Element("Id").Value = newID;
 
             settings.Save(Environment.CurrentDirectory + @"\settings.xml");
-
         }
 
         public void LoadAllItems()
