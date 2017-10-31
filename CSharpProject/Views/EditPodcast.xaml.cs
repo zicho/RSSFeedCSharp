@@ -66,7 +66,6 @@ namespace CSharpProject.Views
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
             Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
-            Closing += (s, e) => main.FilterAfterCategory(); //refreshes the category combobox to display new category
             Closing += (s, e) => main.RefreshFeedList(); //refreshes the category combobox to display new category
         }
 
@@ -193,7 +192,7 @@ namespace CSharpProject.Views
             }
         }
 
-        public async void buttonSave_Click(object sender, RoutedEventArgs e)
+        public void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             Name = feedComboBox.Text;
 
@@ -224,10 +223,13 @@ namespace CSharpProject.Views
                         }
                     }
 
-                    var URL = "";
+                    if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
+                    {
+                        validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
+                    }
 
                     var Name = nameTextBox.Text;
-
+                    var URL = URLTextBox.Text;
                     var Category = categoryComboBox.SelectedValue.ToString();
 
                     var Interval = 0;
@@ -247,60 +249,13 @@ namespace CSharpProject.Views
                         Interval = 7;
                     }
 
-                    if (FeedList[item].URL != URLTextBox.Text) // THIS CODE RUNS ONLY IF URL HAS BEEN CHANGED
-                    {
-                        MessageBoxResult confirmURLChange = System.Windows.MessageBox.Show($"Changing a feeds URL resets it entirely. Really change URL?", $"Confirm edit?", System.Windows.MessageBoxButton.YesNo);
-                        if (confirmURLChange == MessageBoxResult.Yes)
-                        {
-                            validator.Validate(URLTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
-                            URL = URLTextBox.Text;
-                            Feed.DeleteFeedItems(Id, item, Name, URL);
+                    Feed.EditFeed(item, Id, Name, URL, Category, Interval);
 
-                            // DOWNLOAD NEW ITEMS FROM NEW URL
-                            try
-                            {
-                                var text = "";
-
-                                Task<String> RSS_Content = Feed.DownloadFeed(URL, text);
-
-                                String RSS_Name = Name;
-                                String RSS_URL = URL;
-                                
-                                await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
-
-                                var updateInterval = intervalComboBox.SelectedValue.ToString(); //Returns tag in combo-box
-                                var categoryName = categoryComboBox.SelectedValue.ToString();
-
-                                if (RSS_Content != null)
-                                {
-                                    if (RSS_Name != null)
-                                    {
-                                        var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
-                                        var newFeedsFeedItems = newFeed.fetchFeedItems();
-                                        newFeed.Items.AddRange(newFeedsFeedItems);
-
-                                       Feed.UpdateFeedId(Name);
-                                    }
-                                    else
-                                    {
-                                        URL = FeedList[item].URL;
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show(ex.Message);
-                            }
-
-                            Feed.EditFeed(item, Id, Name, URL, Category, Interval);
-
-                            MessageBox.Show("Your changes has been saved.", "Congrats!");
-                            this.Close();
-                        }
-                        //}
-                        //}
-                    }
+                    MessageBox.Show("Your changes has been saved.", "Congrats!");
+                    this.Close();
                 }
+                //}
+                //}
             }
 
             catch (Exception ex)
