@@ -15,17 +15,12 @@ namespace Logic.Exceptions
         private static Feed Feed = new Feed(); // used to validate existing feeds
         private static List<Feed> FeedList = Feed.FeedList; // used to validate existing feeds
 
-        public interface IValidator
-        {
-            void Validate(string input, string field);
-        }
-
         public abstract class Validator
         {
             public abstract void Validate(string input, string field);
         }
 
-        public class InputValidator : Validator, IValidator
+        public class InputValidator : Validator
         {
             public override void Validate(string input, string field)
             {
@@ -37,7 +32,7 @@ namespace Logic.Exceptions
             }
         }
 
-        public class LengthValidator : Validator, IValidator
+        public class LengthValidator : Validator
         {
             private int length;
             public LengthValidator(int length)
@@ -51,7 +46,7 @@ namespace Logic.Exceptions
             }
         }
 
-        public class NameValidator : Validator, IValidator
+        public class NameValidator : Validator
         {
             public override void Validate(string input, string field)
             {
@@ -62,7 +57,7 @@ namespace Logic.Exceptions
             }
         }
 
-        public class URLValidator : Validator, IValidator
+        public class URLValidator : Validator,
         {
             public override void Validate(string input, string field)
             {
@@ -80,7 +75,7 @@ namespace Logic.Exceptions
                 }
             }
         }
-        public class RSSValidator : Validator, IValidator
+        public class RSSValidator : Validator
         {
             public override void Validate(string input, string field)
             {
@@ -100,7 +95,7 @@ namespace Logic.Exceptions
             }
         }
 
-        public class CategoryValidator : Validator, IValidator
+        public class CategoryValidator : Validator
         {
             public override void Validate(string categoryName, string category)
             {
@@ -119,7 +114,7 @@ namespace Logic.Exceptions
             }
         }
 
-        public class ValidatorList : List<IValidator>
+        public class ValidatorList : List<Validator>
             {
                 public void Validate(string input, string field)
                 {
