@@ -76,9 +76,9 @@ namespace CSharpProject.Views
            
             try
             {
-                f.CheckAllIfDownloaded();
+                Feed.CheckAllIfDownloaded();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("There was an error loading the channels or podcasts");
             }
@@ -215,8 +215,7 @@ namespace CSharpProject.Views
                     await Task.Delay(2000);
                     statusLabel.Visibility = Visibility.Hidden;
                     progressBar.Value = 0;
-                    Feed f = new Feed();
-                    f.CheckAllIfDownloaded();
+                    Feed.CheckAllIfDownloaded();
                     refreshListView();
                 }
 

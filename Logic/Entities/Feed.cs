@@ -159,7 +159,7 @@ namespace Logic.Entities
             }
         }
 
-        public void CheckAllIfDownloaded()
+        public static void CheckAllIfDownloaded()
         {
             try
             {

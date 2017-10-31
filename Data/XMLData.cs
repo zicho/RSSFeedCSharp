@@ -72,9 +72,9 @@ namespace Data
                     files.AddRange(loadXML(d));
                 }
             }
-            catch (System.Exception excpt)
+            catch
             {
-                //throw excpt;
+
             }
 
             return files.Where(i => i.EndsWith(".xml")).ToList();

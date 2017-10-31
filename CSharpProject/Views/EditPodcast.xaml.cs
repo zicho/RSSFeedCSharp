@@ -62,7 +62,6 @@ namespace CSharpProject.Views
 
             }
 
-
             Closing += (s, e) => main.IsEnabled = true;
             Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
             Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
