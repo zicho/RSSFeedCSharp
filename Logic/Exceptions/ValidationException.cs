@@ -79,11 +79,19 @@ namespace Logic.Exceptions
         {
             public void Validate(string input, string field)
             {
-                var checkIfMp3Rss = XDocument.Load(input).Descendants("enclosure").ToList();
-                if (checkIfMp3Rss.Count == 0)
+                try
+                {
+                    var checkIfMp3Rss = XDocument.Load(input).Descendants("enclosure").ToList();
+                    if (checkIfMp3Rss.Count == 0)
+                    {
+                        throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
+                    }
+                }
+                catch (Exception)
                 {
                     throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
                 }
+                
             }
         }
 
