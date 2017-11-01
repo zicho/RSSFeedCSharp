@@ -86,8 +86,6 @@ namespace CSharpProject.Views
             f.IntitializeListentedTo();
         }
 
-
-
         internal void RefreshFeedList()
         {
             FeedList.Clear();
@@ -165,8 +163,7 @@ namespace CSharpProject.Views
 
         internal async void Button_Click(object sender, RoutedEventArgs e)
         {
-
-
+            
             try
             {
                 validator.Validate(RSSTextBox.Text, "RSS URL", true); // PASSING A BOOLEAN INTO THIS METHOD MEANS IT DOES AN URL VALIDATION USING AN OVERLOAD ON THE VALIDATOR CLASS
@@ -244,8 +241,6 @@ namespace CSharpProject.Views
             RSSTextBox.Text = "";
             RSSNameTextBox.Text = "";
         }
-
-
 
         internal void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -337,11 +332,6 @@ namespace CSharpProject.Views
                 {
                     progressBar.Value = e.ProgressPercentage;
                 }
-
-
-
-
-
             }
 
             //double bytesIn = double.Parse(e.BytesReceived.ToString());

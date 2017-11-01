@@ -54,12 +54,9 @@ namespace Data
             return null;
         }
 
-
         public List<String> loadXML(string directory)
         {
             List<String> files = new List<String>();
-
-
 
             try
             {
@@ -79,7 +76,6 @@ namespace Data
 
             return files.Where(i => i.EndsWith(".xml")).ToList();
         }
-        
 
         public void updateXmlFilesOrNot()
         {

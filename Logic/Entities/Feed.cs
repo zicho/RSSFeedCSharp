@@ -148,8 +148,7 @@ namespace Logic.Entities
             }
             return false;
         }
-
-
+        
         public void IntitializeListentedTo()
         {
             foreach (Feed f in FeedList)
@@ -189,8 +188,7 @@ namespace Logic.Entities
             }
             
         }
-
-
+        
         public void LoadAllFeeds()
         {
             XMLData xmld = new XMLData();
@@ -201,13 +199,9 @@ namespace Logic.Entities
             {
                 Directory.CreateDirectory(path);
             }
-
-
-
+            
             XDocument settings = xmld.LoadSettings();
-
-
-
+            
             try
             {
                 var feeds = from item in settings.Descendants("Channel")
