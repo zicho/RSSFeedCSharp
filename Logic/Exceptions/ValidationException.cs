@@ -81,15 +81,18 @@ namespace Logic.Exceptions
             {
                 try
                 {
-                    var checkIfMp3Rss = XDocument.Load(input).Descendants("enclosure").ToList();
-                    if (checkIfMp3Rss.Count == 0)
+                    var inputXML = XDocument.Parse(input);
+                    var checkMp3Content = inputXML.Descendants("item").Descendants("enclosure").ToList();
+
+                    //System.Diagnostics.Debug.Write("HÄR ÄR VII"+checkMp3Content.Count());
+                    if (checkMp3Content.Count() == 0)
                     {
                         throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
+                    System.Diagnostics.Debug.Write(e.Message+"FUCKTHISWORLD");//throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
                 }
                 
             }
