@@ -107,13 +107,15 @@
             </ListView>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90*" />
-                    <ColumnDefinition Width="90*"/>
-                    <ColumnDefinition Width="90*" />
+                    <ColumnDefinition Width="80*" />
+                    <ColumnDefinition Width="80*" />
+                    <ColumnDefinition Width="120*"/>
+                    <ColumnDefinition Width="120*" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="buttonPlay" Margin="0 0 12 0" Content="Play" Grid.Column="0" Click="Button_Click_1"/>
-                <Button x:Name="buttonCategoryEdit" Margin="12 0 12 0" Content="Edit Categories" Grid.Column="1" Click="Button_Click_2"/>
-                <Button x:Name="buttonPodcastEdit" Margin="12 0 0 0" Content="Edit Podcasts" Grid.Column="2" Click="Button_Click_3"/>
+                <Button x:Name="buttonPlay" Margin="0,0,10,0" Content="Play" Grid.Column="0" Click="Button_Click_1"/>
+                <Button x:Name="buttonDetails" Margin="0 0 0 0" Content="Details" Grid.Column="1" Click="Button_Click_4"/>
+                <Button x:Name="buttonCategoryEdit" Margin="12 0 0 0" Content="Edit Categories" Grid.Column="2" Click="Button_Click_2"/>
+                <Button x:Name="buttonPodcastEdit" Margin="12 0 0 0" Content="Edit Podcasts" Grid.Column="3" Click="Button_Click_3"/>
             </Grid>
 
             <Grid>
