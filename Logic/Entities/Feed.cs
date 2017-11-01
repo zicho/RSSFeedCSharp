@@ -238,6 +238,8 @@ namespace Logic.Entities
                 FolderName = filePathSplit[filePathSplit.Length - 2],
                 Category = this.Category,
                 Parent = this.getID().ToString(),
+                pubDate = element.Descendants("pubDate").SingleOrDefault().Value,
+                Description = element.Descendants("description").SingleOrDefault().Value,
             });
 
             return feedItems.ToList();
@@ -305,6 +307,8 @@ namespace Logic.Entities
                         FolderName = filePathSplit[filePathSplit.Length - 2],
                         Category = podSettings.Descendants("Category").Single().Value,
                         Parent = podID,
+                        pubDate = element.Descendants("pubDate").SingleOrDefault().Value,
+                        Description = element.Descendants("description").SingleOrDefault().Value,
                     });
 
 

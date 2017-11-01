@@ -24,6 +24,8 @@ namespace Logic.Entities
         public string FolderName { get; set; }
         public bool IsListenedTo { get; set; }
         public bool IsCurrentlyDownloading { get; set; }
+        public string Description { get; set; }
+        public string pubDate { get; set; }
 
         public static void FillItemList()
         {
@@ -49,7 +51,7 @@ namespace Logic.Entities
                         Parent = file.Id.ToString(),
                         FolderName = file.Name.ToString(),
                         IsListenedTo = false,
-                        IsCurrentlyDownloading=false,
+                        IsCurrentlyDownloading = false,
                     });
 
                         foreach (var feedItem in feedItems)

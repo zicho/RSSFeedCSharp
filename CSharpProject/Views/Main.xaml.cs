@@ -503,7 +503,12 @@ namespace CSharpProject.Views
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            var selectedFeedItem = podListBox.SelectedItem as FeedItem;
+            var title = selectedFeedItem.Title;
+            var pubDate = selectedFeedItem.pubDate;
+            var desc = selectedFeedItem.Description;
 
+            MessageBox.Show($"Title: {title}\nPublication Date: {pubDate}\n{desc}");
         }
     }
 }
