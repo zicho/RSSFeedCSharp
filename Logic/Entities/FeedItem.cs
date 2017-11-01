@@ -14,7 +14,6 @@ namespace Logic.Entities
 
     public class FeedItem : INotifyPropertyChanged
     {
-        public static List<FeedItem> FeedItemList = new List<FeedItem>();
         public string Id { get; set; }
         public string Title { get; set; }
         public string Link { get; set; }
@@ -26,46 +25,6 @@ namespace Logic.Entities
         public bool IsCurrentlyDownloading { get; set; }
         public string Description { get; set; }
         public string pubDate { get; set; }
-
-        public static void FillItemList()
-        {
-
-                List<Feed> files = Feed.FeedList;
-
-                foreach (var file in files)
-                {
-
-                    XDocument xmlDocument;
-
-                    try
-                    {
-                        xmlDocument = XDocument.Load(file.Filepath);
-
-                        var items = xmlDocument.Descendants("item");
-
-                    var feedItems = items.Select(element => new FeedItem
-                    {
-                        Title = element.Descendants("title").Single().Value,
-                        Link = element.Descendants("enclosure").Single().Attribute("url").Value,
-                        Category = file.Category.ToString(),
-                        Parent = file.Id.ToString(),
-                        FolderName = file.Name.ToString(),
-                        IsListenedTo = false,
-                        IsCurrentlyDownloading = false,
-                    });
-
-                        foreach (var feedItem in feedItems)
-                        {
-                            FeedItemList.Add(feedItem);
-                        }
-
-                    } catch 
-                    {
-                        // EN TOM CATCH HÄR BETYDER ATT VI HELT ENKELT SKITER I DE FILER SOM EVENTUELLT INTE KAN LÄSAS
-                        // MAN KANSKE SKA HA NÅT FELMEDDELANDE PÅ DEM??!
-                    } 
-                }
-            }    
 
         public string GetFilepath(FeedItem item)
         {

@@ -26,14 +26,13 @@ namespace CSharpProject.Views
 
         // COMPLETE LISTS OF FEEDS AND FEED ITEMS 
         private List<Feed> feedList = Feed.FeedList;
-        private List<FeedItem> feedItemList = FeedItem.FeedItemList;
         private List<Category> categoryList = Category.CategoryList;
 
         private Category category = new Category();
         private FeedItem feedItem = new FeedItem();
 
         public List<Feed> FeedList { get => feedList; set => feedList = value; }
-        public List<FeedItem> FeedItemList { get => feedItemList; set => feedItemList = value; }
+        
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
         public Category Category { get => category; set => category = value; }
         public FeedItem FeedItem { get => feedItem; set => feedItem = value; }
@@ -60,7 +59,6 @@ namespace CSharpProject.Views
             
             InitializeComboBoxes();
             LoadAllFeeds();
-            RefreshPodcastList();
             UpdateFeedList();
         }
 
@@ -87,14 +85,6 @@ namespace CSharpProject.Views
         {
             FeedList.Clear();
             LoadAllFeeds();
-        }
-        internal void RefreshPodcastList()
-        {
-            foreach (var item in FeedItemList)
-            {
-                item.IsDownloaded = item.CheckIfDownloaded(item);
-            }
-
         }
 
         internal void ListBoxItem_Selected(object sender, RoutedEventArgs e)
@@ -503,14 +493,22 @@ namespace CSharpProject.Views
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            var selectedFeedItem = podListBox.SelectedItem as FeedItem;
-            var title = selectedFeedItem.Title;
-            var pubDate = selectedFeedItem.pubDate;
-            var desc = selectedFeedItem.Description;
+            if (podListBox.SelectedIndex > 0)
+            {
 
-            desc = Regex.Replace(desc, "<.*?>", String.Empty);
+                var selectedFeedItem = podListBox.SelectedItem as FeedItem;
+                var title = selectedFeedItem.Title;
+                var pubDate = selectedFeedItem.pubDate;
+                var desc = selectedFeedItem.Description;
 
-            MessageBox.Show($"Title: {title}\nPublication Date: {pubDate}\n\n{desc}");
+                desc = Regex.Replace(desc, "<.*?>", String.Empty);
+
+                MessageBox.Show($"Title: {title}\nPublication Date: {pubDate}\n\n{desc}");
+            } else
+            {
+                MessageBox.Show("No item selected.");
+            }
+
         }
     }
 }
