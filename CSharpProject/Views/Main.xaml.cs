@@ -216,6 +216,7 @@ namespace CSharpProject.Views
                 await Task.Delay(2000);
                 statusLabel.Visibility = Visibility.Hidden;
                 progressBar.Value = 0;
+                statusLabel.Foreground = System.Windows.Media.Brushes.ForestGreen;
             }
         }
 

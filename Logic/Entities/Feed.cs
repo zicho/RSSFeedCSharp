@@ -50,8 +50,6 @@ namespace Logic.Entities
 
         public static Feed AddNewFeed(String content, String name, String url, String updateInterval, String category)
         {
-            //if (content != null)
-            //{
             Feed feed = new Feed();
 
             String path = (Environment.CurrentDirectory + $"\\podcasts\\{name}"); // Path to a folder containing all XML files in the project directory
@@ -227,11 +225,12 @@ namespace Logic.Entities
         public List<FeedItem> fetchFeedItems()
         {
             string feedFilePath = this.Filepath;
+
             var xmlDoc = XDocument.Load(feedFilePath);
 
             string[] filePathSplit = feedFilePath.Split('\\');
             var items = xmlDoc.Descendants("item");
-            var feedItems = items.Select(element => new FeedItem //KOPIA AV KOD FRÅN loadAllFeeds, INTE OK
+            var feedItems = items.Select(element => new FeedItem
             {
                 Title = element.Descendants("title").Single().Value,
                 Link = element.Descendants("enclosure").Single().Attribute("url").Value,
