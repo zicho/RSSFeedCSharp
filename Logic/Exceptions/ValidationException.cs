@@ -24,7 +24,7 @@ namespace Logic.Exceptions
         {
             public override void Validate(string input, string field)
             {
-                if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input)) //testar ersätta input.Length == 0
+                if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
                     throw new Exception($"The field '{field}' may not be empty.");
                 var validName = regex.Match(input);
                 if (!validName.Success)
@@ -91,12 +91,10 @@ namespace Logic.Exceptions
                     throw new Exception("This is no RSS-Link. Please use a correct RSS-Link");
                 }
                 
-                var checkMp3Content = inputXML.Descendants("item").Descendants("enclosure").ToList();
-
-                System.Diagnostics.Debug.Write("HÄR ÄR VII"+checkMp3Content.Count());
+                var checkMp3Content = inputXML.Descendants("item").Descendants("enclosure").Attributes("url").ToList();
+                
                 if (checkMp3Content.Count() == 0 || checkMp3Content == null)
                 {
-                    System.Diagnostics.Debug.Write("HÄR ÄR VII" + checkMp3Content.Count());
                     throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
                 }   
             }
