@@ -500,5 +500,10 @@ namespace CSharpProject.Views
             }
 
         }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
