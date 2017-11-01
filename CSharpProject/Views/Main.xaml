@@ -107,7 +107,7 @@
             </ListView>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80*" />
+                    <ColumnDefinition Width="120*" />
                     <ColumnDefinition Width="80*" />
                     <ColumnDefinition Width="120*"/>
                     <ColumnDefinition Width="120*" />

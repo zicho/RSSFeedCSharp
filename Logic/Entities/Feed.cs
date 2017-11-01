@@ -241,7 +241,6 @@ namespace Logic.Entities
                 pubDate = element.Descendants("pubDate").SingleOrDefault().Value,
                 Description = element.Descendants("description").SingleOrDefault().Value,
             });
-
             return feedItems.ToList();
         }
 

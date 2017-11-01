@@ -508,7 +508,9 @@ namespace CSharpProject.Views
             var pubDate = selectedFeedItem.pubDate;
             var desc = selectedFeedItem.Description;
 
-            MessageBox.Show($"Title: {title}\nPublication Date: {pubDate}\n{desc}");
+            desc = Regex.Replace(desc, "<.*?>", String.Empty);
+
+            MessageBox.Show($"Title: {title}\nPublication Date: {pubDate}\n\n{desc}");
         }
     }
 }
