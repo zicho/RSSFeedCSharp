@@ -41,10 +41,7 @@ namespace CSharpProject.Views
         public List<FeedItem> ActiveList { get; set; }
 
         public Dictionary<FeedItem, WebClient> FeedClientD = new Dictionary<FeedItem, WebClient>();
-
-        //private delegate void ButtonAction(FeedItem item);
-        //private ButtonAction PlayButtonDel;
-
+     
         public MainWindow()
         {
 
@@ -90,16 +87,12 @@ namespace CSharpProject.Views
         {
             FeedList.Clear();
             LoadAllFeeds();
-            //LoadAllFeedItemsInFeedList();
         }
         internal void RefreshPodcastList()
         {
-            //podListBox.Items.Clear();
-
             foreach (var item in FeedItemList)
             {
                 item.IsDownloaded = item.CheckIfDownloaded(item);
-                //podListBox.Items.Add(item);
             }
 
         }
@@ -181,13 +174,11 @@ namespace CSharpProject.Views
                 var text = "";
                 
                 Task<String> RSS_Content = Feed.DownloadFeed(RSSTextBox.Text, text);
-                //var RSS_Content = Task.Run(() => Feed.DownloadFeed(RSSTextBox.Text, text));
                 RSSValidator rssChecker = new RSSValidator();
 
                 String RSS_Name = RSSNameTextBox.Text;
                 String RSS_URL = RSSTextBox.Text;
-                //Task.WaitAll(RSS_Content);
-                await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
+                await RSS_Content;
                 
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
@@ -196,11 +187,10 @@ namespace CSharpProject.Views
                 {
                     if (RSS_Name != null)
                     {
-                        rssChecker.Validate(RSS_Content.Result, "Correct RSS"); //Måste ligga här, ligger den direkt under RSS_Content så kraschar programmet
+                        rssChecker.Validate(RSS_Content.Result, "Correct RSS");
                         var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
                         var newFeedsFeedItems = newFeed.fetchFeedItems();
                         newFeed.Items.AddRange(newFeedsFeedItems);
-                        //FeedList.Add(newFeed);
                         FilterAfterCategory();
                         UpdateFeedList();
                         RSSTextBox.Clear();
@@ -275,12 +265,9 @@ namespace CSharpProject.Views
 
                 */
                 boxValidator.Validate(podListBox.SelectedIndex, "podcast");
-                //FeedItem.playItem(FeedItemList[podListBox.SelectedIndex].Link.ToString());
 
                 FeedItem selectedItem = (FeedItem)podListBox.SelectedItem;
-
-
-
+                
                 if (selectedItem.IsDownloaded)
                 {
                     feedItem.PlayFile(selectedItem);
@@ -297,22 +284,18 @@ namespace CSharpProject.Views
                 {
                     progressBar.Value = 0;
                     WebClient client = new WebClient();
-                    client.DownloadProgressChanged += client_DownloadProgressChanged; //funkar inte som den ska atm
-                    //progressBar.IsIndeterminate = true;
+                    client.DownloadProgressChanged += client_DownloadProgressChanged;
                     selectedItem.IsCurrentlyDownloading = true;
                     FeedClientD[selectedItem] = client;
 
                     UpdatePlayButton();
                     UpdateProgressBarVisibility();
                     await feedItem.DownloadFile(selectedItem, client);
-                    //progressBar.IsIndeterminate = false;
-
+                    
                     selectedItem.IsDownloaded = true;
                     refreshListView();
                     UpdatePlayButton();
-                    //System.ComponentModel.ICollectionView view = System.Windows.Data.CollectionViewSource.GetDefaultView(FeedItemList);
-                    //view.Refresh();
-                }
+                    }
 
             }
             catch (Exception ex)
@@ -336,13 +319,6 @@ namespace CSharpProject.Views
                     progressBar.Value = e.ProgressPercentage;
                 }
             }
-
-            //double bytesIn = double.Parse(e.BytesReceived.ToString());
-            //double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            //double percentage = bytesIn / totalBytes * 100;
-
-            //progressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
-
         }
 
         internal void Button_Click_2(object sender, RoutedEventArgs e)
@@ -506,7 +482,7 @@ namespace CSharpProject.Views
 
         internal void FilterAfterPodcast()
         {
-            Feed ActivePodcast = new Feed();// feedFilterBox.SelectedItem;
+            Feed ActivePodcast = new Feed();
             if (ActiveList != null)
             {
                 ActiveList.Clear();
@@ -522,11 +498,6 @@ namespace CSharpProject.Views
                 }
                 ActivePodcast.Items.ForEach(i => ActiveList.Add(i));
             }
-
-        }
-
-        internal void progressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
 
         }
     }

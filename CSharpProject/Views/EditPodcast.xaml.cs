@@ -19,13 +19,7 @@ using static Logic.Exceptions.ValidationException;
 
 namespace CSharpProject.Views
 {
-    /// <summary>
-    /// Interaction logic for EditPodcast.xaml
-    /// </summary>
-    /// 
-
-
-
+   
     public partial class EditPodcast : Window
     {
 
@@ -40,9 +34,9 @@ namespace CSharpProject.Views
         private List<Category> categoryList = Category.CategoryList;
         public List<Category> CategoryList { get => categoryList; set => categoryList = value; }
 
-        public Logic.Exceptions.ValidationException.ValidatorList validator = new ValidatorList();
-        public Logic.Exceptions.ValidationException.NameValidator nameValidator = new NameValidator();
-        public Logic.Exceptions.ValidationException.BoxValidator boxValidator = new BoxValidator();
+        public ValidatorList validator = new ValidatorList();
+        public NameValidator nameValidator = new NameValidator();
+        public BoxValidator boxValidator = new BoxValidator();
 
         public EditPodcast(MainWindow main)
         {
@@ -63,9 +57,9 @@ namespace CSharpProject.Views
             }
 
             Closing += (s, e) => main.IsEnabled = true;
-            Closing += (s, e) => main.InitializeComboBoxes(); //refreshes the category combobox to display new category
-            Closing += (s, e) => main.UpdateFeedList(); //refreshes the category combobox to display new category
-            Closing += (s, e) => main.RefreshFeedList(); //refreshes the category combobox to display new category
+            Closing += (s, e) => main.InitializeComboBoxes();
+            Closing += (s, e) => main.UpdateFeedList();
+            Closing += (s, e) => main.RefreshFeedList();
         }
 
         public void CheckFeeds()
@@ -253,8 +247,6 @@ namespace CSharpProject.Views
                     MessageBox.Show("Your changes has been saved.", "Congrats!");
                     this.Close();
                 }
-                //}
-                //}
             }
 
             catch (Exception ex)

@@ -85,10 +85,6 @@ namespace Logic.Entities
 
         public bool CheckIfDownloaded(FeedItem item)
         {
-            /*XMLLogic xl = new XMLLogic();
-
-            string path = xl.GetPodcastDirectory() + $@"\{item.FolderName}";*/
-
             string path = GetFilepath(item);
 
             string[] fileName = item.Link.Split('/');

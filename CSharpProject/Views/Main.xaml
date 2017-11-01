@@ -120,7 +120,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ProgressBar x:Name="progressBar" Height="18" Margin="0,8,0,-2" Grid.Column="0" RenderTransformOrigin="0.504,1.833" VerticalContentAlignment="Stretch" ValueChanged="progressBar_ValueChanged"/>
+                <ProgressBar x:Name="progressBar" Height="18" Margin="0,8,0,-2" Grid.Column="0" RenderTransformOrigin="0.504,1.833" VerticalContentAlignment="Stretch"/>
 
             </Grid>
 
