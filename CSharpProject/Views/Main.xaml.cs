@@ -179,15 +179,16 @@ namespace CSharpProject.Views
                 statusLabel.Visibility = Visibility.Visible;
 
                 var text = "";
-
+                
                 Task<String> RSS_Content = Feed.DownloadFeed(RSSTextBox.Text, text);
-                //RSSValidator rssChecker = new RSSValidator();
+                //var RSS_Content = Task.Run(() => Feed.DownloadFeed(RSSTextBox.Text, text));
+                RSSValidator rssChecker = new RSSValidator();
 
                 String RSS_Name = RSSNameTextBox.Text;
                 String RSS_URL = RSSTextBox.Text;
-
+                //Task.WaitAll(RSS_Content);
                 await RSS_Content; //detta är väl useless i detta fallet men ville testa hur det funkade
-                //rssChecker.Validate(RSS_Content.Result, "Correct RSS");
+                
                 var updateInterval = IntervalBox.SelectedValue.ToString(); //Returns tag in combo-box
                 var categoryName = categoryComboBox.SelectedValue.ToString();
 
@@ -195,6 +196,7 @@ namespace CSharpProject.Views
                 {
                     if (RSS_Name != null)
                     {
+                        rssChecker.Validate(RSS_Content.Result, "Correct RSS"); //Måste ligga här, ligger den direkt under RSS_Content så kraschar programmet
                         var newFeed = Feed.AddNewFeed(RSS_Content.Result, RSS_Name, RSS_URL, updateInterval, categoryName);
                         var newFeedsFeedItems = newFeed.fetchFeedItems();
                         newFeed.Items.AddRange(newFeedsFeedItems);

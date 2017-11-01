@@ -79,22 +79,26 @@ namespace Logic.Exceptions
         {
             public override void Validate(string input, string field)
             {
+
+                XDocument inputXML;
                 try
                 {
-                    var inputXML = XDocument.Parse(input);
-                    var checkMp3Content = inputXML.Descendants("item").Descendants("enclosure").ToList();
-
-                    //System.Diagnostics.Debug.Write("HÄR ÄR VII"+checkMp3Content.Count());
-                    if (checkMp3Content.Count() == 0)
-                    {
-                        throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
-                    }
+                    inputXML = XDocument.Parse(input);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    System.Diagnostics.Debug.Write(e.Message+"FUCKTHISWORLD");//throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
+
+                    throw new Exception("This is no RSS-Link. Please use a correct RSS-Link");
                 }
                 
+                var checkMp3Content = inputXML.Descendants("item").Descendants("enclosure").ToList();
+
+                System.Diagnostics.Debug.Write("HÄR ÄR VII"+checkMp3Content.Count());
+                if (checkMp3Content.Count() == 0 || checkMp3Content == null)
+                {
+                    System.Diagnostics.Debug.Write("HÄR ÄR VII" + checkMp3Content.Count());
+                    throw new Exception("This RSS feed doesn't contain any mp3s. Please use another");
+                }   
             }
         }
 
